@@ -52,3 +52,23 @@ Stage Summary:
 - All business details correctly displayed (8 services, 3 phones, email, Ayat address, founding year 2022)
 - Site is now 100% mobile responsive across all pages
 - Build passes successfully
+
+---
+Task ID: 6
+Agent: Main Agent
+Task: Update testimonials with real client reviews
+
+Work Log:
+- Replaced fictional testimonials with real Enkutatash clients:
+  1. Dr. Dereje (ዶ/ር ደረጄ) - Director General, Addis Ababa Science & Technology University
+  2. W/o Tsige Jimma (ወ/ሮ ፅጌ ጂማ) - Deputy Chief Executive, Lemi Kuraa Sub-city
+  3. Ato Midiksa Kebede (አቶ ሚዴቅሳ ከበደ) - Deputy Bureau Head, Addis Ababa Peace & Security Administration
+- Added Amharic names (nameAmharic) and Amharic roles (roleAmharic) to testimonial data
+- Updated testimonial card rendering to display bilingual names and roles
+- Avatar initials now use Amharic characters (ደ, ፅ, ሚ)
+- Added truncate and min-w-0 for proper text overflow on mobile
+- Build passes successfully
+
+Stage Summary:
+- Testimonials now show real clients with bilingual Amharic/English names and titles
+- Card layout supports nameAmharic and roleAmharic fields gracefully

@@ -111,31 +111,37 @@ const services = [
 
 const testimonials = [
   {
-    name: 'Sara Mekonnen',
-    role: 'Bride, Addis Ababa',
-    avatar: 'SM',
+    name: 'Dr. Dereje',
+    nameAmharic: 'ዶ/ር ደረጄ',
+    role: 'Director General, Addis Ababa Science & Technology University',
+    roleAmharic: 'ዋና ዳይሬክተር፣ አዲስ አበባ ሳይንስ እና ቴክኖሎጂ ዩኒቨርስቲ',
+    avatar: 'ደ',
     quote:
-      'Enkutatash turned our wedding into an absolute fairy tale. Every single detail was perfect — from the floral arrangements to the music. Our guests are still talking about it months later!',
+      'Enkutatash delivered an outstanding experience for our university event. Their attention to detail, professionalism, and ability to manage large-scale academic gatherings is truly impressive. I highly recommend their services to any institution seeking excellence.',
     rating: 5,
-    event: 'Wedding Reception',
+    event: 'University Event',
   },
   {
-    name: 'Dawit Amare',
-    role: 'CEO, Horizon Tech',
-    avatar: 'DA',
+    name: 'W/o Tsige Jimma',
+    nameAmharic: 'ወ/ሮ ፅጌ ጂማ',
+    role: 'Deputy Chief Executive, Lemi Kuraa Sub-city',
+    roleAmharic: 'ምክትል ስራ አስኪያጅ፣ ለሚ ኩራ ክ/ከተማ',
+    avatar: 'ፅ',
     quote:
-      'We hired Enkutatash for our annual company retreat and product launch. Their professionalism and creativity exceeded all expectations. The team handled 500+ guests effortlessly.',
+      'We partnered with Enkutatash for our sub-city official events and the results were remarkable. Their team understands government protocols and delivers with precision. The decoration and stage setup were beyond our expectations — truly a trusted partner.',
     rating: 5,
-    event: 'Corporate Launch',
+    event: 'Government Event',
   },
   {
-    name: 'Hana Tadesse',
-    role: 'Festival Director',
-    avatar: 'HT',
+    name: 'Ato Midiksa Kebede',
+    nameAmharic: 'አቶ ሚዴቅሳ ከበደ',
+    role: 'Deputy Bureau Head, Addis Ababa Peace & Security Administration',
+    roleAmharic: 'ምክትል የቢሮ ሀላፊ፣ አዲስ አበባ ሰላምና ፀጥታ አስተዳደር',
+    avatar: 'ሚ',
     quote:
-      'Working with Enkutatash on the Addis Music Festival was a game-changer. Their production quality and crowd management skills are second to none in the industry.',
+      'Enkutatash handled our bureau\'s official ceremony with exceptional professionalism. From sound and lighting to catering and seating arrangements, everything was perfectly coordinated. They are the most reliable event organizer in Addis Ababa.',
     rating: 5,
-    event: 'Music Festival',
+    event: 'Official Ceremony',
   },
 ]
 
@@ -876,12 +882,18 @@ function TestimonialsSection() {
                     &ldquo;{testimonial.quote}&rdquo;
                   </p>
                   <div className="flex items-center gap-3">
-                    <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white text-[10px] sm:text-xs font-bold">
+                    <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white text-sm sm:text-base font-bold shrink-0">
                       {testimonial.avatar}
                     </div>
-                    <div>
-                      <p className="text-xs sm:text-sm font-semibold">{testimonial.name}</p>
-                      <p className="text-[10px] sm:text-xs text-muted-foreground">{testimonial.role}</p>
+                    <div className="min-w-0">
+                      <p className="text-xs sm:text-sm font-semibold truncate">{testimonial.name}</p>
+                      {'nameAmharic' in testimonial && testimonial.nameAmharic && (
+                        <p className="text-[10px] sm:text-xs text-emerald-600 dark:text-emerald-400 font-medium truncate">{testimonial.nameAmharic as string}</p>
+                      )}
+                      <p className="text-[10px] sm:text-xs text-muted-foreground truncate">{testimonial.role}</p>
+                      {'roleAmharic' in testimonial && testimonial.roleAmharic && (
+                        <p className="text-[9px] sm:text-[10px] text-muted-foreground/70 truncate">{testimonial.roleAmharic as string}</p>
+                      )}
                     </div>
                   </div>
                 </CardContent>

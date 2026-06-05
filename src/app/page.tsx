@@ -10,6 +10,7 @@ import { Sidebar } from '@/components/event-organizer/sidebar'
 import { Dashboard } from '@/components/event-organizer/dashboard'
 import { EventsList } from '@/components/event-organizer/events-list'
 import { CreateEventDialog } from '@/components/event-organizer/create-event-dialog'
+import { LandingPage } from '@/components/event-organizer/landing-page'
 import { Card, CardContent } from '@/components/ui/card'
 
 const viewTitles: Record<ViewTab, { title: string; subtitle: string; icon: React.ElementType }> = {
@@ -43,7 +44,7 @@ function PlaceholderView({ view }: { view: ViewTab }) {
   )
 }
 
-export default function Home() {
+function AppView() {
   const { currentView, setEvents, setActivities } = useEventStore()
 
   // Initialize with sample data
@@ -116,5 +117,35 @@ export default function Home() {
 
       <CreateEventDialog />
     </div>
+  )
+}
+
+export default function Home() {
+  const { appView } = useEventStore()
+
+  return (
+    <AnimatePresence mode="wait">
+      {appView === 'landing' ? (
+        <motion.div
+          key="landing"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <LandingPage />
+        </motion.div>
+      ) : (
+        <motion.div
+          key="app"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <AppView />
+        </motion.div>
+      )}
+    </AnimatePresence>
   )
 }

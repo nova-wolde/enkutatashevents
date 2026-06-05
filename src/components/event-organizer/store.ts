@@ -30,11 +30,13 @@ export interface ActivityItem {
 }
 
 export type ViewTab = 'dashboard' | 'events' | 'attendees' | 'venues' | 'analytics' | 'settings'
+export type AppView = 'landing' | 'app'
 
 interface EventStore {
   events: EventItem[]
   activities: ActivityItem[]
   currentView: ViewTab
+  appView: AppView
   sidebarCollapsed: boolean
   mobileSidebarOpen: boolean
   createDialogOpen: boolean
@@ -56,6 +58,7 @@ export const useEventStore = create<EventStore>((set) => ({
   events: [],
   activities: [],
   currentView: 'dashboard',
+  appView: 'landing',
   sidebarCollapsed: false,
   mobileSidebarOpen: false,
   createDialogOpen: false,
@@ -66,6 +69,7 @@ export const useEventStore = create<EventStore>((set) => ({
   addEvent: (event) => set((state) => ({ events: [event, ...state.events] })),
   setActivities: (activities) => set({ activities }),
   setCurrentView: (currentView) => set({ currentView }),
+  setAppView: (appView) => set({ appView }),
   toggleSidebar: () => set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
   setMobileSidebarOpen: (mobileSidebarOpen) => set({ mobileSidebarOpen }),
   setCreateDialogOpen: (createDialogOpen) => set({ createDialogOpen }),

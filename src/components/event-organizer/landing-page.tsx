@@ -281,6 +281,114 @@ const portfolioEvents = [
     description: 'A massive public national celebration with thousands waving Ethiopian flags, large tent stage, and organized crowd in matching vests.',
     gradient: 'from-green-400 via-yellow-500 to-red-500',
   },
+  {
+    title: 'Elegant Indoor Gala',
+    titleAmharic: 'ምሩር ውስጥ ጋላ',
+    category: 'Ceremony',
+    attendees: '300+',
+    image: '/events/event-16.jpg',
+    description: 'An elegant indoor gala with vibrant yellow floral-patterned green carpet aisle, blue and gold-framed VIP chairs, and multi-level balcony seating in a grand hall.',
+    gradient: 'from-yellow-400 via-amber-500 to-orange-600',
+  },
+  {
+    title: 'Formal Auditorium Conference',
+    titleAmharic: 'የአዳራሽ ስብሰባ',
+    category: 'Corporate',
+    attendees: '300+',
+    image: '/events/event-17.jpg',
+    description: 'A formal conference in a multi-level auditorium with blue carpet, white polka dots, ornate gold chairs, marble-topped tables, and tiered balcony seating.',
+    gradient: 'from-blue-400 via-indigo-500 to-violet-600',
+  },
+  {
+    title: 'Grand Stage Ceremony',
+    titleAmharic: 'ታላቅ የመድረክ ሥርዓት',
+    category: 'Ceremony',
+    attendees: '100+',
+    image: '/events/event-18.jpg',
+    description: 'A grand stage ceremony with blue and white draped curtains, glass podium, and a vibrant yellow-and-green floral-patterned carpet aisle in an elegant hall.',
+    gradient: 'from-teal-400 via-cyan-500 to-blue-600',
+  },
+  {
+    title: 'Professional Conference Setup',
+    titleAmharic: 'ሙያዊ የስብሰባ ዝጌጣጌጥ',
+    category: 'Corporate',
+    attendees: '300+',
+    image: '/events/event-19.jpg',
+    description: 'A professional conference setup in a spacious multi-level venue with gold-accented VIP chairs, floral arrangements on marble tables, and tiered upper-level seating.',
+    gradient: 'from-slate-400 via-blue-500 to-indigo-600',
+  },
+  {
+    title: 'Elegant Wedding Ceremony',
+    titleAmharic: 'ምሩር የሰርግ ሥርዓት',
+    category: 'Wedding',
+    attendees: '150+',
+    image: '/events/event-20.jpg',
+    description: 'An elegant wedding ceremony with golden circular-patterned backdrop, red and white floral arrangements, ornate wooden chairs, and chandelier-lit hall.',
+    gradient: 'from-rose-400 via-pink-500 to-fuchsia-600',
+  },
+  {
+    title: 'Academic Symposium',
+    titleAmharic: 'የትምህርት ሲምፖዚየም',
+    category: 'Symposium',
+    attendees: '200+',
+    image: '/events/event-21.jpg',
+    description: 'An academic symposium with professional stage setup, branded backdrop with Ethiopian flags, transparent podium, and green carpet stage at Addis Ababa Science and Technology University.',
+    gradient: 'from-emerald-400 via-green-500 to-teal-600',
+  },
+  {
+    title: 'Official Conference',
+    titleAmharic: 'የመንግስት ስብሰባ',
+    category: 'Government',
+    attendees: '150+',
+    image: '/events/event-22.jpg',
+    description: 'An official government conference with Amharic banner, blue curtain backdrop, green carpet stage, central podium, and gold-accented VIP seating.',
+    gradient: 'from-blue-400 via-cyan-500 to-teal-600',
+  },
+  {
+    title: 'Patriotic Rally',
+    titleAmharic: 'አገር አፍቃሪ ሰልፍ',
+    category: 'Cultural',
+    attendees: '2,000+',
+    image: '/events/event-23.jpg',
+    description: 'A large-scale patriotic rally with thousands waving Ethiopian flags, blue tent stage, organized crowd in matching vests, and an outdoor grassy field venue.',
+    gradient: 'from-green-400 via-yellow-500 to-red-500',
+  },
+  {
+    title: 'Corporate Floral Display',
+    titleAmharic: 'የኮርፖሬት የአበባ ውበት',
+    category: 'Decoration',
+    attendees: '30+',
+    image: '/events/event-24.jpg',
+    description: 'A stunning corporate floral centerpiece with red, pink, and orange roses arranged in a lavish bouquet, set in a modern office lobby with marble finishes.',
+    gradient: 'from-rose-400 via-pink-500 to-red-600',
+  },
+  {
+    title: 'Intimate Wedding Setup',
+    titleAmharic: 'የቤተሰብ ሰርግ ዝጌጣጌጥ',
+    category: 'Wedding',
+    attendees: '50+',
+    image: '/events/event-25.jpg',
+    description: 'An intimate wedding setup with chrome circular-backrest chairs on a shaggy rug, white draped curtain backdrop adorned with hanging floral garlands.',
+    gradient: 'from-pink-400 via-rose-500 to-red-500',
+  },
+  {
+    title: 'Cultural Decor Showcase',
+    titleAmharic: 'የባህል ጌጣጌጥ ማሳያ',
+    category: 'Decoration',
+    attendees: 'Various',
+    image: '/events/event-26.jpg',
+    description: 'A rustic cultural decor display with peach and purple drapes, woven straw hats, ornate white chair, and traditional Ethiopian decorative elements against a stone wall.',
+    gradient: 'from-purple-400 via-violet-500 to-indigo-600',
+  },
+  {
+    title: 'Event Furniture Collection',
+    titleAmharic: 'የዝግጅት ዕቃዎች ስብስብ',
+    category: 'Decoration',
+    attendees: 'Various',
+    image: '/events/event-27.jpg',
+    description: 'An impressive collection of elegant event furniture including high-backed cream chairs with gold frames, ornate wooden chairs, and premium seating arrangements.',
+    gradient: 'from-amber-400 via-yellow-500 to-orange-500',
+  },
 ]
 
 const stats = [
@@ -875,7 +983,7 @@ function PortfolioSection() {
   const [selectedEvent, setSelectedEvent] = useState<typeof portfolioEvents[0] | null>(null)
 
   // Determine which events get the "large" treatment in the grid
-  const largeIndices = [0, 7, 12] // Events at these positions get row-span-2
+  const largeIndices = [0, 7, 12, 17, 22] // Events at these positions get row-span-2
 
   return (
     <section id="portfolio" className="py-12 sm:py-20 md:py-28">

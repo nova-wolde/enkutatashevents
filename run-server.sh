@@ -1,6 +1,8 @@
 #!/bin/bash
-# Persistent Enkutatash server
-cd /home/z/my-project/.next/standalone
+cd /home/z/my-project
 export PORT=3000
-export HOSTNAME=0.0.0.0
-exec node server.js
+while true; do
+  node server.js 2>&1 | tee -a /tmp/enkutatash-server.log
+  echo "[$(date)] Restarting server in 2s..." >> /tmp/enkutatash-server.log
+  sleep 2
+done

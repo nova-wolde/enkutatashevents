@@ -42,3 +42,23 @@ Stage Summary:
 - Goals shown as inline pill badges instead of large cards
 - Objectives shown in compact grid with hidden descriptions on mobile
 - Server running on port 3000, returning 200 OK
+
+---
+Task ID: 2
+Agent: Main Agent
+Task: Fix Application Error - client-side exception when loading the site
+
+Work Log:
+- Discovered invalid Tailwind class `h-4.5` / `w-4.5` in VisionMissionSection (not a valid Tailwind value) — fixed to `h-5` / `w-5`
+- Found server.js EISDIR crash when trying to serve directory paths as files — added `stat.isDirectory()` check
+- Found standalone server missing `react.development.js` module — can't use standalone approach
+- Discovered all background Node.js processes get killed after ~5-10 seconds in the container environment
+- Root cause: Container uses `tini` (PID 1) with Caddy (PID 2) as the main foreground process. Background processes spawned from the agent's shell session get cleaned up
+- Solution: Created `daemon-server.js` that spawns the Node.js server as a truly detached process using `child_process.spawn()` with `detached: true`, `stdio: ['ignore', ...]`, and `child.unref()` — this makes the process survive shell session cleanup
+- Server now runs stably on port 3000, Caddy proxies on port 81
+
+Stage Summary:
+- Fixed invalid Tailwind classes (h-4.5 → h-5)
+- Fixed EISDIR crash in server.js (added directory check)
+- Created daemon-server.js for persistent server process
+- Server stable and accessible on both port 3000 and port 81

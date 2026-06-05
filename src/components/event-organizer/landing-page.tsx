@@ -964,7 +964,7 @@ function VisionMissionSection() {
               <CardContent className="p-4 sm:p-5">
                 <div className="flex items-center gap-2.5 mb-2">
                   <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-md shadow-emerald-500/20">
-                    <Eye className="h-4 w-4 sm:h-4.5 sm:w-4.5 text-white" />
+                    <Eye className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
                   </div>
                   <div>
                     <h3 className="text-sm sm:text-base font-bold">Our Vision</h3>
@@ -984,7 +984,7 @@ function VisionMissionSection() {
               <CardContent className="p-4 sm:p-5">
                 <div className="flex items-center gap-2.5 mb-2">
                   <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-md shadow-amber-500/20">
-                    <Target className="h-4 w-4 sm:h-4.5 sm:w-4.5 text-white" />
+                    <Target className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
                   </div>
                   <div>
                     <h3 className="text-sm sm:text-base font-bold">Our Mission</h3>

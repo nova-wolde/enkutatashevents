@@ -11,21 +11,33 @@ const MIME_TYPES = {
   '.svg': 'image/svg+xml',
   '.ico': 'image/x-icon',
   '.webp': 'image/webp',
+  '.js': 'application/javascript',
+  '.css': 'text/css',
+  '.woff': 'font/woff',
+  '.woff2': 'font/woff2',
+  '.ttf': 'font/ttf',
+  '.json': 'application/json',
 };
 
 function serveStatic(req, res, filePath) {
-  if (!fs.existsSync(filePath)) return false;
-  const stat = fs.statSync(filePath);
-  const ext = path.extname(filePath).toLowerCase();
-  const contentType = MIME_TYPES[ext] || 'application/octet-stream';
-  
-  res.writeHead(200, {
-    'Content-Type': contentType,
-    'Content-Length': stat.size,
-    'Cache-Control': 'public, max-age=31536000, immutable',
-  });
-  fs.createReadStream(filePath).pipe(res);
-  return true;
+  try {
+    if (!fs.existsSync(filePath)) return false;
+    const stat = fs.statSync(filePath);
+    if (stat.isDirectory()) return false;
+    const ext = path.extname(filePath).toLowerCase();
+    const contentType = MIME_TYPES[ext] || 'application/octet-stream';
+    
+    res.writeHead(200, {
+      'Content-Type': contentType,
+      'Content-Length': stat.size,
+      'Cache-Control': 'public, max-age=31536000, immutable',
+    });
+    fs.createReadStream(filePath).pipe(res);
+    return true;
+  } catch (err) {
+    console.error('Static serve error:', err.message);
+    return false;
+  }
 }
 
 async function startServer() {
@@ -37,6 +49,14 @@ async function startServer() {
   console.log('Next.js prepared');
 
   const server = createServer((req, res) => {
+    // Handle client disconnection gracefully
+    req.on('error', (err) => {
+      console.error('Request error:', err.message);
+    });
+    res.on('error', (err) => {
+      console.error('Response error:', err.message);
+    });
+
     try {
       const parsedUrl = parse(req.url, true);
       const { pathname } = parsedUrl;
@@ -48,8 +68,8 @@ async function startServer() {
       }
 
       // Let Next.js handle everything else
-      handle(req, res).catch(err => {
-        console.error('Next.js error:', err.message);
+      handle(req, res, parsedUrl).catch(err => {
+        console.error('Next.js handler error:', err.message);
         if (!res.headersSent) {
           res.writeHead(500);
           res.end('Internal Server Error');
@@ -68,9 +88,13 @@ async function startServer() {
     console.log('> Server ready on http://localhost:3000');
   });
 
-  // Keep process alive
+  server.on('error', (err) => {
+    console.error('Server error event:', err.message);
+  });
+
+  // Keep process alive - log but don't exit on uncaught errors
   process.on('uncaughtException', (err) => {
-    console.error('Uncaught exception:', err.message);
+    console.error('Uncaught exception:', err.message, err.stack);
   });
   
   process.on('unhandledRejection', (reason) => {

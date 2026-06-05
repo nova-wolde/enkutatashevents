@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "EventHub - Event Organizer Dashboard",
-  description: "A modern event organizer dashboard built with Next.js, TypeScript, and shadcn/ui.",
+  title: "Enkutatash - Premium Event Organizers | Addis Ababa",
+  description: "Addis Ababa's premier event organizer. Weddings, corporate events, concerts, cultural celebrations — we bring your vision to life with elegance and precision.",
   icons: {
     icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
   },

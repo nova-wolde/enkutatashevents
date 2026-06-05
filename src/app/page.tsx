@@ -11,7 +11,6 @@ import { Dashboard } from '@/components/event-organizer/dashboard'
 import { EventsList } from '@/components/event-organizer/events-list'
 import { CreateEventDialog } from '@/components/event-organizer/create-event-dialog'
 import { LandingPage } from '@/components/event-organizer/landing-page'
-import { BusinessPage } from '@/components/event-organizer/business-page'
 import { AttendeesView } from '@/components/event-organizer/attendees-view'
 import { VenuesView } from '@/components/event-organizer/venues-view'
 import { AnalyticsView } from '@/components/event-organizer/analytics-view'
@@ -149,17 +148,6 @@ export default function Home() {
           transition={{ duration: 0.3 }}
         >
           <LandingPage />
-        </motion.div>
-      )}
-      {appView === 'business' && (
-        <motion.div
-          key="business"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <BusinessPage />
         </motion.div>
       )}
       {appView === 'app' && (

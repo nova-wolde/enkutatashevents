@@ -30,7 +30,7 @@ export interface ActivityItem {
 }
 
 export type ViewTab = 'dashboard' | 'events' | 'attendees' | 'venues' | 'analytics' | 'settings'
-export type AppView = 'landing' | 'app' | 'business'
+export type AppView = 'landing' | 'app'
 
 interface EventStore {
   events: EventItem[]

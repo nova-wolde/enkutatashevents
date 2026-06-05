@@ -55,7 +55,7 @@ export function Header() {
           <Sparkles className="h-4 w-4 text-white" />
         </div>
         <span className="text-lg font-bold tracking-tight hidden sm:block">
-          Event<span className="text-emerald-600 dark:text-emerald-400">Hub</span>
+          Enkutatash<span className="text-emerald-600 dark:text-emerald-400"> Dashboard</span>
         </span>
       </div>
 
@@ -123,9 +123,9 @@ export function Header() {
             <DropdownMenuItem>Profile</DropdownMenuItem>
             <DropdownMenuItem>Settings</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => setAppView('business')}>
+            <DropdownMenuItem onClick={() => setAppView('landing')}>
               <Globe className="h-4 w-4 mr-2" />
-              View Business Page
+              View Public Page
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="text-destructive" onClick={() => setAppView('landing')}>Sign out</DropdownMenuItem>

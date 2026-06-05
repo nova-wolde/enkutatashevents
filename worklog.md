@@ -72,3 +72,24 @@ Work Log:
 Stage Summary:
 - Testimonials now show real clients with bilingual Amharic/English names and titles
 - Card layout supports nameAmharic and roleAmharic fields gracefully
+
+---
+Task ID: 7
+Agent: Main Agent
+Task: Fix server that was down - diagnose and restart
+
+Work Log:
+- Discovered Next.js dev server was not running (original process from container start.sh had died)
+- Tried multiple approaches to restart server:
+  - npm run dev, node standalone server, npx next start - all died when bash session ended
+  - Root cause: background processes get cleaned up when the Bash tool session ends
+- Created a persistent watchdog script at /tmp/enkutatash-watchdog.sh that auto-restarts the server
+- Started the production server (node .next/standalone/server.js) with setsid+nohup+disown
+- Verified both direct server (port 3000) and Caddy proxy (port 81) return HTTP 200
+- Server has been stable for 2+ minutes of continuous monitoring
+
+Stage Summary:
+- Server is back up and running on port 3000
+- Caddy reverse proxy on port 81 is working correctly
+- Preview URL should be accessible again
+- Created watchdog script for auto-restart capability

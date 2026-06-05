@@ -452,6 +452,7 @@ function LandingNavbar() {
               alt="Enkutatash Logo"
               width={40}
               height={40}
+              unoptimized
               className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl object-contain"
             />
             <div className="flex flex-col leading-tight">
@@ -747,6 +748,7 @@ function HeroSection() {
                       src={event.image}
                       alt={event.title}
                       fill
+                      unoptimized
                       className="object-cover"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
@@ -840,15 +842,15 @@ function AboutSection() {
           >
             <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
               <div className="col-span-2 relative rounded-lg sm:rounded-xl overflow-hidden aspect-[16/9]">
-                <Image src="/events/event-2.jpg" alt="Wedding Reception by Enkutatash" fill className="object-cover" />
+                <Image src="/events/event-2.jpg" alt="Wedding Reception by Enkutatash" fill unoptimized className="object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
               </div>
               <div className="relative rounded-lg sm:rounded-xl overflow-hidden aspect-square">
-                <Image src="/events/event-5.jpg" alt="Cultural Festival by Enkutatash" fill className="object-cover" />
+                <Image src="/events/event-5.jpg" alt="Cultural Festival by Enkutatash" fill unoptimized className="object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
               </div>
               <div className="relative rounded-lg sm:rounded-xl overflow-hidden aspect-square">
-                <Image src="/events/event-4.jpg" alt="Live Concert by Enkutatash" fill className="object-cover" />
+                <Image src="/events/event-4.jpg" alt="Live Concert by Enkutatash" fill unoptimized className="object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
               </div>
             </div>
@@ -1182,6 +1184,7 @@ function PortfolioSection() {
                     src={event.image}
                     alt={event.title}
                     fill
+                    unoptimized
                     className="object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
@@ -1265,6 +1268,7 @@ function PortfolioSection() {
                     alt={selectedEvent.title}
                     width={1200}
                     height={800}
+                    unoptimized
                     className="object-contain w-full max-h-[70vh]"
                   />
                 </div>
@@ -1720,6 +1724,7 @@ function Footer() {
                 alt="Enkutatash Logo"
                 width={32}
                 height={32}
+                unoptimized
                 className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg object-contain"
               />
               <div className="flex flex-col leading-tight">

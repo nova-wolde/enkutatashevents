@@ -147,40 +147,85 @@ const testimonials = [
 
 const portfolioEvents = [
   {
-    title: 'Ethiopian New Year Gala',
+    title: 'Cultural Festival',
+    titleAmharic: 'የባህል ፌስቲቫል',
     category: 'Cultural',
-    attendees: '1,200+',
+    attendees: '1,000+',
+    image: '/events/event-5.jpg',
+    description: 'A vibrant outdoor cultural celebration featuring traditional music, dance, and Ethiopian heritage under our signature tent setup.',
     gradient: 'from-emerald-400 via-teal-500 to-cyan-600',
   },
   {
-    title: 'Horizon Tech Summit 2025',
-    category: 'Corporate',
-    attendees: '500+',
-    gradient: 'from-amber-400 via-orange-500 to-red-500',
-  },
-  {
-    title: 'Mekonnen-Desta Wedding',
+    title: 'Wedding Reception',
+    titleAmharic: 'የሰርግ ስብሰባ',
     category: 'Wedding',
     attendees: '350+',
+    image: '/events/event-2.jpg',
+    description: 'An elegant wedding reception with breathtaking floral backdrops, gold accents, and a sweetheart table setup designed to perfection.',
     gradient: 'from-rose-400 via-pink-500 to-fuchsia-600',
   },
   {
-    title: 'Addis Music Festival',
+    title: 'Live Concert',
+    titleAmharic: 'ቀጥታ ሙዚቃ',
     category: 'Concert',
     attendees: '5,000+',
+    image: '/events/event-4.jpg',
+    description: 'A spectacular live concert with full stage setup, professional sound systems, dynamic lighting, and traditional Ethiopian performances.',
     gradient: 'from-violet-400 via-purple-500 to-indigo-600',
   },
   {
-    title: 'Millennium Hall Expo',
-    category: 'Exhibition',
-    attendees: '3,000+',
+    title: 'Corporate Event',
+    titleAmharic: 'የኮርፖሬት ዝግጅት',
+    category: 'Corporate',
+    attendees: '500+',
+    image: '/events/event-6.jpg',
+    description: 'A premium corporate gathering with elegant white leather seating, marble-topped tables, and VIP lounge areas for distinguished guests.',
+    gradient: 'from-amber-400 via-orange-500 to-red-500',
+  },
+  {
+    title: 'VIP Lounge Setup',
+    titleAmharic: 'ቪአይፒ ሎውንጅ',
+    category: 'Corporate',
+    attendees: '200+',
+    image: '/events/event-7.jpg',
+    description: 'Luxury VIP lounge with plush white leather armchairs, gold-framed marble tables, and an elegant atmosphere for exclusive gatherings.',
     gradient: 'from-cyan-400 via-blue-500 to-indigo-600',
   },
   {
-    title: 'Selam Birthday Bash',
-    category: 'Private',
-    attendees: '150+',
+    title: 'Grand Wedding',
+    titleAmharic: 'ታላቅ ሰርግ',
+    category: 'Wedding',
+    attendees: '800+',
+    image: '/events/event-8.jpg',
+    description: 'A grand wedding ceremony in a multi-level venue with floral-patterned aisle, gold-framed VIP chairs, and tiered balcony seating.',
+    gradient: 'from-rose-400 via-pink-500 to-fuchsia-600',
+  },
+  {
+    title: 'Formal Ceremony',
+    titleAmharic: 'ሥርዓተ ሰርግ',
+    category: 'Ceremony',
+    attendees: '600+',
+    image: '/events/event-9.jpg',
+    description: 'A formal ceremony in an elegant auditorium with ornate gold chairs, fresh floral arrangements, and a beautifully decorated grand venue.',
     gradient: 'from-lime-400 via-green-500 to-emerald-600',
+  },
+  {
+    title: 'Musical Performance',
+    titleAmharic: 'ሙዚቃዊ ትንታኔ',
+    category: 'Concert',
+    attendees: '3,000+',
+    image: '/events/event-3.jpg',
+    description: 'A captivating musical performance with dynamic blue stage lighting, decorative floral columns, and professional broadcast setup.',
+    gradient: 'from-violet-400 via-purple-500 to-indigo-600',
+  },
+  {
+    title: 'Event Decoration',
+    titleAmharic: 'የዝግጅት ጌጣጌጥ',
+    category: 'Decoration',
+    attendees: 'Various',
+    image: '/events/event-1.jpg',
+    description: 'Premium decorative lighting and gold candelabra fixtures that add elegance and warmth to any event setting.',
+    gradient: 'from-amber-400 via-yellow-500 to-orange-500',
   },
 ]
 
@@ -525,13 +570,22 @@ function HeroSection() {
                 {portfolioEvents.slice(0, 3).map((event) => (
                   <div
                     key={event.title}
-                    className={`rounded-lg sm:rounded-xl bg-gradient-to-br ${event.gradient} p-2.5 sm:p-3 md:p-4 text-white aspect-[4/3] flex flex-col justify-end`}
+                    className="relative rounded-lg sm:rounded-xl overflow-hidden aspect-[4/3] flex flex-col justify-end"
                   >
-                    <Badge className="w-fit text-[9px] sm:text-[10px] bg-white/20 text-white border-0 mb-1 sm:mb-2">
-                      {event.category}
-                    </Badge>
-                    <p className="text-xs sm:text-sm font-bold leading-tight">{event.title}</p>
-                    <p className="text-[10px] sm:text-sm text-white/80 mt-0.5 sm:mt-1">{event.attendees} guests</p>
+                    <Image
+                      src={event.image}
+                      alt={event.title}
+                      fill
+                      className="object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                    <div className="relative z-10 p-2.5 sm:p-3 md:p-4">
+                      <Badge className="w-fit text-[9px] sm:text-[10px] bg-white/20 text-white border-0 mb-1 sm:mb-2 backdrop-blur-sm">
+                        {event.category}
+                      </Badge>
+                      <p className="text-xs sm:text-sm font-bold leading-tight text-white">{event.title}</p>
+                      <p className="text-[10px] sm:text-sm text-white/80 mt-0.5 sm:mt-1">{event.attendees} guests</p>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -763,6 +817,9 @@ function ServicesSection() {
 }
 
 function PortfolioSection() {
+  const [selectedImage, setSelectedImage] = useState<string | null>(null)
+  const [selectedEvent, setSelectedEvent] = useState<typeof portfolioEvents[0] | null>(null)
+
   return (
     <section id="portfolio" className="py-12 sm:py-20 md:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -785,32 +842,188 @@ function PortfolioSection() {
           </p>
         </motion.div>
 
+        {/* Masonry-style gallery grid */}
         <motion.div
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-100px' }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6"
+          className="grid grid-cols-2 md:grid-cols-3 gap-2 sm:gap-4"
         >
-          {portfolioEvents.map((event) => (
-            <motion.div key={event.title} variants={staggerItem} whileHover={{ y: -4, scale: 1.02 }} className="group cursor-pointer">
-              <div className={`rounded-xl sm:rounded-2xl bg-gradient-to-br ${event.gradient} p-[1px]`}>
-                <div className="rounded-xl sm:rounded-2xl bg-card p-3 sm:p-5 h-full flex flex-col">
-                  <div className={`rounded-lg sm:rounded-xl bg-gradient-to-br ${event.gradient} h-24 sm:h-40 mb-3 sm:mb-4 flex items-center justify-center`}>
-                    <span className="text-3xl sm:text-4xl font-bold text-white/90">{event.title.charAt(0)}</span>
-                  </div>
-                  <Badge className="w-fit text-[10px] sm:text-xs bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20 mb-1.5 sm:mb-2">
+          {/* Row 1: Large + 2 small */}
+          <motion.div variants={staggerItem} className="row-span-2 group cursor-pointer" onClick={() => { setSelectedImage(portfolioEvents[0].image); setSelectedEvent(portfolioEvents[0]) }}>
+            <div className="relative rounded-xl sm:rounded-2xl overflow-hidden h-full min-h-[250px] sm:min-h-[400px]">
+              <Image
+                src={portfolioEvents[0].image}
+                alt={portfolioEvents[0].title}
+                fill
+                className="object-cover transition-transform duration-500 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-5">
+                <Badge className="w-fit text-[9px] sm:text-xs bg-white/20 text-white border-0 mb-1.5 sm:mb-2 backdrop-blur-sm">
+                  {portfolioEvents[0].category}
+                </Badge>
+                <h3 className="text-sm sm:text-lg font-bold text-white">{portfolioEvents[0].title}</h3>
+                <p className="text-[10px] sm:text-xs text-white/80 mt-0.5">{portfolioEvents[0].titleAmharic}</p>
+                <p className="text-[10px] sm:text-sm text-white/70 mt-1">{portfolioEvents[0].attendees} guests</p>
+              </div>
+            </div>
+          </motion.div>
+
+          {portfolioEvents.slice(1, 3).map((event) => (
+            <motion.div key={event.title} variants={staggerItem} className="group cursor-pointer" onClick={() => { setSelectedImage(event.image); setSelectedEvent(event) }}>
+              <div className="relative rounded-xl sm:rounded-2xl overflow-hidden aspect-[4/3]">
+                <Image
+                  src={event.image}
+                  alt={event.title}
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-2.5 sm:p-4">
+                  <Badge className="w-fit text-[8px] sm:text-[10px] bg-white/20 text-white border-0 mb-1 backdrop-blur-sm">
                     {event.category}
                   </Badge>
-                  <h3 className="text-base sm:text-lg font-semibold group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
-                    {event.title}
-                  </h3>
-                  <p className="text-xs sm:text-base text-muted-foreground mt-1">{event.attendees} guests attended</p>
+                  <h3 className="text-xs sm:text-sm font-bold text-white">{event.title}</h3>
+                  <p className="text-[8px] sm:text-[10px] text-white/80 mt-0.5">{event.titleAmharic}</p>
                 </div>
               </div>
             </motion.div>
           ))}
+
+          {/* Row 2: 2 small */}
+          {portfolioEvents.slice(3, 5).map((event) => (
+            <motion.div key={event.title} variants={staggerItem} className="group cursor-pointer" onClick={() => { setSelectedImage(event.image); setSelectedEvent(event) }}>
+              <div className="relative rounded-xl sm:rounded-2xl overflow-hidden aspect-[4/3]">
+                <Image
+                  src={event.image}
+                  alt={event.title}
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-2.5 sm:p-4">
+                  <Badge className="w-fit text-[8px] sm:text-[10px] bg-white/20 text-white border-0 mb-1 backdrop-blur-sm">
+                    {event.category}
+                  </Badge>
+                  <h3 className="text-xs sm:text-sm font-bold text-white">{event.title}</h3>
+                  <p className="text-[8px] sm:text-[10px] text-white/80 mt-0.5">{event.titleAmharic}</p>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+
+          {/* Row 3: 2 small + large */}
+          {portfolioEvents.slice(5, 7).map((event) => (
+            <motion.div key={event.title} variants={staggerItem} className="group cursor-pointer" onClick={() => { setSelectedImage(event.image); setSelectedEvent(event) }}>
+              <div className="relative rounded-xl sm:rounded-2xl overflow-hidden aspect-[4/3]">
+                <Image
+                  src={event.image}
+                  alt={event.title}
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-2.5 sm:p-4">
+                  <Badge className="w-fit text-[8px] sm:text-[10px] bg-white/20 text-white border-0 mb-1 backdrop-blur-sm">
+                    {event.category}
+                  </Badge>
+                  <h3 className="text-xs sm:text-sm font-bold text-white">{event.title}</h3>
+                  <p className="text-[8px] sm:text-[10px] text-white/80 mt-0.5">{event.titleAmharic}</p>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+
+          <motion.div variants={staggerItem} className="row-span-2 group cursor-pointer" onClick={() => { setSelectedImage(portfolioEvents[7].image); setSelectedEvent(portfolioEvents[7]) }}>
+            <div className="relative rounded-xl sm:rounded-2xl overflow-hidden h-full min-h-[250px] sm:min-h-[400px]">
+              <Image
+                src={portfolioEvents[7].image}
+                alt={portfolioEvents[7].title}
+                fill
+                className="object-cover transition-transform duration-500 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-5">
+                <Badge className="w-fit text-[9px] sm:text-xs bg-white/20 text-white border-0 mb-1.5 sm:mb-2 backdrop-blur-sm">
+                  {portfolioEvents[7].category}
+                </Badge>
+                <h3 className="text-sm sm:text-lg font-bold text-white">{portfolioEvents[7].title}</h3>
+                <p className="text-[10px] sm:text-xs text-white/80 mt-0.5">{portfolioEvents[7].titleAmharic}</p>
+                <p className="text-[10px] sm:text-sm text-white/70 mt-1">{portfolioEvents[7].attendees} guests</p>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Last event */}
+          <motion.div variants={staggerItem} className="group cursor-pointer" onClick={() => { setSelectedImage(portfolioEvents[8].image); setSelectedEvent(portfolioEvents[8]) }}>
+            <div className="relative rounded-xl sm:rounded-2xl overflow-hidden aspect-[4/3]">
+              <Image
+                src={portfolioEvents[8].image}
+                alt={portfolioEvents[8].title}
+                fill
+                className="object-cover transition-transform duration-500 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-2.5 sm:p-4">
+                <Badge className="w-fit text-[8px] sm:text-[10px] bg-white/20 text-white border-0 mb-1 backdrop-blur-sm">
+                  {portfolioEvents[8].category}
+                </Badge>
+                <h3 className="text-xs sm:text-sm font-bold text-white">{portfolioEvents[8].title}</h3>
+                <p className="text-[8px] sm:text-[10px] text-white/80 mt-0.5">{portfolioEvents[8].titleAmharic}</p>
+              </div>
+            </div>
+          </motion.div>
         </motion.div>
+
+        {/* Lightbox Modal */}
+        <AnimatePresence>
+          {selectedImage && selectedEvent && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
+              onClick={() => { setSelectedImage(null); setSelectedEvent(null) }}
+            >
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                className="relative max-w-4xl w-full max-h-[85vh]"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  onClick={() => { setSelectedImage(null); setSelectedEvent(null) }}
+                  className="absolute -top-10 right-0 text-white/70 hover:text-white transition-colors z-10"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+                <div className="relative rounded-2xl overflow-hidden">
+                  <Image
+                    src={selectedImage}
+                    alt={selectedEvent.title}
+                    width={1200}
+                    height={800}
+                    className="object-contain w-full max-h-[70vh]"
+                  />
+                </div>
+                <div className="mt-4 text-white">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Badge className="text-xs bg-emerald-500/20 text-emerald-300 border-emerald-500/30">
+                      {selectedEvent.category}
+                    </Badge>
+                    <span className="text-xs text-white/50">{selectedEvent.attendees} guests</span>
+                  </div>
+                  <h3 className="text-xl font-bold">{selectedEvent.title}</h3>
+                  <p className="text-sm text-emerald-400 mt-0.5">{selectedEvent.titleAmharic}</p>
+                  <p className="text-sm text-white/70 mt-2">{selectedEvent.description}</p>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <motion.div
           initial={{ opacity: 0 }}

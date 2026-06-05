@@ -821,7 +821,7 @@ function AboutSection() {
     <section id="about" className="py-12 sm:py-20 md:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
-          {/* Left - Visual */}
+          {/* Left - Photo Collage */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -829,34 +829,66 @@ function AboutSection() {
             transition={{ duration: 0.6 }}
             className="relative"
           >
-            <div className="aspect-[4/3] rounded-xl sm:rounded-2xl bg-gradient-to-br from-emerald-500 via-teal-500 to-amber-500 p-[1px]">
-              <div className="h-full w-full rounded-xl sm:rounded-2xl bg-background flex flex-col items-center justify-center p-4 sm:p-8 text-center">
+            <div className="grid grid-cols-2 gap-2 sm:gap-3">
+              {/* Main large image */}
+              <div className="col-span-2 relative rounded-xl sm:rounded-2xl overflow-hidden aspect-[16/9]">
                 <Image
-                  src="/enkutatash-logo.png"
-                  alt="Enkutatash Logo"
-                  width={80}
-                  height={80}
-                  className="h-14 w-14 sm:h-20 sm:w-20 rounded-2xl object-contain mb-3 sm:mb-6"
+                  src="/events/event-2.jpg"
+                  alt="Wedding Reception by Enkutatash"
+                  fill
+                  className="object-cover"
                 />
-                <h3 className="text-xl sm:text-2xl font-bold mb-0.5 sm:mb-2">Enkutatash</h3>
-                <p className="text-emerald-600 dark:text-emerald-400 text-sm sm:text-base font-medium mb-0.5">እንቁጣጣሽ ኤቨንት</p>
-                <p className="text-muted-foreground text-xs sm:text-sm">Premium Event Organizers</p>
-                <div className="mt-3 sm:mt-6 grid grid-cols-2 gap-2 sm:gap-4 w-full max-w-xs">
-                  <div className="rounded-lg sm:rounded-xl bg-emerald-500/5 border border-emerald-500/10 p-2 sm:p-3">
-                    <p className="text-lg sm:text-xl font-bold text-emerald-600 dark:text-emerald-400">4+</p>
-                    <p className="text-[10px] sm:text-xs text-muted-foreground">Years</p>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4">
+                  <Badge className="text-[9px] sm:text-xs bg-white/20 text-white border-0 backdrop-blur-sm">Wedding</Badge>
+                </div>
+              </div>
+              {/* Two smaller images */}
+              <div className="relative rounded-xl sm:rounded-2xl overflow-hidden aspect-square">
+                <Image
+                  src="/events/event-5.jpg"
+                  alt="Cultural Festival by Enkutatash"
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                <div className="absolute bottom-2 left-2 sm:bottom-3 sm:left-3">
+                  <Badge className="text-[8px] sm:text-[10px] bg-white/20 text-white border-0 backdrop-blur-sm">Cultural</Badge>
+                </div>
+              </div>
+              <div className="relative rounded-xl sm:rounded-2xl overflow-hidden aspect-square">
+                <Image
+                  src="/events/event-4.jpg"
+                  alt="Live Concert by Enkutatash"
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                <div className="absolute bottom-2 left-2 sm:bottom-3 sm:left-3">
+                  <Badge className="text-[8px] sm:text-[10px] bg-white/20 text-white border-0 backdrop-blur-sm">Concert</Badge>
+                </div>
+              </div>
+            </div>
+            {/* Floating stats card */}
+            <div className="absolute -bottom-4 -right-2 sm:-bottom-6 sm:-right-4 bg-background border border-border/50 rounded-xl sm:rounded-2xl shadow-xl p-3 sm:p-4 backdrop-blur-sm z-10">
+              <div className="flex items-center gap-3 sm:gap-4">
+                <div className="flex items-center gap-1.5">
+                  <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                    <Award className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-600 dark:text-emerald-400" />
                   </div>
-                  <div className="rounded-lg sm:rounded-xl bg-amber-500/5 border border-amber-500/10 p-2 sm:p-3">
-                    <p className="text-lg sm:text-xl font-bold text-amber-600 dark:text-amber-400">500+</p>
-                    <p className="text-[10px] sm:text-xs text-muted-foreground">Events</p>
+                  <div>
+                    <p className="text-sm sm:text-base font-bold">4+</p>
+                    <p className="text-[8px] sm:text-[10px] text-muted-foreground">Years</p>
                   </div>
-                  <div className="rounded-lg sm:rounded-xl bg-teal-500/5 border border-teal-500/10 p-2 sm:p-3">
-                    <p className="text-lg sm:text-xl font-bold text-teal-600 dark:text-teal-400">50K+</p>
-                    <p className="text-[10px] sm:text-xs text-muted-foreground">Guests</p>
+                </div>
+                <div className="w-px h-8 bg-border/50" />
+                <div className="flex items-center gap-1.5">
+                  <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-amber-500/10 flex items-center justify-center">
+                    <CalendarDays className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-600 dark:text-amber-400" />
                   </div>
-                  <div className="rounded-lg sm:rounded-xl bg-rose-500/5 border border-rose-500/10 p-2 sm:p-3">
-                    <p className="text-lg sm:text-xl font-bold text-rose-600 dark:text-rose-400">4.9</p>
-                    <p className="text-[10px] sm:text-xs text-muted-foreground">Rating</p>
+                  <div>
+                    <p className="text-sm sm:text-base font-bold">500+</p>
+                    <p className="text-[8px] sm:text-[10px] text-muted-foreground">Events</p>
                   </div>
                 </div>
               </div>
@@ -874,19 +906,22 @@ function AboutSection() {
             transition={{ duration: 0.6 }}
           >
             <Badge variant="secondary" className="mb-3 sm:mb-4 border-emerald-500/20 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400">
-              About Us
+              About Us — ስለ እኛ
             </Badge>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
               Crafting Unforgettable
               <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent"> Moments Since 2022</span>
             </h2>
-            <p className="mt-3 sm:mt-4 text-muted-foreground text-sm sm:text-lg leading-relaxed">
+            <p className="mt-1 text-sm sm:text-base text-emerald-600 dark:text-emerald-400 font-medium">
+              ከ2022 ዓ.ም ጀምሮ ያልተረሳ ትዝታዎችን እያደራጅን
+            </p>
+            <p className="mt-3 sm:mt-4 text-muted-foreground text-sm sm:text-base leading-relaxed">
               Named after the Ethiopian New Year — a celebration of new beginnings and fresh possibilities — 
               Enkutatash was founded with a simple belief: every event deserves to be extraordinary. Based in 
               the heart of Addis Ababa, we have been transforming ordinary occasions into 
-              legendary experiences.
+              legendary experiences for over four years.
             </p>
-            <p className="mt-2 sm:mt-4 text-muted-foreground text-xs sm:text-base leading-relaxed">
+            <p className="mt-2 sm:mt-4 text-muted-foreground text-sm sm:text-base leading-relaxed">
               Our team of creative professionals brings together expertise in event design, production, 
               catering coordination, and logistics management. We understand the unique cultural nuances that 
               make Ethiopian celebrations special, while also delivering world-class standards that impress 
@@ -894,18 +929,23 @@ function AboutSection() {
               corporate product launch, we approach every event with the same passion and meticulous attention 
               to detail.
             </p>
-            <div className="mt-3 sm:mt-6 space-y-1.5 sm:space-y-3">
+            <div className="mt-4 sm:mt-6 grid grid-cols-2 gap-2 sm:gap-3">
               {[
-                'End-to-end event planning and execution',
-                'Award-winning creative design team',
-                'Strong vendor network across Addis Ababa',
-                'Dedicated project manager for every event',
-              ].map((item) => (
-                <div key={item} className="flex items-center gap-2 sm:gap-3">
-                  <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                  <span className="text-xs sm:text-sm">{item}</span>
-                </div>
-              ))}
+                { label: 'End-to-end event planning', icon: CheckCircle2 },
+                { label: 'Award-winning design team', icon: CheckCircle2 },
+                { label: 'Strong vendor network', icon: CheckCircle2 },
+                { label: 'Dedicated project manager', icon: CheckCircle2 },
+                { label: 'Full sound & light supply', icon: CheckCircle2 },
+                { label: 'Catering & decoration', icon: CheckCircle2 },
+              ].map((item) => {
+                const ItemIcon = item.icon
+                return (
+                  <div key={item.label} className="flex items-center gap-1.5 sm:gap-2">
+                    <ItemIcon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                    <span className="text-[11px] sm:text-sm">{item.label}</span>
+                  </div>
+                )
+              })}
             </div>
             <Button
               className="mt-4 sm:mt-8 bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20 min-h-[44px]"
@@ -981,9 +1021,14 @@ function ServicesSection() {
 function PortfolioSection() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
   const [selectedEvent, setSelectedEvent] = useState<typeof portfolioEvents[0] | null>(null)
+  const [showAll, setShowAll] = useState(false)
+
+  const INITIAL_COUNT = 9
+  const displayedEvents = showAll ? portfolioEvents : portfolioEvents.slice(0, INITIAL_COUNT)
+  const hasMore = portfolioEvents.length > INITIAL_COUNT
 
   // Determine which events get the "large" treatment in the grid
-  const largeIndices = [0, 7, 12, 17, 22] // Events at these positions get row-span-2
+  const largeIndices = [0, 7] // Events at these positions get row-span-2
 
   return (
     <section id="portfolio" className="py-12 sm:py-20 md:py-28">
@@ -1015,7 +1060,7 @@ function PortfolioSection() {
           viewport={{ once: true, margin: '-100px' }}
           className="grid grid-cols-2 md:grid-cols-3 gap-2 sm:gap-4"
         >
-          {portfolioEvents.map((event, index) => {
+          {displayedEvents.map((event, index) => {
             const isLarge = largeIndices.includes(index)
             return (
               <motion.div
@@ -1047,6 +1092,41 @@ function PortfolioSection() {
             )
           })}
         </motion.div>
+
+        {/* Show More / Show Less Button */}
+        {hasMore && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="text-center mt-6 sm:mt-10"
+          >
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={() => setShowAll(!showAll)}
+              className="group min-h-[44px] border-emerald-500/30 hover:bg-emerald-500/5 hover:border-emerald-500/50"
+            >
+              {showAll ? (
+                <>
+                  Show Less
+                  <ChevronRight className="ml-2 h-4 w-4 -rotate-90 group-hover:-rotate-90 transition-transform" />
+                </>
+              ) : (
+                <>
+                  Show More Events
+                  <ChevronRight className="ml-2 h-4 w-4 rotate-90 group-hover:rotate-90 transition-transform" />
+                </>
+              )}
+            </Button>
+            <p className="mt-2 text-xs sm:text-sm text-muted-foreground">
+              {showAll
+                ? `Showing all ${portfolioEvents.length} events`
+                : `Showing ${INITIAL_COUNT} of ${portfolioEvents.length} events`
+              }
+            </p>
+          </motion.div>
+        )}
 
         {/* Lightbox Modal */}
         <AnimatePresence>
@@ -1103,13 +1183,12 @@ function PortfolioSection() {
           className="text-center mt-8 sm:mt-12"
         >
           <Button
-            variant="outline"
             size="lg"
             onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-            className="group min-h-[44px]"
+            className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20 min-h-[44px]"
           >
             Plan Your Event With Us
-            <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </motion.div>
       </div>

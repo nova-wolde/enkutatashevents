@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Sparkles,
@@ -184,13 +184,11 @@ function LandingNavbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
 
-  useState(() => {
-    if (typeof window !== 'undefined') {
-      const handleScroll = () => setScrolled(window.scrollY > 20)
-      window.addEventListener('scroll', handleScroll)
-      return () => window.removeEventListener('scroll', handleScroll)
-    }
-  })
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20)
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   return (
     <motion.nav
@@ -357,11 +355,11 @@ function HeroSection() {
           >
             <Badge
               variant="secondary"
-              className="mb-6 px-4 py-1.5 text-sm font-medium border border-emerald-500/20 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400"
+              className="mb-6 px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-medium border border-emerald-500/20 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400 flex-wrap justify-center"
             >
-              <Sparkles className="h-3.5 w-3.5 mr-1.5" />
-              Premium Event Organizers in Addis Ababa
-              <ChevronRight className="h-3.5 w-3.5 ml-1" />
+              <Sparkles className="h-3 w-3 sm:h-3.5 sm:w-3.5 mr-1.5" />
+              <span>Premium Event Organizers in Addis Ababa</span>
+              <ChevronRight className="h-3 w-3 sm:h-3.5 sm:w-3.5 ml-1" />
             </Badge>
           </motion.div>
 
@@ -384,7 +382,7 @@ function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="mt-6 text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed"
+            className="mt-4 sm:mt-6 text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed px-2 sm:px-0"
           >
             Enkutatash is Addis Ababa&apos;s premier event organizer. From breathtaking weddings 
             to large-scale corporate events and cultural celebrations — we bring your vision to life 
@@ -396,12 +394,12 @@ function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
+            className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto"
           >
             <Button
               size="lg"
               onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-xl shadow-emerald-600/20 px-8 h-12 text-base"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-xl shadow-emerald-600/20 px-6 sm:px-8 h-12 text-base w-full sm:w-auto"
             >
               Book Your Event
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -409,7 +407,7 @@ function HeroSection() {
             <Button
               size="lg"
               variant="outline"
-              className="px-8 h-12 text-base group"
+              className="px-6 sm:px-8 h-12 text-base group w-full sm:w-auto"
               onClick={() => document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth' })}
             >
               <Play className="mr-2 h-4 w-4 group-hover:text-emerald-600 transition-colors" />
@@ -443,13 +441,13 @@ function HeroSection() {
                 </div>
               ))}
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
               <div className="flex gap-0.5">
                 {[1, 2, 3, 4, 5].map((s) => (
-                  <Star key={s} className="h-4 w-4 fill-amber-400 text-amber-400" />
+                  <Star key={s} className="h-3.5 w-3.5 sm:h-4 sm:w-4 fill-amber-400 text-amber-400" />
                 ))}
               </div>
-              <span className="text-sm text-muted-foreground">
+              <span className="text-xs sm:text-sm text-muted-foreground">
                 Trusted by <span className="font-semibold text-foreground">500+</span> happy clients
               </span>
             </div>
@@ -461,7 +459,7 @@ function HeroSection() {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.6 }}
-          className="mt-16 md:mt-20 relative"
+          className="mt-10 sm:mt-16 md:mt-20 relative"
         >
           <div className="relative rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm shadow-2xl shadow-emerald-500/5 overflow-hidden">
             {/* Window chrome */}
@@ -476,22 +474,22 @@ function HeroSection() {
               </div>
             </div>
             {/* Preview content - Event showcase */}
-            <div className="p-6 md:p-8 bg-gradient-to-br from-muted/20 to-muted/5">
-              <div className="grid grid-cols-3 gap-3 md:gap-4 mb-6">
+            <div className="p-3 sm:p-6 md:p-8 bg-gradient-to-br from-muted/20 to-muted/5">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 mb-4 sm:mb-6">
                 {portfolioEvents.slice(0, 3).map((event) => (
                   <div
                     key={event.title}
-                    className={`rounded-xl bg-gradient-to-br ${event.gradient} p-3 md:p-4 text-white aspect-[4/3] flex flex-col justify-end`}
+                    className={`rounded-xl bg-gradient-to-br ${event.gradient} p-3 md:p-4 text-white aspect-[4/3] sm:aspect-[4/3] flex flex-col justify-end`}
                   >
-                    <Badge className="w-fit text-[9px] md:text-[10px] bg-white/20 text-white border-0 mb-2">
+                    <Badge className="w-fit text-[10px] md:text-[10px] bg-white/20 text-white border-0 mb-2">
                       {event.category}
                     </Badge>
-                    <p className="text-xs md:text-sm font-bold leading-tight">{event.title}</p>
-                    <p className="text-[9px] md:text-xs text-white/80 mt-1">{event.attendees} guests</p>
+                    <p className="text-sm md:text-sm font-bold leading-tight">{event.title}</p>
+                    <p className="text-xs sm:text-sm text-white/80 mt-1">{event.attendees} guests</p>
                   </div>
                 ))}
               </div>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
                 {[
                   { label: 'Events Organized', value: '500+', icon: CalendarDays },
                   { label: 'Happy Guests', value: '50K+', icon: Users },
@@ -502,14 +500,14 @@ function HeroSection() {
                   return (
                     <div
                       key={stat.label}
-                      className="rounded-xl bg-background/60 border border-border/30 p-3 md:p-4 flex items-center gap-3"
+                      className="rounded-xl bg-background/60 border border-border/30 p-2 sm:p-3 md:p-4 flex items-center gap-2 sm:gap-3"
                     >
-                      <div className="h-8 w-8 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0">
-                        <Icon className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                      <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0">
+                        <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-600 dark:text-emerald-400" />
                       </div>
-                      <div>
-                        <p className="text-sm md:text-lg font-bold">{stat.value}</p>
-                        <p className="text-[9px] md:text-xs text-muted-foreground">{stat.label}</p>
+                      <div className="min-w-0">
+                        <p className="text-xs sm:text-sm md:text-lg font-bold">{stat.value}</p>
+                        <p className="text-[8px] sm:text-[9px] md:text-xs text-muted-foreground truncate">{stat.label}</p>
                       </div>
                     </div>
                   )
@@ -527,26 +525,26 @@ function HeroSection() {
 
 function StatsSection() {
   return (
-    <section className="py-16 border-y border-border/50 bg-muted/20">
+    <section className="py-10 sm:py-16 border-y border-border/50 bg-muted/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-100px' }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-8"
+          className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8"
         >
           {stats.map((stat) => {
             const Icon = stat.icon
             return (
               <motion.div key={stat.label} variants={staggerItem} className="text-center">
-                <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/10 mb-3">
-                  <Icon className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
+                <div className="inline-flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-emerald-500/10 mb-2 sm:mb-3">
+                  <Icon className="h-5 w-5 sm:h-6 sm:w-6 text-emerald-600 dark:text-emerald-400" />
                 </div>
-                <p className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                <p className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
                   {stat.value}
                 </p>
-                <p className="text-sm text-muted-foreground mt-1">{stat.label}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1">{stat.label}</p>
               </motion.div>
             )
           })}
@@ -558,9 +556,9 @@ function StatsSection() {
 
 function AboutSection() {
   return (
-    <section id="about" className="py-20 md:py-28">
+    <section id="about" className="py-14 sm:py-20 md:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
           {/* Left - Visual */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -570,28 +568,28 @@ function AboutSection() {
             className="relative"
           >
             <div className="aspect-[4/3] rounded-2xl bg-gradient-to-br from-emerald-500 via-teal-500 to-amber-500 p-[1px]">
-              <div className="h-full w-full rounded-2xl bg-background flex flex-col items-center justify-center p-8 text-center">
-                <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-emerald-500 via-teal-500 to-amber-500 flex items-center justify-center mb-6 shadow-xl shadow-emerald-500/20">
-                  <Sparkles className="h-10 w-10 text-white" />
+              <div className="h-full w-full rounded-2xl bg-background flex flex-col items-center justify-center p-5 sm:p-8 text-center">
+                <div className="h-14 w-14 sm:h-20 sm:w-14 rounded-2xl bg-gradient-to-br from-emerald-500 via-teal-500 to-amber-500 flex items-center justify-center mb-4 sm:mb-6 shadow-xl shadow-emerald-500/20">
+                  <Sparkles className="h-7 w-7 sm:h-10 sm:w-10 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold mb-2">Enkutatash</h3>
-                <p className="text-muted-foreground text-sm">Premium Event Organizers</p>
-                <div className="mt-6 grid grid-cols-2 gap-4 w-full max-w-xs">
-                  <div className="rounded-xl bg-emerald-500/5 border border-emerald-500/10 p-3">
-                    <p className="text-xl font-bold text-emerald-600 dark:text-emerald-400">8+</p>
-                    <p className="text-xs text-muted-foreground">Years</p>
+                <h3 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">Enkutatash</h3>
+                <p className="text-muted-foreground text-xs sm:text-sm">Premium Event Organizers</p>
+                <div className="mt-4 sm:mt-6 grid grid-cols-2 gap-3 sm:gap-4 w-full max-w-xs">
+                  <div className="rounded-xl bg-emerald-500/5 border border-emerald-500/10 p-2.5 sm:p-3">
+                    <p className="text-lg sm:text-xl font-bold text-emerald-600 dark:text-emerald-400">8+</p>
+                    <p className="text-[10px] sm:text-xs text-muted-foreground">Years</p>
                   </div>
-                  <div className="rounded-xl bg-amber-500/5 border border-amber-500/10 p-3">
-                    <p className="text-xl font-bold text-amber-600 dark:text-amber-400">500+</p>
-                    <p className="text-xs text-muted-foreground">Events</p>
+                  <div className="rounded-xl bg-amber-500/5 border border-amber-500/10 p-2.5 sm:p-3">
+                    <p className="text-lg sm:text-xl font-bold text-amber-600 dark:text-amber-400">500+</p>
+                    <p className="text-[10px] sm:text-xs text-muted-foreground">Events</p>
                   </div>
-                  <div className="rounded-xl bg-teal-500/5 border border-teal-500/10 p-3">
-                    <p className="text-xl font-bold text-teal-600 dark:text-teal-400">50K+</p>
-                    <p className="text-xs text-muted-foreground">Guests</p>
+                  <div className="rounded-xl bg-teal-500/5 border border-teal-500/10 p-2.5 sm:p-3">
+                    <p className="text-lg sm:text-xl font-bold text-teal-600 dark:text-teal-400">50K+</p>
+                    <p className="text-[10px] sm:text-xs text-muted-foreground">Guests</p>
                   </div>
-                  <div className="rounded-xl bg-rose-500/5 border border-rose-500/10 p-3">
-                    <p className="text-xl font-bold text-rose-600 dark:text-rose-400">4.9</p>
-                    <p className="text-xs text-muted-foreground">Rating</p>
+                  <div className="rounded-xl bg-rose-500/5 border border-rose-500/10 p-2.5 sm:p-3">
+                    <p className="text-lg sm:text-xl font-bold text-rose-600 dark:text-rose-400">4.9</p>
+                    <p className="text-[10px] sm:text-xs text-muted-foreground">Rating</p>
                   </div>
                 </div>
               </div>
@@ -611,17 +609,17 @@ function AboutSection() {
             <Badge variant="secondary" className="mb-4 border-emerald-500/20 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400">
               About Us
             </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
               Crafting Unforgettable
               <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent"> Moments Since 2018</span>
             </h2>
-            <p className="mt-4 text-muted-foreground text-lg leading-relaxed">
+            <p className="mt-3 sm:mt-4 text-muted-foreground text-base sm:text-lg leading-relaxed">
               Named after the Ethiopian New Year — a celebration of new beginnings and fresh possibilities — 
               Enkutatash was founded with a simple belief: every event deserves to be extraordinary. Based in 
               the heart of Addis Ababa, we have spent over eight years transforming ordinary occasions into 
               legendary experiences.
             </p>
-            <p className="mt-4 text-muted-foreground leading-relaxed">
+            <p className="mt-3 sm:mt-4 text-muted-foreground text-sm sm:text-base leading-relaxed">
               Our team of 25+ creative professionals brings together expertise in event design, production, 
               catering coordination, and logistics management. We understand the unique cultural nuances that 
               make Ethiopian celebrations special, while also delivering world-class standards that impress 
@@ -629,7 +627,7 @@ function AboutSection() {
               corporate product launch, we approach every event with the same passion and meticulous attention 
               to detail.
             </p>
-            <div className="mt-6 space-y-3">
+            <div className="mt-4 sm:mt-6 space-y-2 sm:space-y-3">
               {[
                 'End-to-end event planning and execution',
                 'Award-winning creative design team',
@@ -657,7 +655,7 @@ function AboutSection() {
 
 function ServicesSection() {
   return (
-    <section id="services" className="py-20 md:py-28 bg-muted/20">
+    <section id="services" className="py-14 sm:py-20 md:py-28 bg-muted/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -669,11 +667,11 @@ function ServicesSection() {
           <Badge variant="secondary" className="mb-4 border-emerald-500/20 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400">
             Our Services
           </Badge>
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
             Whatever the occasion,
             <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent"> we make it extraordinary</span>
           </h2>
-          <p className="mt-4 text-muted-foreground text-lg">
+          <p className="mt-4 text-muted-foreground text-base sm:text-lg">
             From intimate gatherings to grand spectacles, our team delivers world-class event experiences tailored to your vision.
           </p>
         </motion.div>
@@ -683,7 +681,7 @@ function ServicesSection() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-100px' }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
         >
           {services.map((service) => {
             const Icon = service.icon
@@ -715,7 +713,7 @@ function ServicesSection() {
 
 function PortfolioSection() {
   return (
-    <section id="portfolio" className="py-20 md:py-28">
+    <section id="portfolio" className="py-14 sm:py-20 md:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -727,11 +725,11 @@ function PortfolioSection() {
           <Badge variant="secondary" className="mb-4 border-emerald-500/20 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400">
             Our Portfolio
           </Badge>
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
             Events that
             <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent"> speak for themselves</span>
           </h2>
-          <p className="mt-4 text-muted-foreground text-lg">
+          <p className="mt-4 text-muted-foreground text-base sm:text-lg">
             A glimpse into some of our most memorable events — each one a unique story of creativity and flawless execution.
           </p>
         </motion.div>
@@ -741,13 +739,13 @@ function PortfolioSection() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-100px' }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
         >
           {portfolioEvents.map((event) => (
             <motion.div key={event.title} variants={staggerItem} whileHover={{ y: -4, scale: 1.02 }} className="group cursor-pointer">
               <div className={`rounded-2xl bg-gradient-to-br ${event.gradient} p-[1px]`}>
                 <div className="rounded-2xl bg-card p-5 h-full flex flex-col">
-                  <div className={`rounded-xl bg-gradient-to-br ${event.gradient} h-40 mb-4 flex items-center justify-center`}>
+                  <div className={`rounded-xl bg-gradient-to-br ${event.gradient} h-32 sm:h-40 mb-4 flex items-center justify-center`}>
                     <span className="text-4xl font-bold text-white/90">{event.title.charAt(0)}</span>
                   </div>
                   <Badge className="w-fit text-xs bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20 mb-2">
@@ -756,7 +754,7 @@ function PortfolioSection() {
                   <h3 className="text-lg font-semibold group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
                     {event.title}
                   </h3>
-                  <p className="text-sm text-muted-foreground mt-1">{event.attendees} guests attended</p>
+                  <p className="text-sm sm:text-base text-muted-foreground mt-1">{event.attendees} guests attended</p>
                 </div>
               </div>
             </motion.div>
@@ -786,7 +784,7 @@ function PortfolioSection() {
 
 function TestimonialsSection() {
   return (
-    <section id="testimonials" className="py-20 md:py-28 bg-muted/20">
+    <section id="testimonials" className="py-14 sm:py-20 md:py-28 bg-muted/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -798,11 +796,11 @@ function TestimonialsSection() {
           <Badge variant="secondary" className="mb-4 border-emerald-500/20 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400">
             Testimonials
           </Badge>
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
             What our clients
             <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent"> say about us</span>
           </h2>
-          <p className="mt-4 text-muted-foreground text-lg">
+          <p className="mt-4 text-muted-foreground text-base sm:text-lg">
             Don&apos;t just take our word for it — hear from the people who have experienced the Enkutatash difference.
           </p>
         </motion.div>
@@ -812,7 +810,7 @@ function TestimonialsSection() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-100px' }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6"
+          className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6"
         >
           {testimonials.map((testimonial) => (
             <motion.div key={testimonial.name} variants={staggerItem} whileHover={{ y: -4 }}>
@@ -876,7 +874,7 @@ function ProcessSection() {
   ]
 
   return (
-    <section className="py-20 md:py-28">
+    <section className="py-14 sm:py-20 md:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -888,7 +886,7 @@ function ProcessSection() {
           <Badge variant="secondary" className="mb-4 border-emerald-500/20 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400">
             How It Works
           </Badge>
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
             From vision to reality
             <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent"> in 4 steps</span>
           </h2>
@@ -899,7 +897,7 @@ function ProcessSection() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-100px' }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+          className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6"
         >
           {steps.map((step, index) => (
             <motion.div key={step.number} variants={staggerItem}>
@@ -908,8 +906,8 @@ function ProcessSection() {
                   <div className="hidden lg:block absolute top-8 left-[calc(50%+2rem)] w-[calc(100%-4rem)] h-px border-t border-dashed border-emerald-500/20" />
                 )}
                 <div className="text-center">
-                  <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-500/10 border border-emerald-500/20 mb-4">
-                    <span className="text-xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                  <div className="inline-flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-2xl bg-emerald-500/10 border border-emerald-500/20 mb-4">
+                    <span className="text-lg sm:text-xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
                       {step.number}
                     </span>
                   </div>
@@ -943,9 +941,9 @@ function ContactSection() {
   }
 
   return (
-    <section id="contact" className="py-20 md:py-28 bg-muted/20">
+    <section id="contact" className="py-14 sm:py-20 md:py-28 bg-muted/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16">
           {/* Left - Contact Info */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -956,11 +954,11 @@ function ContactSection() {
             <Badge variant="secondary" className="mb-4 border-emerald-500/20 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400">
               Get in Touch
             </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
               Let&apos;s create something
               <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent"> extraordinary</span>
             </h2>
-            <p className="mt-4 text-muted-foreground text-lg leading-relaxed">
+            <p className="mt-4 text-muted-foreground text-base sm:text-lg leading-relaxed">
               Ready to bring your event vision to life? Reach out to us and let&apos;s start planning. 
               Every great event begins with a conversation.
             </p>
@@ -1058,7 +1056,7 @@ function ContactSection() {
                           value={formState.name}
                           onChange={(e) => setFormState({ ...formState, name: e.target.value })}
                           required
-                          className="h-10"
+                          className="h-11 sm:h-10"
                         />
                       </div>
                       <div>
@@ -1069,7 +1067,7 @@ function ContactSection() {
                           value={formState.email}
                           onChange={(e) => setFormState({ ...formState, email: e.target.value })}
                           required
-                          className="h-10"
+                          className="h-11 sm:h-10"
                         />
                       </div>
                     </div>
@@ -1080,7 +1078,7 @@ function ContactSection() {
                           placeholder="+251 ..."
                           value={formState.phone}
                           onChange={(e) => setFormState({ ...formState, phone: e.target.value })}
-                          className="h-10"
+                          className="h-11 sm:h-10"
                         />
                       </div>
                       <div>
@@ -1089,7 +1087,7 @@ function ContactSection() {
                           placeholder="Wedding, Corporate, etc."
                           value={formState.eventType}
                           onChange={(e) => setFormState({ ...formState, eventType: e.target.value })}
-                          className="h-10"
+                          className="h-11 sm:h-10"
                         />
                       </div>
                     </div>
@@ -1127,7 +1125,7 @@ function ContactSection() {
 
 function CTASection() {
   return (
-    <section className="py-20 md:py-28">
+    <section className="py-14 sm:py-20 md:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -1144,14 +1142,14 @@ function CTASection() {
           <div className="absolute top-0 right-0 h-64 w-64 rounded-full bg-white/5 -translate-y-1/2 translate-x-1/4" />
           <div className="absolute bottom-0 left-0 h-48 w-48 rounded-full bg-white/5 translate-y-1/3 -translate-x-1/4" />
 
-          <div className="relative px-6 py-16 md:px-16 md:py-20 text-center">
-            <Sparkles className="h-12 w-12 text-white/80 mx-auto mb-6" />
-            <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight">
+          <div className="relative px-5 py-12 sm:px-6 sm:py-16 md:px-16 md:py-20 text-center">
+            <Sparkles className="h-8 w-8 sm:h-12 sm:w-12 text-white/80 mx-auto mb-6" />
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white tracking-tight">
               Your Next Event Deserves
               <br />
               the Enkutatash Touch
             </h2>
-            <p className="mt-4 text-white/80 text-lg max-w-xl mx-auto">
+            <p className="mt-4 text-white/80 text-base sm:text-lg max-w-xl mx-auto">
               Let us transform your vision into an unforgettable experience. 
               Book a free consultation today and discover why hundreds of clients trust us.
             </p>
@@ -1159,7 +1157,7 @@ function CTASection() {
               <Button
                 size="lg"
                 onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-                className="bg-white text-emerald-700 hover:bg-white/90 shadow-xl px-8 h-12 text-base font-semibold"
+                className="bg-white text-emerald-700 hover:bg-white/90 shadow-xl w-full sm:w-auto px-6 sm:px-8 h-11 sm:h-12 text-sm sm:text-base font-semibold"
               >
                 Book a Free Consultation
                 <ArrowRight className="ml-2 h-5 w-5" />
@@ -1167,7 +1165,7 @@ function CTASection() {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-white/30 text-white hover:bg-white/10 px-8 h-12 text-base"
+                className="border-white/30 text-white hover:bg-white/10 w-full sm:w-auto px-6 sm:px-8 h-11 sm:h-12 text-sm sm:text-base"
                 onClick={() => window.open('tel:+251112345678')}
               >
                 <Phone className="mr-2 h-4 w-4" />
@@ -1183,9 +1181,9 @@ function CTASection() {
 
 function Footer() {
   return (
-    <footer className="border-t border-border/50 py-12">
+    <footer className="border-t border-border/50 py-8 sm:py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-8">
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2 mb-4">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 via-teal-500 to-amber-500">
@@ -1193,23 +1191,23 @@ function Footer() {
               </div>
               <span className="text-lg font-bold">Enkutatash</span>
             </div>
-            <p className="text-sm text-muted-foreground max-w-xs">
+            <p className="text-xs sm:text-sm text-muted-foreground max-w-xs">
               Addis Ababa&apos;s premier event organizer. Crafting legendary experiences since 2018.
             </p>
             <div className="mt-4 flex gap-2">
               {[Instagram, Facebook, Twitter].map((Icon, i) => (
-                <Button key={i} variant="ghost" size="icon" className="h-8 w-8">
-                  <Icon className="h-4 w-4" />
+                <Button key={i} variant="ghost" size="icon" className="h-10 w-10 sm:h-8 sm:w-8">
+                  <Icon className="h-5 w-5 sm:h-4 sm:w-4" />
                 </Button>
               ))}
             </div>
           </div>
           <div>
-            <h4 className="text-sm font-semibold mb-3">Services</h4>
-            <ul className="space-y-2">
+            <h4 className="text-xs sm:text-sm font-semibold mb-3">Services</h4>
+            <ul className="space-y-1.5 sm:space-y-2">
               {['Weddings', 'Corporate Events', 'Concerts', 'Private Parties', 'Cultural Events'].map((item) => (
                 <li key={item}>
-                  <a className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
+                  <a className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
                     {item}
                   </a>
                 </li>
@@ -1217,11 +1215,11 @@ function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="text-sm font-semibold mb-3">Company</h4>
-            <ul className="space-y-2">
+            <h4 className="text-xs sm:text-sm font-semibold mb-3">Company</h4>
+            <ul className="space-y-1.5 sm:space-y-2">
               {['About Us', 'Portfolio', 'Testimonials', 'Blog', 'Careers'].map((item) => (
                 <li key={item}>
-                  <a className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
+                  <a className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
                     {item}
                   </a>
                 </li>
@@ -1229,22 +1227,22 @@ function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="text-sm font-semibold mb-3">Contact</h4>
-            <ul className="space-y-2">
-              <li className="text-sm text-muted-foreground">+251 11 234 5678</li>
-              <li className="text-sm text-muted-foreground">hello@enkutatash.com</li>
-              <li className="text-sm text-muted-foreground">Bole Road, Addis Ababa</li>
-              <li className="text-sm text-muted-foreground">Mon-Sat, 8AM-6PM</li>
+            <h4 className="text-xs sm:text-sm font-semibold mb-3">Contact</h4>
+            <ul className="space-y-1.5 sm:space-y-2">
+              <li className="text-xs sm:text-sm text-muted-foreground">+251 11 234 5678</li>
+              <li className="text-xs sm:text-sm text-muted-foreground">hello@enkutatash.com</li>
+              <li className="text-xs sm:text-sm text-muted-foreground">Bole Road, Addis Ababa</li>
+              <li className="text-xs sm:text-sm text-muted-foreground">Mon-Sat, 8AM-6PM</li>
             </ul>
           </div>
         </div>
         <div className="pt-8 border-t border-border/50 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-xs sm:text-sm text-muted-foreground">
             &copy; 2026 Enkutatash Event Organizers. All rights reserved.
           </p>
           <div className="flex items-center gap-4">
-            <a className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">Privacy Policy</a>
-            <a className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">Terms of Service</a>
+            <a className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">Privacy Policy</a>
+            <a className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">Terms of Service</a>
           </div>
         </div>
       </div>

@@ -198,7 +198,7 @@ export function EventsList() {
             </div>
           </CardHeader>
           <CardContent className="pb-4">
-            <div className="rounded-lg border border-border overflow-hidden">
+            <div className="rounded-lg border border-border overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow className="bg-muted/50">
@@ -283,7 +283,7 @@ export function EventsList() {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-between mt-4">
+              <div className="flex flex-col sm:flex-row items-center justify-between mt-4 gap-3">
                 <p className="text-sm text-muted-foreground">
                   Showing {(page - 1) * perPage + 1}-{Math.min(page * perPage, filteredEvents.length)} of{' '}
                   {filteredEvents.length} events

@@ -156,7 +156,7 @@ export function SettingsView() {
           <div className="space-y-2">
             <Label>Theme</Label>
             <Select value={theme} onValueChange={setTheme}>
-              <SelectTrigger className="w-[200px]">
+              <SelectTrigger className="w-full sm:w-[200px]">
                 <SelectValue placeholder="Select theme" />
               </SelectTrigger>
               <SelectContent>
@@ -218,7 +218,7 @@ export function SettingsView() {
               type="number"
               value={defaultMaxAttendees}
               onChange={(e) => setDefaultMaxAttendees(e.target.value)}
-              className="w-[200px]"
+              className="w-full sm:w-[200px]"
             />
           </div>
         </CardContent>
@@ -234,7 +234,7 @@ export function SettingsView() {
           <CardDescription>Irreversible and destructive actions</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div>
               <p className="text-sm font-medium">Delete Account</p>
               <p className="text-xs text-muted-foreground">Permanently delete your account and all data</p>
@@ -266,7 +266,7 @@ export function SettingsView() {
       </Card>
 
       {/* Save Button */}
-      <div className="flex justify-end pb-6">
+      <div className="flex justify-center sm:justify-end pb-6">
         <Button
           onClick={handleSave}
           className="gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white"

@@ -172,7 +172,7 @@ export function CreateEventDialog() {
           </div>
 
           {/* Date and Time row */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Date</Label>
               <Popover>
@@ -210,7 +210,7 @@ export function CreateEventDialog() {
           </div>
 
           {/* Venue and Category row */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Venue</Label>
               <Select value={venue || undefined} onValueChange={setVenue}>
@@ -256,7 +256,7 @@ export function CreateEventDialog() {
           </div>
 
           {/* Max attendees and ticket price row */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="max-attendees">Max Attendees</Label>
               <Input
@@ -282,7 +282,7 @@ export function CreateEventDialog() {
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-3 pt-2">
+          <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-3 pt-2">
             <Button variant="outline" onClick={handleClose}>
               Cancel
             </Button>

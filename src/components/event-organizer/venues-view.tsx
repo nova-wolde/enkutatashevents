@@ -118,7 +118,7 @@ export function VenuesView() {
       className="space-y-6"
     >
       {/* Header with Add button */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div>
           <p className="text-sm text-muted-foreground">{venueList.length} venues managed</p>
         </div>
@@ -201,7 +201,7 @@ export function VenuesView() {
 
       {/* Add Venue Dialog */}
       <Dialog open={addDialogOpen} onOpenChange={setAddDialogOpen}>
-        <DialogContent className="sm:max-w-[440px]">
+        <DialogContent className="sm:max-w-[440px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Add New Venue</DialogTitle>
             <DialogDescription>Enter the details for the new venue.</DialogDescription>

@@ -37,7 +37,7 @@ export function CalendarWidget() {
             modifiers={{
               hasEvent: eventDates,
             }}
-            className="rounded-md"
+            className="rounded-md max-w-full [&_[data-slot=calendar]]:max-w-full"
             modifiersClassNames={{
               hasEvent: 'after:bg-emerald-500 after:rounded-full after:w-1.5 after:h-1.5 after:bottom-0.5 after:left-1/2 after:-translate-x-1/2 after:absolute',
             }}

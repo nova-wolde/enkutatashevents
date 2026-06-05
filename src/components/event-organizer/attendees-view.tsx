@@ -201,20 +201,21 @@ export function AttendeesView() {
         <CardHeader className="pb-4">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <CardTitle className="text-lg font-semibold">Attendee List</CardTitle>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   placeholder="Search attendees..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9 h-9 w-[200px]"
+                  className="pl-9 h-9 w-full sm:w-[200px]"
                 />
               </div>
-              <Select value={filterEvent} onValueChange={setFilterEvent}>
-                <SelectTrigger className="w-[180px] h-9 text-sm">
-                  <SelectValue placeholder="Filter by event" />
-                </SelectTrigger>
+              <div className="flex items-center gap-2">
+                <Select value={filterEvent} onValueChange={setFilterEvent}>
+                  <SelectTrigger className="w-full sm:w-[180px] h-9 text-sm">
+                    <SelectValue placeholder="Filter by event" />
+                  </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Events</SelectItem>
                   {events.map((e) => (
@@ -228,15 +229,16 @@ export function AttendeesView() {
                 variant="outline"
                 size="sm"
                 onClick={handleExport}
-                className="h-9 gap-1.5"
+                className="h-9 gap-1.5 w-full sm:w-auto"
               >
                 <Download className="h-3.5 w-3.5" /> Export
               </Button>
+              </div>
             </div>
           </div>
         </CardHeader>
         <CardContent className="pb-4">
-          <div className="rounded-lg border border-border overflow-hidden">
+          <div className="rounded-lg border border-border overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow className="bg-muted/50">

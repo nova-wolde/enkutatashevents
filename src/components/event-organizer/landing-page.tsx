@@ -181,7 +181,7 @@ const portfolioEvents = [
 const stats = [
   { value: '500+', label: 'Events Organized', icon: CalendarDays },
   { value: '50K+', label: 'Happy Guests', icon: Users },
-  { value: '8+', label: 'Years of Excellence', icon: Award },
+  { value: '4+', label: 'Years of Excellence', icon: Award },
   { value: '4.9', label: 'Average Rating', icon: Star },
 ]
 
@@ -533,7 +533,7 @@ function HeroSection() {
                 {[
                   { label: 'Events', value: '500+', icon: CalendarDays },
                   { label: 'Guests', value: '50K+', icon: Users },
-                  { label: 'Years', value: '8+', icon: Award },
+                  { label: 'Years', value: '4+', icon: Award },
                   { label: 'Rating', value: '4.9/5', icon: Star },
                 ].map((stat) => {
                   const Icon = stat.icon
@@ -621,7 +621,7 @@ function AboutSection() {
                 <p className="text-muted-foreground text-xs sm:text-sm">Premium Event Organizers</p>
                 <div className="mt-3 sm:mt-6 grid grid-cols-2 gap-2 sm:gap-4 w-full max-w-xs">
                   <div className="rounded-lg sm:rounded-xl bg-emerald-500/5 border border-emerald-500/10 p-2 sm:p-3">
-                    <p className="text-lg sm:text-xl font-bold text-emerald-600 dark:text-emerald-400">8+</p>
+                    <p className="text-lg sm:text-xl font-bold text-emerald-600 dark:text-emerald-400">4+</p>
                     <p className="text-[10px] sm:text-xs text-muted-foreground">Years</p>
                   </div>
                   <div className="rounded-lg sm:rounded-xl bg-amber-500/5 border border-amber-500/10 p-2 sm:p-3">
@@ -656,12 +656,12 @@ function AboutSection() {
             </Badge>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
               Crafting Unforgettable
-              <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent"> Moments Since 2018</span>
+              <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent"> Moments Since 2022</span>
             </h2>
             <p className="mt-3 sm:mt-4 text-muted-foreground text-sm sm:text-lg leading-relaxed">
               Named after the Ethiopian New Year — a celebration of new beginnings and fresh possibilities — 
               Enkutatash was founded with a simple belief: every event deserves to be extraordinary. Based in 
-              the heart of Addis Ababa, we have spent over eight years transforming ordinary occasions into 
+              the heart of Addis Ababa, we have been transforming ordinary occasions into 
               legendary experiences.
             </p>
             <p className="mt-2 sm:mt-4 text-muted-foreground text-xs sm:text-base leading-relaxed">
@@ -1060,7 +1060,7 @@ function ContactSection() {
               ].map((social) => {
                 const Icon = social.icon
                 return (
-                  <Button key={social.label} variant="outline" size="icon" className="h-9 w-9 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl">
+                  <Button key={social.label} variant="outline" size="icon" className="h-10 w-10 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl min-h-[44px] min-w-[44px]">
                     <Icon className="h-4 w-4" />
                   </Button>
                 )
@@ -1249,7 +1249,7 @@ function Footer() {
             </p>
             <div className="mt-3 sm:mt-4 flex gap-1.5 sm:gap-2">
               {[Instagram, Facebook, Twitter].map((Icon, i) => (
-                <Button key={i} variant="ghost" size="icon" className="h-9 w-9 sm:h-8 sm:w-8">
+                <Button key={i} variant="ghost" size="icon" className="h-10 w-10 sm:h-8 sm:w-8 min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0">
                   <Icon className="h-4 w-4 sm:h-4 sm:w-4" />
                 </Button>
               ))}
@@ -1260,7 +1260,7 @@ function Footer() {
             <ul className="space-y-1 sm:space-y-2">
               {['Advert & Promotion', 'Event Organization', 'Decoration', 'Stage & Tent', 'Sound & Light', 'Chair & Table', 'Catering', 'Kids Games'].map((item) => (
                 <li key={item}>
-                  <a className="text-[10px] sm:text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
+                  <a className="text-[10px] sm:text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer block py-0.5 min-h-[28px] sm:min-h-0 flex items-center">
                     {item}
                   </a>
                 </li>

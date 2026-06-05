@@ -135,7 +135,7 @@ export function EventDetailDialog() {
           </div>
 
           {/* Details grid */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
               <Calendar className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
               <div>
@@ -190,7 +190,7 @@ export function EventDetailDialog() {
           </div>
 
           {/* Action buttons */}
-          <div className="flex items-center gap-2 pt-2 border-t">
+          <div className="flex flex-wrap items-center gap-2 pt-2 border-t">
             <Button
               variant="outline"
               size="sm"

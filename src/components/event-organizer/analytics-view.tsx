@@ -156,7 +156,7 @@ export function AnalyticsView() {
             <CardTitle className="text-base font-semibold">Revenue Overview</CardTitle>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={250}>
               <LineChart data={monthlyRevenue}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                 <XAxis dataKey="month" className="text-xs" tick={{ fill: 'currentColor' }} />
@@ -184,7 +184,7 @@ export function AnalyticsView() {
             <CardTitle className="text-base font-semibold">Events by Category</CardTitle>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={250}>
               <PieChart>
                 <Pie
                   data={categoryData}
@@ -222,7 +222,7 @@ export function AnalyticsView() {
             <CardTitle className="text-base font-semibold">Attendee Trends</CardTitle>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={250}>
               <BarChart data={monthlyAttendees}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                 <XAxis dataKey="month" className="text-xs" tick={{ fill: 'currentColor' }} />
@@ -243,16 +243,16 @@ export function AnalyticsView() {
             <CardTitle className="text-base font-semibold">Top Events by Attendees</CardTitle>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={250}>
               <BarChart data={topEvents} layout="vertical">
                 <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                 <XAxis type="number" className="text-xs" tick={{ fill: 'currentColor' }} />
                 <YAxis
                   type="category"
                   dataKey="name"
-                  width={120}
+                  width={100}
                   className="text-xs"
-                  tick={{ fill: 'currentColor' }}
+                  tick={{ fill: 'currentColor', fontSize: 11 }}
                 />
                 <Tooltip
                   formatter={(value: number) => [value.toLocaleString(), 'Attendees']}

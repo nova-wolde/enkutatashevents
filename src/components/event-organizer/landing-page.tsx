@@ -827,140 +827,88 @@ function StatsSection() {
 
 function AboutSection() {
   return (
-    <section id="about" className="py-12 sm:py-20 md:py-28">
+    <section id="about" className="py-10 sm:py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-10 items-center">
           {/* Left - Photo Collage */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
+            initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.5 }}
             className="relative"
           >
-            <div className="grid grid-cols-2 gap-2 sm:gap-3">
-              {/* Main large image */}
-              <div className="col-span-2 relative rounded-xl sm:rounded-2xl overflow-hidden aspect-[16/9]">
-                <Image
-                  src="/events/event-2.jpg"
-                  alt="Wedding Reception by Enkutatash"
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-                <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4">
-                  <Badge className="text-[9px] sm:text-xs bg-white/20 text-white border-0 backdrop-blur-sm">Wedding</Badge>
-                </div>
+            <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
+              <div className="col-span-2 relative rounded-lg sm:rounded-xl overflow-hidden aspect-[16/9]">
+                <Image src="/events/event-2.jpg" alt="Wedding Reception by Enkutatash" fill className="object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
               </div>
-              {/* Two smaller images */}
-              <div className="relative rounded-xl sm:rounded-2xl overflow-hidden aspect-square">
-                <Image
-                  src="/events/event-5.jpg"
-                  alt="Cultural Festival by Enkutatash"
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                <div className="absolute bottom-2 left-2 sm:bottom-3 sm:left-3">
-                  <Badge className="text-[8px] sm:text-[10px] bg-white/20 text-white border-0 backdrop-blur-sm">Cultural</Badge>
-                </div>
+              <div className="relative rounded-lg sm:rounded-xl overflow-hidden aspect-square">
+                <Image src="/events/event-5.jpg" alt="Cultural Festival by Enkutatash" fill className="object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
               </div>
-              <div className="relative rounded-xl sm:rounded-2xl overflow-hidden aspect-square">
-                <Image
-                  src="/events/event-4.jpg"
-                  alt="Live Concert by Enkutatash"
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                <div className="absolute bottom-2 left-2 sm:bottom-3 sm:left-3">
-                  <Badge className="text-[8px] sm:text-[10px] bg-white/20 text-white border-0 backdrop-blur-sm">Concert</Badge>
-                </div>
+              <div className="relative rounded-lg sm:rounded-xl overflow-hidden aspect-square">
+                <Image src="/events/event-4.jpg" alt="Live Concert by Enkutatash" fill className="object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
               </div>
             </div>
-            {/* Floating stats card */}
-            <div className="absolute -bottom-4 -right-2 sm:-bottom-6 sm:-right-4 bg-background border border-border/50 rounded-xl sm:rounded-2xl shadow-xl p-3 sm:p-4 backdrop-blur-sm z-10">
-              <div className="flex items-center gap-3 sm:gap-4">
-                <div className="flex items-center gap-1.5">
-                  <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
-                    <Award className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-600 dark:text-emerald-400" />
-                  </div>
-                  <div>
-                    <p className="text-sm sm:text-base font-bold">4+</p>
-                    <p className="text-[8px] sm:text-[10px] text-muted-foreground">Years</p>
-                  </div>
-                </div>
-                <div className="w-px h-8 bg-border/50" />
-                <div className="flex items-center gap-1.5">
-                  <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-amber-500/10 flex items-center justify-center">
-                    <CalendarDays className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-600 dark:text-amber-400" />
-                  </div>
-                  <div>
-                    <p className="text-sm sm:text-base font-bold">500+</p>
-                    <p className="text-[8px] sm:text-[10px] text-muted-foreground">Events</p>
-                  </div>
-                </div>
+            {/* Floating stats pill */}
+            <div className="absolute -bottom-3 -right-1 sm:-bottom-4 sm:-right-3 bg-background/90 border border-border/50 rounded-full shadow-lg px-3 py-1.5 sm:px-4 sm:py-2 backdrop-blur-sm z-10 flex items-center gap-2.5 sm:gap-3">
+              <div className="flex items-center gap-1">
+                <Award className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-emerald-600 dark:text-emerald-400" />
+                <span className="text-[10px] sm:text-xs font-bold">4+ Yrs</span>
+              </div>
+              <div className="w-px h-3 bg-border/50" />
+              <div className="flex items-center gap-1">
+                <CalendarDays className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-amber-600 dark:text-amber-400" />
+                <span className="text-[10px] sm:text-xs font-bold">500+ Events</span>
               </div>
             </div>
-            {/* Decorative elements */}
-            <div className="absolute -bottom-4 sm:-bottom-6 -right-4 sm:-right-6 h-16 sm:h-24 w-16 sm:w-24 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 -z-10 opacity-20 blur-xl" />
-            <div className="absolute -top-4 sm:-top-6 -left-4 sm:-left-6 h-16 sm:h-24 w-16 sm:w-24 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-500 -z-10 opacity-20 blur-xl" />
           </motion.div>
 
           {/* Right - Content */}
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
+            initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.5 }}
           >
-            <Badge variant="secondary" className="mb-3 sm:mb-4 border-emerald-500/20 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400">
+            <Badge variant="secondary" className="mb-2 sm:mb-3 border-emerald-500/20 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400 text-[10px] sm:text-xs">
               About Us — ስለ እኛ
             </Badge>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">
               Crafting Unforgettable
               <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent"> Moments Since 2022</span>
             </h2>
-            <p className="mt-1 text-sm sm:text-base text-emerald-600 dark:text-emerald-400 font-medium">
+            <p className="mt-0.5 text-xs sm:text-sm text-emerald-600 dark:text-emerald-400 font-medium">
               ከ2022 ዓ.ም ጀምሮ ያልተረሳ ትዝታዎችን እያደራጅን
             </p>
-            <p className="mt-3 sm:mt-4 text-muted-foreground text-sm sm:text-base leading-relaxed">
-              Named after the Ethiopian New Year — a celebration of new beginnings and fresh possibilities — 
-              Enkutatash was founded with a simple belief: every event deserves to be extraordinary. Based in 
-              the heart of Addis Ababa, we have been transforming ordinary occasions into 
-              legendary experiences for over four years.
+            <p className="mt-2 sm:mt-3 text-muted-foreground text-xs sm:text-sm leading-relaxed">
+              Named after the Ethiopian New Year, Enkutatash was founded with a simple belief: 
+              every event deserves to be extraordinary. Based in Addis Ababa, we transform ordinary 
+              occasions into legendary experiences with cultural understanding and world-class standards.
             </p>
-            <p className="mt-2 sm:mt-4 text-muted-foreground text-sm sm:text-base leading-relaxed">
-              Our team of creative professionals brings together expertise in event design, production, 
-              catering coordination, and logistics management. We understand the unique cultural nuances that 
-              make Ethiopian celebrations special, while also delivering world-class standards that impress 
-              international guests. Whether it is a traditional wedding with hundreds of guests or a sleek 
-              corporate product launch, we approach every event with the same passion and meticulous attention 
-              to detail.
-            </p>
-            <div className="mt-4 sm:mt-6 grid grid-cols-2 gap-2 sm:gap-3">
+            <div className="mt-3 sm:mt-4 flex flex-wrap gap-x-4 gap-y-1.5 sm:gap-y-2">
               {[
-                { label: 'End-to-end event planning', icon: CheckCircle2 },
-                { label: 'Award-winning design team', icon: CheckCircle2 },
-                { label: 'Strong vendor network', icon: CheckCircle2 },
-                { label: 'Dedicated project manager', icon: CheckCircle2 },
-                { label: 'Full sound & light supply', icon: CheckCircle2 },
-                { label: 'Catering & decoration', icon: CheckCircle2 },
-              ].map((item) => {
-                const ItemIcon = item.icon
-                return (
-                  <div key={item.label} className="flex items-center gap-1.5 sm:gap-2">
-                    <ItemIcon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                    <span className="text-[11px] sm:text-sm">{item.label}</span>
-                  </div>
-                )
-              })}
+                'End-to-end event planning',
+                'Award-winning design team',
+                'Strong vendor network',
+                'Dedicated project manager',
+                'Full sound & light supply',
+                'Catering & decoration',
+              ].map((label) => (
+                <div key={label} className="flex items-center gap-1 sm:gap-1.5">
+                  <CheckCircle2 className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                  <span className="text-[10px] sm:text-xs text-muted-foreground">{label}</span>
+                </div>
+              ))}
             </div>
             <Button
-              className="mt-4 sm:mt-8 bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20 min-h-[44px]"
+              size="sm"
+              className="mt-3 sm:mt-5 bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20 min-h-[40px] sm:min-h-[44px] text-xs sm:text-sm"
               onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
             >
-              Get in Touch <ArrowRight className="ml-2 h-4 w-4" />
+              Get in Touch <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
             </Button>
           </motion.div>
         </div>
@@ -971,269 +919,149 @@ function AboutSection() {
 
 function VisionMissionSection() {
   const goals = [
-    {
-      icon: Heart,
-      title: 'Client Satisfaction',
-      titleAmharic: 'የደንበኛ እርካታ',
-      description: 'Strive to consistently meet and surpass client expectations by providing top-notch event management services that leave every client delighted and eager to return.',
-      gradient: 'from-rose-500 to-pink-600',
-      bgGlow: 'bg-rose-500/10',
-    },
-    {
-      icon: Sparkles,
-      title: 'Exceptional Experiences',
-      titleAmharic: 'ልዩ ልምዶች',
-      description: 'Create unique and innovative event concepts that captivate attendees and leave a lasting impression, turning every gathering into an unforgettable memory.',
-      gradient: 'from-amber-500 to-orange-600',
-      bgGlow: 'bg-amber-500/10',
-    },
-    {
-      icon: Shield,
-      title: 'Professionalism & Reliability',
-      titleAmharic: 'ሙያዊነትና አስተማማኝነት',
-      description: 'Establish a reputation for delivering events with the utmost professionalism and reliability, ensuring every detail is handled with precision and care.',
-      gradient: 'from-blue-500 to-indigo-600',
-      bgGlow: 'bg-blue-500/10',
-    },
-    {
-      icon: TrendingUp,
-      title: 'Growth & Expansion',
-      titleAmharic: 'እድገትና ስፋት',
-      description: 'Expand the client base by consistently delivering successful events that generate referrals and build long-lasting business relationships across Ethiopia.',
-      gradient: 'from-emerald-500 to-teal-600',
-      bgGlow: 'bg-emerald-500/10',
-    },
-    {
-      icon: Award,
-      title: 'Industry Leadership',
-      titleAmharic: 'የኢንዱስትሪ መሪነት',
-      description: 'Become an industry leader in corporate event management, consistently setting trends and raising the standard of excellence for the entire events industry in Ethiopia.',
-      gradient: 'from-violet-500 to-purple-600',
-      bgGlow: 'bg-violet-500/10',
-    },
+    { icon: Heart, title: 'Client Satisfaction', titleAmharic: 'የደንበኛ እርካታ', gradient: 'from-rose-500 to-pink-600' },
+    { icon: Sparkles, title: 'Exceptional Experiences', titleAmharic: 'ልዩ ልምዶች', gradient: 'from-amber-500 to-orange-600' },
+    { icon: Shield, title: 'Professionalism & Reliability', titleAmharic: 'ሙያዊነትና አስተማማኝነት', gradient: 'from-blue-500 to-indigo-600' },
+    { icon: TrendingUp, title: 'Growth & Expansion', titleAmharic: 'እድገትና ስፋት', gradient: 'from-emerald-500 to-teal-600' },
+    { icon: Award, title: 'Industry Leadership', titleAmharic: 'የኢንዱስትሪ መሪነት', gradient: 'from-violet-500 to-purple-600' },
   ]
 
   const objectives = [
-    {
-      icon: Target,
-      title: 'Tailored Planning',
-      description: 'Offer comprehensive event planning services tailored to the specific needs and requirements of corporate clients.',
-    },
-    {
-      icon: CheckCircle2,
-      title: 'Meticulous Detail',
-      description: 'Provide meticulous attention to detail in all aspects of event management — venue selection, logistics, catering, audiovisuals, and entertainment.',
-    },
-    {
-      icon: Handshake,
-      title: 'Brand Alignment',
-      description: 'Collaborate closely with clients to understand their brand identity, values, and objectives, ensuring the event aligns perfectly with their vision.',
-    },
-    {
-      icon: Megaphone,
-      title: 'Strategic Promotion',
-      description: 'Implement effective marketing and promotion strategies to create buzz and attract the desired target audience for every event.',
-    },
-    {
-      icon: Lightbulb,
-      title: 'Technology-Driven',
-      description: 'Utilize technology and event management tools to streamline processes, enhance efficiency, and deliver superior results consistently.',
-    },
-    {
-      icon: Users,
-      title: 'Vendor Excellence',
-      description: 'Foster strong relationships with vendors and suppliers to ensure access to high-quality and reliable services for every event.',
-    },
-    {
-      icon: Rocket,
-      title: 'Innovation First',
-      description: 'Continuously stay updated with the latest trends and innovations in the events industry, incorporating them into event concepts and design.',
-    },
-    {
-      icon: BarChart3,
-      title: 'Continuous Improvement',
-      description: 'Monitor and evaluate the success of each event, gathering feedback from clients and attendees, and implementing improvements for future events.',
-    },
+    { icon: Target, title: 'Tailored Planning', description: 'Comprehensive planning tailored to corporate client needs' },
+    { icon: CheckCircle2, title: 'Meticulous Detail', description: 'Attention to detail in venue, logistics, catering & AV' },
+    { icon: Handshake, title: 'Brand Alignment', description: 'Events aligned with your brand identity and objectives' },
+    { icon: Megaphone, title: 'Strategic Promotion', description: 'Marketing strategies to attract your target audience' },
+    { icon: Lightbulb, title: 'Technology-Driven', description: 'Modern tools for streamlined, efficient delivery' },
+    { icon: Users, title: 'Vendor Excellence', description: 'Strong vendor relationships for reliable services' },
+    { icon: Rocket, title: 'Innovation First', description: 'Latest industry trends incorporated into every event' },
+    { icon: BarChart3, title: 'Continuous Improvement', description: 'Feedback-driven improvement for future events' },
   ]
 
   return (
-    <section id="vision" className="py-12 sm:py-20 md:py-28 bg-muted/20">
+    <section id="vision" className="py-8 sm:py-14 bg-muted/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Vision & Mission Header */}
+        {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: 0.5 }}
-          className="text-center max-w-2xl mx-auto mb-8 sm:mb-16"
+          transition={{ duration: 0.4 }}
+          className="text-center max-w-xl mx-auto mb-6 sm:mb-10"
         >
-          <Badge variant="secondary" className="mb-3 sm:mb-4 border-emerald-500/20 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400">
-            Our Vision & Mission — ራዕይና ተልዕኮ
+          <Badge variant="secondary" className="mb-2 border-emerald-500/20 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400 text-[10px] sm:text-xs">
+            Vision & Mission — ራዕይና ተልዕኮ
           </Badge>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">
             Driven by Purpose,
             <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent"> Defined by Excellence</span>
           </h2>
         </motion.div>
 
-        {/* Vision & Mission Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-12 sm:mb-20">
-          {/* Vision Card */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.5 }}
-          >
-            <Card className="h-full rounded-xl sm:rounded-2xl border-emerald-500/20 bg-gradient-to-br from-emerald-500/5 via-background to-teal-500/5 shadow-lg hover:shadow-xl transition-shadow">
-              <CardContent className="p-5 sm:p-8">
-                <div className="flex items-center gap-3 mb-3 sm:mb-5">
-                  <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/20">
-                    <Eye className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
+        {/* Vision & Mission - compact side by side */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-10">
+          <motion.div initial={{ opacity: 0, x: -15 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: '-100px' }} transition={{ duration: 0.4 }}>
+            <Card className="h-full rounded-xl border-emerald-500/20 bg-gradient-to-br from-emerald-500/5 via-background to-teal-500/5 shadow-md hover:shadow-lg transition-shadow">
+              <CardContent className="p-4 sm:p-5">
+                <div className="flex items-center gap-2.5 mb-2">
+                  <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-md shadow-emerald-500/20">
+                    <Eye className="h-4 w-4 sm:h-4.5 sm:w-4.5 text-white" />
                   </div>
                   <div>
-                    <h3 className="text-lg sm:text-xl font-bold">Our Vision</h3>
-                    <p className="text-[10px] sm:text-xs text-emerald-600 dark:text-emerald-400 font-medium">ራዕያችን</p>
+                    <h3 className="text-sm sm:text-base font-bold">Our Vision</h3>
+                    <p className="text-[9px] sm:text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">ራዕያችን</p>
                   </div>
                 </div>
-                <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                   To be the leading events management service provider for corporate events, delivering 
-                  exceptional experiences and exceeding client expectations. We envision a future where 
-                  every corporate gathering in Ethiopia reflects world-class standards, powered by 
-                  Enkutatash&apos;s creative excellence and unwavering commitment to quality.
+                  exceptional experiences and exceeding client expectations across Ethiopia.
                 </p>
               </CardContent>
             </Card>
           </motion.div>
 
-          {/* Mission Card */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.5 }}
-          >
-            <Card className="h-full rounded-xl sm:rounded-2xl border-amber-500/20 bg-gradient-to-br from-amber-500/5 via-background to-orange-500/5 shadow-lg hover:shadow-xl transition-shadow">
-              <CardContent className="p-5 sm:p-8">
-                <div className="flex items-center gap-3 mb-3 sm:mb-5">
-                  <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/20">
-                    <Target className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
+          <motion.div initial={{ opacity: 0, x: 15 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: '-100px' }} transition={{ duration: 0.4 }}>
+            <Card className="h-full rounded-xl border-amber-500/20 bg-gradient-to-br from-amber-500/5 via-background to-orange-500/5 shadow-md hover:shadow-lg transition-shadow">
+              <CardContent className="p-4 sm:p-5">
+                <div className="flex items-center gap-2.5 mb-2">
+                  <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-md shadow-amber-500/20">
+                    <Target className="h-4 w-4 sm:h-4.5 sm:w-4.5 text-white" />
                   </div>
                   <div>
-                    <h3 className="text-lg sm:text-xl font-bold">Our Mission</h3>
-                    <p className="text-[10px] sm:text-xs text-amber-600 dark:text-amber-400 font-medium">ተልዕኳችን</p>
+                    <h3 className="text-sm sm:text-base font-bold">Our Mission</h3>
+                    <p className="text-[9px] sm:text-[10px] text-amber-600 dark:text-amber-400 font-medium">ተልዕኳችን</p>
                   </div>
                 </div>
-                <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                   To create memorable and impactful corporate events that engage and inspire attendees, 
-                  leaving a lasting impression on both clients and participants. Through innovative design, 
-                  meticulous planning, and cultural understanding, we transform corporate gatherings into 
-                  powerful experiences that drive results and strengthen brands.
+                  transforming gatherings into powerful experiences through innovative design and meticulous planning.
                 </p>
               </CardContent>
             </Card>
           </motion.div>
         </div>
 
-        {/* Goals Section */}
+        {/* Goals - compact pills */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: 0.5 }}
-          className="text-center max-w-2xl mx-auto mb-8 sm:mb-12"
+          transition={{ duration: 0.4 }}
+          className="mb-6 sm:mb-10"
         >
-          <Badge variant="secondary" className="mb-3 sm:mb-4 border-amber-500/20 bg-amber-500/5 text-amber-700 dark:text-amber-400">
-            Our Goals — ግቦቻችን
-          </Badge>
-          <h3 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">
-            What We Strive For
-            <span className="bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent"> Every Day</span>
-          </h3>
+          <div className="flex items-center justify-center gap-1.5 mb-3 sm:mb-4">
+            <Badge variant="secondary" className="border-amber-500/20 bg-amber-500/5 text-amber-700 dark:text-amber-400 text-[10px] sm:text-xs">
+              Goals — ግቦቻችን
+            </Badge>
+          </div>
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
+            {goals.map((goal) => {
+              const Icon = goal.icon
+              return (
+                <div key={goal.title} className="flex items-center gap-1.5 sm:gap-2 bg-background border border-border/50 rounded-full px-3 py-1.5 sm:px-4 sm:py-2 shadow-sm hover:shadow-md transition-shadow">
+                  <div className={`h-5 w-5 sm:h-6 sm:w-6 rounded-full bg-gradient-to-br ${goal.gradient} flex items-center justify-center`}>
+                    <Icon className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-white" />
+                  </div>
+                  <span className="text-[10px] sm:text-xs font-medium">{goal.title}</span>
+                  <span className="text-[8px] sm:text-[10px] text-emerald-600 dark:text-emerald-400 font-medium hidden sm:inline">({goal.titleAmharic})</span>
+                </div>
+              )
+            })}
+          </div>
         </motion.div>
 
+        {/* Objectives - compact grid */}
         <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 mb-12 sm:mb-20"
+          transition={{ duration: 0.4 }}
+          className="mb-2"
         >
-          {goals.map((goal) => {
-            const Icon = goal.icon
-            return (
-              <motion.div key={goal.title} variants={staggerItem} whileHover={{ y: -4 }} className="group">
-                <Card className="h-full rounded-xl sm:rounded-2xl border-border/50 shadow-sm hover:shadow-lg transition-all duration-300 hover:border-emerald-500/20">
-                  <CardContent className="p-3 sm:p-4 text-center">
-                    <div className={`inline-flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-xl sm:rounded-2xl ${goal.bgGlow} mb-2 sm:mb-3`}>
-                      <div className={`h-6 w-6 sm:h-7 sm:w-7 rounded-lg sm:rounded-xl bg-gradient-to-br ${goal.gradient} flex items-center justify-center`}>
-                        <Icon className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-white" />
-                      </div>
-                    </div>
-                    <h4 className="text-xs sm:text-sm font-semibold mb-0.5 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
-                      {goal.title}
+          <div className="flex items-center justify-center gap-1.5 mb-3 sm:mb-4">
+            <Badge variant="secondary" className="border-violet-500/20 bg-violet-500/5 text-violet-700 dark:text-violet-400 text-[10px] sm:text-xs">
+              Objectives — የስራ ዓላማዎች
+            </Badge>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
+            {objectives.map((objective) => {
+              const Icon = objective.icon
+              return (
+                <div key={objective.title} className="group flex items-start gap-1.5 sm:gap-2 bg-background border border-border/50 rounded-lg p-2 sm:p-2.5 shadow-sm hover:shadow-md hover:border-violet-500/20 transition-all">
+                  <div className="shrink-0 h-6 w-6 sm:h-7 sm:w-7 rounded-md bg-violet-500/10 flex items-center justify-center">
+                    <Icon className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-violet-600 dark:text-violet-400" />
+                  </div>
+                  <div className="min-w-0">
+                    <h4 className="text-[10px] sm:text-xs font-semibold group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors leading-tight">
+                      {objective.title}
                     </h4>
-                    <p className="text-[9px] sm:text-[10px] text-emerald-600 dark:text-emerald-400 font-medium mb-1">
-                      {goal.titleAmharic}
+                    <p className="text-[8px] sm:text-[10px] text-muted-foreground leading-relaxed mt-0.5 hidden sm:block">
+                      {objective.description}
                     </p>
-                    <p className="text-[10px] sm:text-xs text-muted-foreground leading-relaxed line-clamp-3 sm:line-clamp-none">
-                      {goal.description}
-                    </p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            )
-          })}
-        </motion.div>
-
-        {/* Objectives Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: 0.5 }}
-          className="text-center max-w-2xl mx-auto mb-8 sm:mb-12"
-        >
-          <Badge variant="secondary" className="mb-3 sm:mb-4 border-violet-500/20 bg-violet-500/5 text-violet-700 dark:text-violet-400">
-            Our Objectives — የስራ ዓላማዎች
-          </Badge>
-          <h3 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">
-            How We Deliver
-            <span className="bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent"> On Our Promise</span>
-          </h3>
-        </motion.div>
-
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-100px' }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4"
-        >
-          {objectives.map((objective, index) => {
-            const Icon = objective.icon
-            return (
-              <motion.div key={objective.title} variants={staggerItem} whileHover={{ y: -3 }} className="group">
-                <Card className="h-full rounded-xl sm:rounded-2xl border-border/50 shadow-sm hover:shadow-lg transition-all duration-300 hover:border-violet-500/20">
-                  <CardContent className="p-3 sm:p-5">
-                    <div className="flex items-start gap-2.5 sm:gap-3">
-                      <div className="shrink-0 h-8 w-8 sm:h-9 sm:w-9 rounded-lg sm:rounded-xl bg-violet-500/10 flex items-center justify-center">
-                        <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-violet-600 dark:text-violet-400" />
-                      </div>
-                      <div className="min-w-0">
-                        <h4 className="text-xs sm:text-sm font-semibold mb-0.5 sm:mb-1 group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors">
-                          {objective.title}
-                        </h4>
-                        <p className="text-[10px] sm:text-xs text-muted-foreground leading-relaxed">
-                          {objective.description}
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            )
-          })}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
         </motion.div>
       </div>
     </section>

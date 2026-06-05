@@ -12,7 +12,10 @@ import { EventsList } from '@/components/event-organizer/events-list'
 import { CreateEventDialog } from '@/components/event-organizer/create-event-dialog'
 import { LandingPage } from '@/components/event-organizer/landing-page'
 import { BusinessPage } from '@/components/event-organizer/business-page'
-import { Card, CardContent } from '@/components/ui/card'
+import { AttendeesView } from '@/components/event-organizer/attendees-view'
+import { VenuesView } from '@/components/event-organizer/venues-view'
+import { AnalyticsView } from '@/components/event-organizer/analytics-view'
+import { SettingsView } from '@/components/event-organizer/settings-view'
 
 const viewTitles: Record<ViewTab, { title: string; subtitle: string; icon: React.ElementType }> = {
   dashboard: { title: 'Dashboard', subtitle: 'Welcome back, John! Here\'s what\'s happening.', icon: CalendarDays },
@@ -21,28 +24,6 @@ const viewTitles: Record<ViewTab, { title: string; subtitle: string; icon: React
   venues: { title: 'Venues', subtitle: 'Manage your event venues.', icon: MapPin },
   analytics: { title: 'Analytics', subtitle: 'Insights and performance metrics.', icon: BarChart3 },
   settings: { title: 'Settings', subtitle: 'Configure your preferences.', icon: Settings },
-}
-
-function PlaceholderView({ view }: { view: ViewTab }) {
-  const info = viewTitles[view]
-  const Icon = info.icon
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-    >
-      <Card className="rounded-xl shadow-sm">
-        <CardContent className="flex flex-col items-center justify-center py-20">
-          <div className="h-16 w-16 rounded-2xl bg-emerald-500/10 flex items-center justify-center mb-4">
-            <Icon className="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
-          </div>
-          <h2 className="text-xl font-semibold mb-1">{info.title}</h2>
-          <p className="text-muted-foreground text-sm">{info.subtitle}</p>
-        </CardContent>
-      </Card>
-    </motion.div>
-  )
 }
 
 function AppView() {
@@ -100,15 +81,48 @@ function AppView() {
                   <EventsList />
                 </motion.div>
               )}
-              {!['dashboard', 'events'].includes(currentView) && (
+              {currentView === 'attendees' && (
                 <motion.div
-                  key={currentView}
+                  key="attendees"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <PlaceholderView view={currentView} />
+                  <AttendeesView />
+                </motion.div>
+              )}
+              {currentView === 'venues' && (
+                <motion.div
+                  key="venues"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <VenuesView />
+                </motion.div>
+              )}
+              {currentView === 'analytics' && (
+                <motion.div
+                  key="analytics"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <AnalyticsView />
+                </motion.div>
+              )}
+              {currentView === 'settings' && (
+                <motion.div
+                  key="settings"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <SettingsView />
                 </motion.div>
               )}
             </AnimatePresence>

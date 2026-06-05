@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { CalendarIcon, Sparkles } from 'lucide-react'
-import { format } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 import {
   Dialog,
   DialogContent,
@@ -26,6 +26,7 @@ import {
 import { cn } from '@/lib/utils'
 import { useEventStore, EventCategory, EventItem } from './store'
 import { venues } from './data'
+import { useToast } from '@/hooks/use-toast'
 
 const gradients = [
   'from-emerald-400 to-teal-600',
@@ -38,7 +39,8 @@ const gradients = [
 const categories: EventCategory[] = ['Conference', 'Workshop', 'Social', 'Concert', 'Meetup']
 
 export function CreateEventDialog() {
-  const { createDialogOpen, setCreateDialogOpen, addEvent } = useEventStore()
+  const { createDialogOpen, setCreateDialogOpen, addEvent, editingEvent, setEditingEvent, updateEvent, addActivity } = useEventStore()
+  const { toast } = useToast()
   const [name, setName] = useState('')
   const [date, setDate] = useState<Date | undefined>(undefined)
   const [time, setTime] = useState('09:00')
@@ -48,30 +50,85 @@ export function CreateEventDialog() {
   const [maxAttendees, setMaxAttendees] = useState('100')
   const [ticketPrice, setTicketPrice] = useState('0')
 
+  const isEditing = !!editingEvent
+
+  // Populate form when editing
+  useEffect(() => {
+    if (editingEvent) {
+      setName(editingEvent.name)
+      setDate(parseISO(editingEvent.date))
+      setTime(editingEvent.time)
+      setVenue(editingEvent.venue)
+      setCategory(editingEvent.category)
+      setDescription(editingEvent.description)
+      setMaxAttendees(editingEvent.maxAttendees.toString())
+      setTicketPrice(editingEvent.ticketPrice.toString())
+    }
+  }, [editingEvent])
+
   const handleSubmit = () => {
     if (!name || !date || !venue || !category) return
 
-    const newEvent: EventItem = {
-      id: Date.now().toString(),
-      name,
-      date: format(date, 'yyyy-MM-dd'),
-      time,
-      venue,
-      attendees: 0,
-      maxAttendees: parseInt(maxAttendees) || 100,
-      category: category as EventCategory || 'Conference',
-      status: 'upcoming',
-      description,
-      ticketPrice: parseFloat(ticketPrice) || 0,
-      imageGradient: gradients[Math.floor(Math.random() * gradients.length)],
+    if (isEditing && editingEvent) {
+      updateEvent(editingEvent.id, {
+        name,
+        date: format(date, 'yyyy-MM-dd'),
+        time,
+        venue,
+        category: category as EventCategory,
+        description,
+        maxAttendees: parseInt(maxAttendees) || 100,
+        ticketPrice: parseFloat(ticketPrice) || 0,
+      })
+      addActivity({
+        id: Date.now().toString(),
+        user: 'John Doe',
+        avatar: 'JD',
+        action: 'updated details for',
+        target: name,
+        timestamp: new Date().toISOString(),
+      })
+      toast({
+        title: 'Event Updated',
+        description: `${name} has been updated successfully.`,
+      })
+    } else {
+      const newEvent: EventItem = {
+        id: Date.now().toString(),
+        name,
+        date: format(date, 'yyyy-MM-dd'),
+        time,
+        venue,
+        attendees: 0,
+        maxAttendees: parseInt(maxAttendees) || 100,
+        category: category as EventCategory || 'Conference',
+        status: 'upcoming',
+        description,
+        ticketPrice: parseFloat(ticketPrice) || 0,
+        imageGradient: gradients[Math.floor(Math.random() * gradients.length)],
+      }
+
+      addEvent(newEvent)
+      addActivity({
+        id: Date.now().toString(),
+        user: 'John Doe',
+        avatar: 'JD',
+        action: 'created event',
+        target: name,
+        timestamp: new Date().toISOString(),
+      })
+      toast({
+        title: 'Event Created',
+        description: `${name} has been created successfully.`,
+      })
     }
 
-    addEvent(newEvent)
     handleClose()
   }
 
   const handleClose = () => {
     setCreateDialogOpen(false)
+    setEditingEvent(null)
     setName('')
     setDate(undefined)
     setTime('09:00')
@@ -88,10 +145,10 @@ export function CreateEventDialog() {
         <DialogHeader className="p-6 pb-0">
           <DialogTitle className="flex items-center gap-2 text-xl">
             <Sparkles className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-            Create New Event
+            {isEditing ? 'Edit Event' : 'Create New Event'}
           </DialogTitle>
           <DialogDescription>
-            Fill in the details to create your new event.
+            {isEditing ? 'Update the event details below.' : 'Fill in the details to create your new event.'}
           </DialogDescription>
         </DialogHeader>
 
@@ -234,7 +291,7 @@ export function CreateEventDialog() {
               disabled={!name || !date || !venue || !category}
               className="bg-emerald-600 hover:bg-emerald-700 text-white"
             >
-              Create Event
+              {isEditing ? 'Save Changes' : 'Create Event'}
             </Button>
           </div>
         </div>

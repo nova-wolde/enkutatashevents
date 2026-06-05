@@ -42,16 +42,24 @@ interface EventStore {
   createDialogOpen: boolean
   searchQuery: string
   filterStatus: EventStatus | 'all'
+  selectedEvent: EventItem | null
+  editingEvent: EventItem | null
 
   setEvents: (events: EventItem[]) => void
   addEvent: (event: EventItem) => void
+  updateEvent: (id: string, updates: Partial<EventItem>) => void
+  deleteEvent: (id: string) => void
   setActivities: (activities: ActivityItem[]) => void
+  addActivity: (activity: ActivityItem) => void
   setCurrentView: (view: ViewTab) => void
+  setAppView: (view: AppView) => void
   toggleSidebar: () => void
   setMobileSidebarOpen: (open: boolean) => void
   setCreateDialogOpen: (open: boolean) => void
   setSearchQuery: (query: string) => void
   setFilterStatus: (status: EventStatus | 'all') => void
+  setSelectedEvent: (event: EventItem | null) => void
+  setEditingEvent: (event: EventItem | null) => void
 }
 
 export const useEventStore = create<EventStore>((set) => ({
@@ -64,10 +72,24 @@ export const useEventStore = create<EventStore>((set) => ({
   createDialogOpen: false,
   searchQuery: '',
   filterStatus: 'all',
+  selectedEvent: null,
+  editingEvent: null,
 
   setEvents: (events) => set({ events }),
   addEvent: (event) => set((state) => ({ events: [event, ...state.events] })),
+  updateEvent: (id, updates) =>
+    set((state) => ({
+      events: state.events.map((e) => (e.id === id ? { ...e, ...updates } : e)),
+    })),
+  deleteEvent: (id) =>
+    set((state) => ({
+      events: state.events.filter((e) => e.id !== id),
+    })),
   setActivities: (activities) => set({ activities }),
+  addActivity: (activity) =>
+    set((state) => ({
+      activities: [activity, ...state.activities],
+    })),
   setCurrentView: (currentView) => set({ currentView }),
   setAppView: (appView) => set({ appView }),
   toggleSidebar: () => set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
@@ -75,4 +97,6 @@ export const useEventStore = create<EventStore>((set) => ({
   setCreateDialogOpen: (createDialogOpen) => set({ createDialogOpen }),
   setSearchQuery: (searchQuery) => set({ searchQuery }),
   setFilterStatus: (filterStatus) => set({ filterStatus }),
+  setSelectedEvent: (selectedEvent) => set({ selectedEvent }),
+  setEditingEvent: (editingEvent) => set({ editingEvent }),
 }))

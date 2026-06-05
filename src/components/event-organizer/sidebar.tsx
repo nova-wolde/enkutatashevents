@@ -115,7 +115,7 @@ export function Sidebar() {
               <Sparkles className="h-4 w-4 text-white" />
             </div>
             <span className="text-lg font-bold">
-              Event<span className="text-emerald-600 dark:text-emerald-400">Hub</span>
+              Enkutatash<span className="text-emerald-600 dark:text-emerald-400"> Event</span>
             </span>
           </div>
           <ScrollArea className="flex-1 px-2 py-4">

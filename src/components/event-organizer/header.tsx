@@ -12,6 +12,7 @@ import {
   Command,
   Globe,
 } from 'lucide-react'
+import Image from 'next/image'
 import { useTheme } from 'next-themes'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -51,9 +52,13 @@ export function Header() {
 
       {/* Logo */}
       <div className="flex items-center gap-2">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600">
-          <Sparkles className="h-4 w-4 text-white" />
-        </div>
+        <Image
+          src="/enkutatash-logo.png"
+          alt="Enkutatash"
+          width={32}
+          height={32}
+          className="h-8 w-8 rounded-lg object-contain"
+        />
         <span className="text-lg font-bold tracking-tight hidden sm:block">
           Enkutatash<span className="text-emerald-600 dark:text-emerald-400"> Dashboard</span>
         </span>
@@ -109,15 +114,15 @@ export function Header() {
             <Button variant="ghost" className="h-9 w-9 rounded-full p-0 ml-1">
               <Avatar className="h-8 w-8">
                 <AvatarFallback className="bg-gradient-to-br from-emerald-500 to-teal-600 text-white text-xs font-semibold">
-                  JD
+                  EE
                 </AvatarFallback>
               </Avatar>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-48">
             <DropdownMenuItem className="flex flex-col items-start">
-              <span className="font-medium">John Doe</span>
-              <span className="text-xs text-muted-foreground">john@eventhub.com</span>
+              <span className="font-medium">Enkutatash Owner</span>
+              <span className="text-xs text-muted-foreground">enkutatashevents@gmail.com</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>Profile</DropdownMenuItem>

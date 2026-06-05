@@ -17,7 +17,7 @@ import { AnalyticsView } from '@/components/event-organizer/analytics-view'
 import { SettingsView } from '@/components/event-organizer/settings-view'
 
 const viewTitles: Record<ViewTab, { title: string; subtitle: string; icon: React.ElementType }> = {
-  dashboard: { title: 'Dashboard', subtitle: 'Welcome back, John! Here\'s what\'s happening.', icon: CalendarDays },
+  dashboard: { title: 'Dashboard', subtitle: 'Welcome back! Here\'s what\'s happening.', icon: CalendarDays },
   events: { title: 'Events', subtitle: 'Manage all your events in one place.', icon: Calendar },
   attendees: { title: 'Attendees', subtitle: 'Track and manage event attendees.', icon: Users },
   venues: { title: 'Venues', subtitle: 'Manage your event venues.', icon: MapPin },

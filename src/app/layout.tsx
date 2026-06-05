@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   title: "Enkutatash - Premium Event Organizers | Addis Ababa",
   description: "Addis Ababa's premier event organizer. Weddings, corporate events, concerts, cultural celebrations — we bring your vision to life with elegance and precision.",
   icons: {
-    icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
+    icon: "/enkutatash-logo.png",
   },
 };
 

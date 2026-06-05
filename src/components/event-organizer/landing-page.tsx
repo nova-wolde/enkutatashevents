@@ -32,6 +32,15 @@ import {
   Armchair,
   UtensilsCrossed,
   Gamepad2,
+  Eye,
+  Target,
+  TrendingUp,
+  Handshake,
+  Lightbulb,
+  Shield,
+  BarChart3,
+  Rocket,
+  Heart,
 } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import Image from 'next/image'
@@ -460,14 +469,14 @@ function LandingNavbar() {
             <a href="#about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               About
             </a>
+            <a href="#vision" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              Vision
+            </a>
             <a href="#services" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               Services
             </a>
             <a href="#portfolio" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               Portfolio
-            </a>
-            <a href="#testimonials" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              Testimonials
             </a>
             <a href="#contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               Contact
@@ -536,7 +545,7 @@ function LandingNavbar() {
             className="lg:hidden border-t border-border/50 bg-background/95 backdrop-blur-xl"
           >
             <div className="px-4 py-4 space-y-3">
-              {['About', 'Services', 'Portfolio', 'Testimonials', 'Contact'].map((item) => (
+              {['About', 'Vision', 'Services', 'Portfolio', 'Contact'].map((item) => (
                 <a
                   key={item}
                   href={`#${item.toLowerCase()}`}
@@ -960,9 +969,280 @@ function AboutSection() {
   )
 }
 
+function VisionMissionSection() {
+  const goals = [
+    {
+      icon: Heart,
+      title: 'Client Satisfaction',
+      titleAmharic: 'የደንበኛ እርካታ',
+      description: 'Strive to consistently meet and surpass client expectations by providing top-notch event management services that leave every client delighted and eager to return.',
+      gradient: 'from-rose-500 to-pink-600',
+      bgGlow: 'bg-rose-500/10',
+    },
+    {
+      icon: Sparkles,
+      title: 'Exceptional Experiences',
+      titleAmharic: 'ልዩ ልምዶች',
+      description: 'Create unique and innovative event concepts that captivate attendees and leave a lasting impression, turning every gathering into an unforgettable memory.',
+      gradient: 'from-amber-500 to-orange-600',
+      bgGlow: 'bg-amber-500/10',
+    },
+    {
+      icon: Shield,
+      title: 'Professionalism & Reliability',
+      titleAmharic: 'ሙያዊነትና አስተማማኝነት',
+      description: 'Establish a reputation for delivering events with the utmost professionalism and reliability, ensuring every detail is handled with precision and care.',
+      gradient: 'from-blue-500 to-indigo-600',
+      bgGlow: 'bg-blue-500/10',
+    },
+    {
+      icon: TrendingUp,
+      title: 'Growth & Expansion',
+      titleAmharic: 'እድገትና ስፋት',
+      description: 'Expand the client base by consistently delivering successful events that generate referrals and build long-lasting business relationships across Ethiopia.',
+      gradient: 'from-emerald-500 to-teal-600',
+      bgGlow: 'bg-emerald-500/10',
+    },
+    {
+      icon: Award,
+      title: 'Industry Leadership',
+      titleAmharic: 'የኢንዱስትሪ መሪነት',
+      description: 'Become an industry leader in corporate event management, consistently setting trends and raising the standard of excellence for the entire events industry in Ethiopia.',
+      gradient: 'from-violet-500 to-purple-600',
+      bgGlow: 'bg-violet-500/10',
+    },
+  ]
+
+  const objectives = [
+    {
+      icon: Target,
+      title: 'Tailored Planning',
+      description: 'Offer comprehensive event planning services tailored to the specific needs and requirements of corporate clients.',
+    },
+    {
+      icon: CheckCircle2,
+      title: 'Meticulous Detail',
+      description: 'Provide meticulous attention to detail in all aspects of event management — venue selection, logistics, catering, audiovisuals, and entertainment.',
+    },
+    {
+      icon: Handshake,
+      title: 'Brand Alignment',
+      description: 'Collaborate closely with clients to understand their brand identity, values, and objectives, ensuring the event aligns perfectly with their vision.',
+    },
+    {
+      icon: Megaphone,
+      title: 'Strategic Promotion',
+      description: 'Implement effective marketing and promotion strategies to create buzz and attract the desired target audience for every event.',
+    },
+    {
+      icon: Lightbulb,
+      title: 'Technology-Driven',
+      description: 'Utilize technology and event management tools to streamline processes, enhance efficiency, and deliver superior results consistently.',
+    },
+    {
+      icon: Users,
+      title: 'Vendor Excellence',
+      description: 'Foster strong relationships with vendors and suppliers to ensure access to high-quality and reliable services for every event.',
+    },
+    {
+      icon: Rocket,
+      title: 'Innovation First',
+      description: 'Continuously stay updated with the latest trends and innovations in the events industry, incorporating them into event concepts and design.',
+    },
+    {
+      icon: BarChart3,
+      title: 'Continuous Improvement',
+      description: 'Monitor and evaluate the success of each event, gathering feedback from clients and attendees, and implementing improvements for future events.',
+    },
+  ]
+
+  return (
+    <section id="vision" className="py-12 sm:py-20 md:py-28 bg-muted/20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Vision & Mission Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: 0.5 }}
+          className="text-center max-w-2xl mx-auto mb-8 sm:mb-16"
+        >
+          <Badge variant="secondary" className="mb-3 sm:mb-4 border-emerald-500/20 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400">
+            Our Vision & Mission — ራዕይና ተልዕኮ
+          </Badge>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
+            Driven by Purpose,
+            <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent"> Defined by Excellence</span>
+          </h2>
+        </motion.div>
+
+        {/* Vision & Mission Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-12 sm:mb-20">
+          {/* Vision Card */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: 0.5 }}
+          >
+            <Card className="h-full rounded-xl sm:rounded-2xl border-emerald-500/20 bg-gradient-to-br from-emerald-500/5 via-background to-teal-500/5 shadow-lg hover:shadow-xl transition-shadow">
+              <CardContent className="p-5 sm:p-8">
+                <div className="flex items-center gap-3 mb-3 sm:mb-5">
+                  <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                    <Eye className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg sm:text-xl font-bold">Our Vision</h3>
+                    <p className="text-[10px] sm:text-xs text-emerald-600 dark:text-emerald-400 font-medium">ራዕያችን</p>
+                  </div>
+                </div>
+                <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                  To be the leading events management service provider for corporate events, delivering 
+                  exceptional experiences and exceeding client expectations. We envision a future where 
+                  every corporate gathering in Ethiopia reflects world-class standards, powered by 
+                  Enkutatash&apos;s creative excellence and unwavering commitment to quality.
+                </p>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Mission Card */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: 0.5 }}
+          >
+            <Card className="h-full rounded-xl sm:rounded-2xl border-amber-500/20 bg-gradient-to-br from-amber-500/5 via-background to-orange-500/5 shadow-lg hover:shadow-xl transition-shadow">
+              <CardContent className="p-5 sm:p-8">
+                <div className="flex items-center gap-3 mb-3 sm:mb-5">
+                  <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/20">
+                    <Target className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg sm:text-xl font-bold">Our Mission</h3>
+                    <p className="text-[10px] sm:text-xs text-amber-600 dark:text-amber-400 font-medium">ተልዕኳችን</p>
+                  </div>
+                </div>
+                <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                  To create memorable and impactful corporate events that engage and inspire attendees, 
+                  leaving a lasting impression on both clients and participants. Through innovative design, 
+                  meticulous planning, and cultural understanding, we transform corporate gatherings into 
+                  powerful experiences that drive results and strengthen brands.
+                </p>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+
+        {/* Goals Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: 0.5 }}
+          className="text-center max-w-2xl mx-auto mb-8 sm:mb-12"
+        >
+          <Badge variant="secondary" className="mb-3 sm:mb-4 border-amber-500/20 bg-amber-500/5 text-amber-700 dark:text-amber-400">
+            Our Goals — ግቦቻችን
+          </Badge>
+          <h3 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">
+            What We Strive For
+            <span className="bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent"> Every Day</span>
+          </h3>
+        </motion.div>
+
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-100px' }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 mb-12 sm:mb-20"
+        >
+          {goals.map((goal) => {
+            const Icon = goal.icon
+            return (
+              <motion.div key={goal.title} variants={staggerItem} whileHover={{ y: -4 }} className="group">
+                <Card className="h-full rounded-xl sm:rounded-2xl border-border/50 shadow-sm hover:shadow-lg transition-all duration-300 hover:border-emerald-500/20">
+                  <CardContent className="p-3 sm:p-4 text-center">
+                    <div className={`inline-flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-xl sm:rounded-2xl ${goal.bgGlow} mb-2 sm:mb-3`}>
+                      <div className={`h-6 w-6 sm:h-7 sm:w-7 rounded-lg sm:rounded-xl bg-gradient-to-br ${goal.gradient} flex items-center justify-center`}>
+                        <Icon className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-white" />
+                      </div>
+                    </div>
+                    <h4 className="text-xs sm:text-sm font-semibold mb-0.5 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                      {goal.title}
+                    </h4>
+                    <p className="text-[9px] sm:text-[10px] text-emerald-600 dark:text-emerald-400 font-medium mb-1">
+                      {goal.titleAmharic}
+                    </p>
+                    <p className="text-[10px] sm:text-xs text-muted-foreground leading-relaxed line-clamp-3 sm:line-clamp-none">
+                      {goal.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            )
+          })}
+        </motion.div>
+
+        {/* Objectives Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: 0.5 }}
+          className="text-center max-w-2xl mx-auto mb-8 sm:mb-12"
+        >
+          <Badge variant="secondary" className="mb-3 sm:mb-4 border-violet-500/20 bg-violet-500/5 text-violet-700 dark:text-violet-400">
+            Our Objectives — የስራ ዓላማዎች
+          </Badge>
+          <h3 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">
+            How We Deliver
+            <span className="bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent"> On Our Promise</span>
+          </h3>
+        </motion.div>
+
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-100px' }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4"
+        >
+          {objectives.map((objective, index) => {
+            const Icon = objective.icon
+            return (
+              <motion.div key={objective.title} variants={staggerItem} whileHover={{ y: -3 }} className="group">
+                <Card className="h-full rounded-xl sm:rounded-2xl border-border/50 shadow-sm hover:shadow-lg transition-all duration-300 hover:border-violet-500/20">
+                  <CardContent className="p-3 sm:p-5">
+                    <div className="flex items-start gap-2.5 sm:gap-3">
+                      <div className="shrink-0 h-8 w-8 sm:h-9 sm:w-9 rounded-lg sm:rounded-xl bg-violet-500/10 flex items-center justify-center">
+                        <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-violet-600 dark:text-violet-400" />
+                      </div>
+                      <div className="min-w-0">
+                        <h4 className="text-xs sm:text-sm font-semibold mb-0.5 sm:mb-1 group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors">
+                          {objective.title}
+                        </h4>
+                        <p className="text-[10px] sm:text-xs text-muted-foreground leading-relaxed">
+                          {objective.description}
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            )
+          })}
+        </motion.div>
+      </div>
+    </section>
+  )
+}
+
 function ServicesSection() {
   return (
-    <section id="services" className="py-12 sm:py-20 md:py-28 bg-muted/20">
+    <section id="services" className="py-12 sm:py-20 md:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -1685,6 +1965,7 @@ export function LandingPage() {
       <HeroSection />
       <StatsSection />
       <AboutSection />
+      <VisionMissionSection />
       <ServicesSection />
       <PortfolioSection />
       <ProcessSection />

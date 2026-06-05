@@ -213,6 +213,12 @@ function LandingNavbar() {
             <a href="#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               Pricing
             </a>
+            <button
+              onClick={() => setAppView('business')}
+              className="text-sm text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-medium transition-colors"
+            >
+              Our Business
+            </button>
           </div>
 
           {/* Desktop actions */}
@@ -294,6 +300,12 @@ function LandingNavbar() {
             >
               Pricing
             </a>
+            <button
+              onClick={() => { setAppView('business'); setMobileOpen(false) }}
+              className="block text-sm text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-medium py-2"
+            >
+              Our Business
+            </button>
             <div className="pt-2 flex flex-col gap-2">
               <Button
                 variant="outline"

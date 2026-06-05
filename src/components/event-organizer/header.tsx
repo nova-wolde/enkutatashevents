@@ -10,6 +10,7 @@ import {
   Sun,
   Menu,
   Command,
+  Globe,
 } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { Button } from '@/components/ui/button'
@@ -27,7 +28,7 @@ import { useEventStore } from './store'
 
 export function Header() {
   const { setTheme, theme } = useTheme()
-  const { setMobileSidebarOpen, setSearchQuery } = useEventStore()
+  const { setMobileSidebarOpen, setSearchQuery, setAppView } = useEventStore()
   const [searchFocused, setSearchFocused] = useState(false)
 
   return (
@@ -122,7 +123,12 @@ export function Header() {
             <DropdownMenuItem>Profile</DropdownMenuItem>
             <DropdownMenuItem>Settings</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-destructive">Sign out</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setAppView('business')}>
+              <Globe className="h-4 w-4 mr-2" />
+              View Business Page
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="text-destructive" onClick={() => setAppView('landing')}>Sign out</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

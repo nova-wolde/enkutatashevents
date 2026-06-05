@@ -11,6 +11,7 @@ import { Dashboard } from '@/components/event-organizer/dashboard'
 import { EventsList } from '@/components/event-organizer/events-list'
 import { CreateEventDialog } from '@/components/event-organizer/create-event-dialog'
 import { LandingPage } from '@/components/event-organizer/landing-page'
+import { BusinessPage } from '@/components/event-organizer/business-page'
 import { Card, CardContent } from '@/components/ui/card'
 
 const viewTitles: Record<ViewTab, { title: string; subtitle: string; icon: React.ElementType }> = {
@@ -125,7 +126,7 @@ export default function Home() {
 
   return (
     <AnimatePresence mode="wait">
-      {appView === 'landing' ? (
+      {appView === 'landing' && (
         <motion.div
           key="landing"
           initial={{ opacity: 0 }}
@@ -135,7 +136,19 @@ export default function Home() {
         >
           <LandingPage />
         </motion.div>
-      ) : (
+      )}
+      {appView === 'business' && (
+        <motion.div
+          key="business"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <BusinessPage />
+        </motion.div>
+      )}
+      {appView === 'app' && (
         <motion.div
           key="app"
           initial={{ opacity: 0 }}

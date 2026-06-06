@@ -56,3 +56,28 @@ Stage Summary:
 - Attendees view shows real bookings instead of random data
 - Venues can be added/deleted through both venues view and content manager
 - Settings now persists (localStorage + API sync)
+---
+Task ID: 1
+Agent: Main Agent
+Task: Fix deployment - build and runtime issues
+
+Work Log:
+- Ran `npm run build` — build succeeded with no errors
+- Discovered server.js was using `require('next')` with `next({ dev: false })` which conflicts with `output: standalone`
+- Found EADDRINUSE errors in logs from multiple crashed server instances
+- Rewrote server.js to delegate to the standalone server at `.next/standalone/server.js`
+- Updated build script in package.json to also copy `data/` and `.env` to standalone directory
+- Found HTTPS redirect loop: middleware was redirecting when `x-forwarded-proto: http`, but Caddy proxies over HTTP
+- Fixed middleware to only redirect when there's no proxy (no `x-forwarded-for` header)
+- Updated Caddyfile to pass `X-Forwarded-Proto: https` (hardcoded) since external gateway handles TLS
+- Killed stale processes, rebuilt, restarted server
+- Verified all routes return 200 via both localhost:3000 and Caddy proxy on port 81
+- Verified all API endpoints work: content, events, bookings, activities, contact, auth
+- Verified login/session flow works correctly
+- Verified CRUD operations (PATCH content, POST events, POST contact) all work
+
+Stage Summary:
+- Deployment fixed: standalone server now starts correctly
+- HTTPS redirect loop fixed: middleware no longer redirects behind reverse proxy
+- All routes and APIs verified working on production build
+- Build succeeds cleanly, server starts and responds with 200 on all endpoints

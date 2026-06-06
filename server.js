@@ -1,108 +1,97 @@
-const { createServer } = require('http');
-const { parse } = require('url');
-const path = require('path');
+/**
+ * Production server for Enkutatash Events
+ *
+ * With Next.js "output: standalone", the build generates a self-contained
+ * server at .next/standalone/server.js.  This wrapper starts that server
+ * and ensures the required symlinks / copies (public, data, .env) are
+ * present inside the standalone directory.
+ */
+
+const { spawn } = require('child_process');
 const fs = require('fs');
+const path = require('path');
 
-// Static file serving
-const MIME_TYPES = {
-  '.jpg': 'image/jpeg',
-  '.jpeg': 'image/jpeg',
-  '.png': 'image/png',
-  '.svg': 'image/svg+xml',
-  '.ico': 'image/x-icon',
-  '.webp': 'image/webp',
-  '.js': 'application/javascript',
-  '.css': 'text/css',
-  '.woff': 'font/woff',
-  '.woff2': 'font/woff2',
-  '.ttf': 'font/ttf',
-  '.json': 'application/json',
-};
+const ROOT = __dirname;
+const STANDALONE = path.join(ROOT, '.next', 'standalone');
+const PID_FILE = '/tmp/enkutatash-server.pid';
+const LOG_FILE = '/tmp/enkutatash-server.log';
+const PORT = process.env.PORT || '3000';
 
-function serveStatic(req, res, filePath) {
-  try {
-    if (!fs.existsSync(filePath)) return false;
-    const stat = fs.statSync(filePath);
-    if (stat.isDirectory()) return false;
-    const ext = path.extname(filePath).toLowerCase();
-    const contentType = MIME_TYPES[ext] || 'application/octet-stream';
-    
-    res.writeHead(200, {
-      'Content-Type': contentType,
-      'Content-Length': stat.size,
-      'Cache-Control': 'public, max-age=31536000, immutable',
-    });
-    fs.createReadStream(filePath).pipe(res);
-    return true;
-  } catch (err) {
-    console.error('Static serve error:', err.message);
-    return false;
+// ── Ensure required assets exist inside the standalone directory ──────────
+function ensureStandaloneAssets() {
+  // Copy data directory if missing or stale
+  const standaloneData = path.join(STANDALONE, 'data');
+  const rootData = path.join(ROOT, 'data');
+  if (fs.existsSync(rootData)) {
+    if (!fs.existsSync(standaloneData)) {
+      fs.mkdirSync(standaloneData, { recursive: true });
+    }
+    const files = fs.readdirSync(rootData);
+    for (const file of files) {
+      const src = path.join(rootData, file);
+      const dst = path.join(standaloneData, file);
+      fs.copyFileSync(src, dst);
+    }
+  }
+
+  // Copy .env if missing
+  const envSrc = path.join(ROOT, '.env');
+  const envDst = path.join(STANDALONE, '.env');
+  if (fs.existsSync(envSrc) && !fs.existsSync(envDst)) {
+    fs.copyFileSync(envSrc, envDst);
+  }
+
+  // Ensure public directory is present (build script copies it, but double-check)
+  const standalonePublic = path.join(STANDALONE, 'public');
+  const rootPublic = path.join(ROOT, 'public');
+  if (!fs.existsSync(standalonePublic) && fs.existsSync(rootPublic)) {
+    fs.cpSync(rootPublic, standalonePublic, { recursive: true });
   }
 }
 
-async function startServer() {
-  const next = require('next');
-  const app = next({ dev: false });
-  const handle = app.getRequestHandler();
-
-  await app.prepare();
-  console.log('Next.js prepared');
-
-  const server = createServer((req, res) => {
-    // Handle client disconnection gracefully
-    req.on('error', (err) => {
-      console.error('Request error:', err.message);
-    });
-    res.on('error', (err) => {
-      console.error('Response error:', err.message);
-    });
-
-    try {
-      const parsedUrl = parse(req.url, true);
-      const { pathname } = parsedUrl;
-
-      // Serve static files directly
-      if (pathname) {
-        const filePath = path.join(__dirname, 'public', pathname);
-        if (serveStatic(req, res, filePath)) return;
-      }
-
-      // Let Next.js handle everything else
-      handle(req, res, parsedUrl).catch(err => {
-        console.error('Next.js handler error:', err.message);
-        if (!res.headersSent) {
-          res.writeHead(500);
-          res.end('Internal Server Error');
+// ── Kill any previous instance ────────────────────────────────────────────
+function killPrevious() {
+  try {
+    const pid = parseInt(fs.readFileSync(PID_FILE, 'utf8'), 10);
+    if (pid && Number.isFinite(pid)) {
+      try {
+        process.kill(pid, 0); // throws if not running
+        console.log(`Killing previous server (PID ${pid})`);
+        process.kill(pid, 'SIGTERM');
+        // Give it a moment to die
+        const deadline = Date.now() + 3000;
+        while (Date.now() < deadline) {
+          try { process.kill(pid, 0); } catch { break; }
         }
-      });
-    } catch (err) {
-      console.error('Server error:', err.message);
-      if (!res.headersSent) {
-        res.writeHead(500);
-        res.end('Internal Server Error');
+      } catch {
+        // Already dead – just clean up
       }
     }
-  });
-
-  server.listen(3000, '0.0.0.0', () => {
-    console.log('> Server ready on http://localhost:3000');
-  });
-
-  server.on('error', (err) => {
-    console.error('Server error event:', err.message);
-  });
-
-  // Keep process alive - log but don't exit on uncaught errors
-  process.on('uncaughtException', (err) => {
-    console.error('Uncaught exception:', err.message, err.stack);
-  });
-  
-  process.on('unhandledRejection', (reason) => {
-    console.error('Unhandled rejection:', reason);
-  });
+  } catch {
+    // PID file doesn't exist
+  }
+  try { fs.unlinkSync(PID_FILE); } catch {}
 }
 
-startServer().catch(err => {
-  console.error('Failed to start:', err);
-  process.exit(1);
-});
+// ── Start the standalone server ──────────────────────────────────────────
+function startServer() {
+  ensureStandaloneAssets();
+  killPrevious();
+
+  const logStream = fs.openSync(LOG_FILE, 'a');
+
+  const child = spawn('node', [path.join(STANDALONE, 'server.js')], {
+    cwd: STANDALONE,
+    env: { ...process.env, PORT, NODE_ENV: 'production' },
+    detached: true,
+    stdio: ['ignore', logStream, logStream],
+  });
+
+  fs.writeFileSync(PID_FILE, String(child.pid));
+  child.unref();
+
+  console.log(`Standalone server started (PID ${child.pid}) on port ${PORT}`);
+  console.log(`Logs: ${LOG_FILE}`);
+}
+
+startServer();

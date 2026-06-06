@@ -42,10 +42,16 @@ if (typeof setInterval !== "undefined") {
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // ── 1. HTTPS Enforcement (production only) ────────────────────────────────
+  // ── 1. HTTPS Enforcement (production only, only for direct access) ──────
+  // When behind a reverse proxy (Caddy, Nginx, Cloudflare, etc.), TLS
+  // termination happens at the proxy layer.  The proxy forwards requests
+  // to us over plain HTTP, so we must NOT redirect in that case.
+  // Only redirect when the client hits us directly (no proxy headers).
   if (process.env.NODE_ENV === "production") {
+    const forwarded = request.headers.get("x-forwarded-for");
     const proto = request.headers.get("x-forwarded-proto");
-    if (proto === "http") {
+    // Only redirect if there's no proxy (direct access) and proto is http
+    if (!forwarded && proto === "http") {
       const httpsUrl = request.nextUrl.clone();
       httpsUrl.protocol = "https";
       return NextResponse.redirect(httpsUrl, 301);

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { writeFile, readFile, mkdir } from 'fs/promises'
 import { existsSync } from 'fs'
 import path from 'path'
+import { verifyAuth } from '@/lib/auth-helpers'
 
 // ─── Booking Type ──────────────────────────────────────────────────────────
 interface Booking {
@@ -115,9 +116,13 @@ export async function POST(request: Request) {
   }
 }
 
-// ─── GET: Fetch Bookings ──────────────────────────────────────────────────────
-export async function GET() {
+// ─── GET: Fetch Bookings (auth required) ──────────────────────────────────────
+export async function GET(request: Request) {
   try {
+    const { authenticated } = await verifyAuth(request)
+    if (!authenticated) {
+      return NextResponse.json({ bookings: [] }, { status: 401 })
+    }
     const bookings = await getBookings()
     return NextResponse.json({ bookings })
   } catch {
@@ -125,9 +130,14 @@ export async function GET() {
   }
 }
 
-// ─── PATCH: Update Booking Status / Read ──────────────────────────────────────
+// ─── PATCH: Update Booking Status / Read (auth required) ─────────────────────
 export async function PATCH(request: Request) {
   try {
+    const { authenticated } = await verifyAuth(request)
+    if (!authenticated) {
+      return NextResponse.json({ success: false, errors: ['Unauthorized'] }, { status: 401 })
+    }
+
     const body = await request.json()
     const { id, status, read } = body as { id: string; status?: string; read?: boolean }
 
@@ -165,9 +175,14 @@ export async function PATCH(request: Request) {
   }
 }
 
-// ─── DELETE: Remove Booking ───────────────────────────────────────────────────
+// ─── DELETE: Remove Booking (auth required) ──────────────────────────────────
 export async function DELETE(request: Request) {
   try {
+    const { authenticated } = await verifyAuth(request)
+    if (!authenticated) {
+      return NextResponse.json({ success: false, errors: ['Unauthorized'] }, { status: 401 })
+    }
+
     const body = await request.json()
     const { id } = body as { id: string }
 

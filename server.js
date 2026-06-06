@@ -5,6 +5,12 @@
  * server at .next/standalone/server.js.  This wrapper starts that server
  * and ensures the required symlinks / copies (public, data, .env) are
  * present inside the standalone directory.
+ *
+ * Features:
+ * - Graceful shutdown (SIGTERM/SIGINT)
+ * - Unhandled rejection / exception handlers
+ * - PID file tracking
+ * - Automatic asset syncing
  */
 
 const { spawn } = require('child_process');
@@ -16,6 +22,18 @@ const STANDALONE = path.join(ROOT, '.next', 'standalone');
 const PID_FILE = '/tmp/enkutatash-server.pid';
 const LOG_FILE = '/tmp/enkutatash-server.log';
 const PORT = process.env.PORT || '3000';
+
+// ── Global Error Handlers ─────────────────────────────────────────────────
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('[FATAL] Unhandled Promise Rejection:', reason);
+  // Don't exit — log and continue. The child process handles the actual server.
+});
+
+process.on('uncaughtException', (error) => {
+  console.error('[FATAL] Uncaught Exception:', error);
+  // For uncaught exceptions, attempt graceful shutdown
+  gracefulShutdown('UNCAUGHT_EXCEPTION');
+});
 
 // ── Ensure required assets exist inside the standalone directory ──────────
 function ensureStandaloneAssets() {
@@ -52,20 +70,15 @@ function ensureStandaloneAssets() {
   const standaloneStatic = path.join(STANDALONE, '.next', 'static');
   const rootStatic = path.join(ROOT, '.next', 'static');
   if (fs.existsSync(rootStatic)) {
-    // Remove existing symlink/dir if broken or wrong type
     try {
       if (fs.lstatSync(standaloneStatic).isSymbolicLink()) {
-        // Already a symlink — verify it points to the right place
         const target = fs.readlinkSync(standaloneStatic);
         if (target !== rootStatic) {
           fs.unlinkSync(standaloneStatic);
           fs.symlinkSync(rootStatic, standaloneStatic);
         }
-      } else {
-        // It's a real directory — leave it (could be from a custom build step)
       }
     } catch {
-      // Doesn't exist — create symlink
       fs.symlinkSync(rootStatic, standaloneStatic);
     }
   }
@@ -80,7 +93,6 @@ function killPrevious() {
         process.kill(pid, 0); // throws if not running
         console.log(`Killing previous server (PID ${pid})`);
         process.kill(pid, 'SIGTERM');
-        // Give it a moment to die
         const deadline = Date.now() + 3000;
         while (Date.now() < deadline) {
           try { process.kill(pid, 0); } catch { break; }
@@ -95,6 +107,48 @@ function killPrevious() {
   try { fs.unlinkSync(PID_FILE); } catch {}
 }
 
+// ── Child process reference ───────────────────────────────────────────────
+let childProcess = null;
+
+// ── Graceful shutdown ─────────────────────────────────────────────────────
+function gracefulShutdown(signal) {
+  console.log(`\n[Server] Received ${signal}. Shutting down gracefully...`);
+
+  if (childProcess && childProcess.pid) {
+    try {
+      process.kill(childProcess.pid, 'SIGTERM');
+      console.log(`[Server] Sent SIGTERM to child (PID ${childProcess.pid})`);
+
+      // Force kill after 10 seconds if child hasn't exited
+      const forceKillTimer = setTimeout(() => {
+        try {
+          process.kill(childProcess.pid, 'SIGKILL');
+          console.log('[Server] Force-killed child process');
+        } catch {}
+      }, 10000);
+
+      childProcess.on('exit', () => {
+        clearTimeout(forceKillTimer);
+        console.log('[Server] Child process exited');
+        cleanupAndExit(0);
+      });
+    } catch {
+      cleanupAndExit(0);
+    }
+  } else {
+    cleanupAndExit(0);
+  }
+}
+
+function cleanupAndExit(code) {
+  try { fs.unlinkSync(PID_FILE); } catch {}
+  process.exit(code);
+}
+
+// ── Register shutdown signals ─────────────────────────────────────────────
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+
 // ── Start the standalone server ──────────────────────────────────────────
 function startServer() {
   ensureStandaloneAssets();
@@ -102,17 +156,28 @@ function startServer() {
 
   const logStream = fs.openSync(LOG_FILE, 'a');
 
-  const child = spawn('node', [path.join(STANDALONE, 'server.js')], {
+  childProcess = spawn('node', [path.join(STANDALONE, 'server.js')], {
     cwd: STANDALONE,
-    env: { ...process.env, PORT, NODE_ENV: 'production' },
+    env: { ...process.env, PORT, NODE_ENV: 'production', HOSTNAME: '0.0.0.0' },
     detached: true,
     stdio: ['ignore', logStream, logStream],
   });
 
-  fs.writeFileSync(PID_FILE, String(child.pid));
-  child.unref();
+  fs.writeFileSync(PID_FILE, String(childProcess.pid));
 
-  console.log(`Standalone server started (PID ${child.pid}) on port ${PORT}`);
+  childProcess.on('error', (err) => {
+    console.error('[Server] Failed to start child process:', err);
+    cleanupAndExit(1);
+  });
+
+  childProcess.on('exit', (code, signal) => {
+    console.log(`[Server] Child process exited with code ${code}, signal ${signal}`);
+    // Don't auto-restart here — PM2 or watchdog handles that
+  });
+
+  childProcess.unref();
+
+  console.log(`Standalone server started (PID ${childProcess.pid}) on port ${PORT}`);
   console.log(`Logs: ${LOG_FILE}`);
 }
 

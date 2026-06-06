@@ -1032,6 +1032,16 @@ function Footer({ content }: { content: SiteContent }) {
         </div>
         <div className="pt-6 sm:pt-8 border-t border-border/50 flex flex-col items-center justify-center gap-2">
           <p className="text-[10px] sm:text-sm text-muted-foreground">&copy; 2026 {content.businessName} Event / {content.businessNameAmharic}. All rights reserved.</p>
+          <div className="flex items-center gap-3 text-[10px] sm:text-xs text-muted-foreground">
+            <a href="/privacy" className="hover:text-foreground transition-colors">{t('Privacy Policy', 'የግላዊነት ፖሊሲ')}</a>
+            <span className="text-border">|</span>
+            <button
+              onClick={() => window.dispatchEvent(new Event('show-cookie-consent'))}
+              className="hover:text-foreground transition-colors"
+            >
+              {t('Cookie Settings', 'የኩኪ ቅንብሮች')}
+            </button>
+          </div>
         </div>
       </div>
     </footer>

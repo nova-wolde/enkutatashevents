@@ -1,8 +1,15 @@
 import { NextResponse } from 'next/server'
-import { writeFile, readFile, mkdir } from 'fs/promises'
+import { writeFile, mkdir } from 'fs/promises'
 import { existsSync } from 'fs'
 import path from 'path'
 import crypto from 'crypto'
+import {
+  timingSafePasswordCompare,
+  checkLoginRateLimit,
+  recordFailedLogin,
+  resetLoginAttempts,
+  getClientIp,
+} from '@/lib/auth-helpers'
 
 const DATA_DIR = path.join(process.cwd(), 'data')
 const SESSIONS_FILE = path.join(DATA_DIR, 'sessions.json')
@@ -33,6 +40,19 @@ async function saveSessions(sessions: Session[]): Promise<void> {
 
 export async function POST(request: Request) {
   try {
+    // ── 1. Rate limiting check ──────────────────────────────────────────────
+    const clientIp = getClientIp(request)
+    const rateCheck = checkLoginRateLimit(clientIp)
+
+    if (!rateCheck.allowed) {
+      const retryMinutes = Math.ceil((rateCheck.retryAfterMs || 0) / 60000)
+      return NextResponse.json(
+        { success: false, error: `Too many login attempts. Please try again in ${retryMinutes} minutes.` },
+        { status: 429 }
+      )
+    }
+
+    // ── 2. Parse & validate request ─────────────────────────────────────────
     const body = await request.json()
     const { password } = body as { password: string }
 
@@ -43,14 +63,16 @@ export async function POST(request: Request) {
       )
     }
 
-    if (password !== OWNER_PASSWORD) {
+    // ── 3. Timing-safe password comparison ──────────────────────────────────
+    if (!OWNER_PASSWORD || !timingSafePasswordCompare(password, OWNER_PASSWORD)) {
+      recordFailedLogin(clientIp)
       return NextResponse.json(
         { success: false, error: 'Invalid password' },
         { status: 401 }
       )
     }
 
-    // Generate a session token
+    // ── 4. Generate session token ───────────────────────────────────────────
     const token = crypto.randomBytes(32).toString('hex')
     const now = new Date()
     const expiresAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000) // 7 days
@@ -67,7 +89,10 @@ export async function POST(request: Request) {
     activeSessions.push(session)
     await saveSessions(activeSessions)
 
-    // Set HTTP-only cookie
+    // Reset rate limit on successful login
+    resetLoginAttempts(clientIp)
+
+    // ── 5. Set HTTP-only cookie ─────────────────────────────────────────────
     const response = NextResponse.json({
       success: true,
       message: 'Logged in successfully',

@@ -1,10 +1,26 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Cookie, X } from 'lucide-react'
+import { Cookie, X, Settings } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 const CONSENT_KEY = 'enkutatash-cookie-consent'
+
+/**
+ * Read consent from localStorage.
+ * Returns true only if the user explicitly accepted.
+ */
+export function hasCookieConsent(): boolean {
+  if (typeof window === 'undefined') return false
+  try {
+    const raw = localStorage.getItem(CONSENT_KEY)
+    if (!raw) return false
+    const data = JSON.parse(raw)
+    return data.accepted === true
+  } catch {
+    return false
+  }
+}
 
 export function CookieConsent() {
   const [visible, setVisible] = useState(false)
@@ -19,6 +35,16 @@ export function CookieConsent() {
     }
   }, [])
 
+  // Listen for external show events (e.g. "Manage Cookies" link in footer)
+  useEffect(() => {
+    const handleShow = () => {
+      localStorage.removeItem(CONSENT_KEY)
+      setVisible(true)
+    }
+    window.addEventListener('show-cookie-consent', handleShow)
+    return () => window.removeEventListener('show-cookie-consent', handleShow)
+  }, [])
+
   const accept = () => {
     localStorage.setItem(CONSENT_KEY, JSON.stringify({ accepted: true, date: new Date().toISOString() }))
     setVisible(false)
@@ -29,6 +55,8 @@ export function CookieConsent() {
   const decline = () => {
     localStorage.setItem(CONSENT_KEY, JSON.stringify({ accepted: false, date: new Date().toISOString() }))
     setVisible(false)
+    // Dispatch rejection so analytics scripts can self-disable
+    window.dispatchEvent(new Event('cookie-consent-declined'))
   }
 
   if (!visible) return null
@@ -69,7 +97,7 @@ export function CookieConsent() {
                 onClick={decline}
                 className="text-xs sm:text-sm h-9"
               >
-                Decline
+                Decline Non-Essential
               </Button>
             </div>
           </div>

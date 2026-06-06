@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { writeFile, readFile, mkdir } from "fs/promises";
 import { existsSync } from "fs";
 import path from "path";
+import { verifyAuth } from "@/lib/auth-helpers";
 
 // ─── Contact Submission Type ──────────────────────────────────────────────────
 interface ContactSubmission {
@@ -108,9 +109,13 @@ export async function POST(request: Request) {
   }
 }
 
-// ─── GET: Fetch Submissions (for dashboard) ───────────────────────────────────
-export async function GET() {
+// ─── GET: Fetch Submissions (auth required, for dashboard) ────────────────────
+export async function GET(request: Request) {
   try {
+    const { authenticated } = await verifyAuth(request);
+    if (!authenticated) {
+      return NextResponse.json({ submissions: [] }, { status: 401 });
+    }
     const submissions = await getSubmissions();
     return NextResponse.json({ submissions });
   } catch {
@@ -118,9 +123,14 @@ export async function GET() {
   }
 }
 
-// ─── PATCH: Mark as Read ──────────────────────────────────────────────────────
+// ─── PATCH: Mark as Read (auth required) ──────────────────────────────────────
 export async function PATCH(request: Request) {
   try {
+    const { authenticated } = await verifyAuth(request);
+    if (!authenticated) {
+      return NextResponse.json({ success: false, errors: ["Unauthorized"] }, { status: 401 });
+    }
+
     const body = await request.json();
     const { id, read } = body as { id: string; read: boolean };
 
@@ -145,9 +155,14 @@ export async function PATCH(request: Request) {
   }
 }
 
-// ─── DELETE: Remove Submission ────────────────────────────────────────────────
+// ─── DELETE: Remove Submission (auth required) ────────────────────────────────
 export async function DELETE(request: Request) {
   try {
+    const { authenticated } = await verifyAuth(request);
+    if (!authenticated) {
+      return NextResponse.json({ success: false, errors: ["Unauthorized"] }, { status: 401 });
+    }
+
     const body = await request.json();
     const { id } = body as { id: string };
 

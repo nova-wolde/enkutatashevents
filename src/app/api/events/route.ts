@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { writeFile, readFile, mkdir } from "fs/promises"
 import { existsSync } from "fs"
 import path from "path"
+import { verifyAuth } from "@/lib/auth-helpers"
 
 // ─── Data File Path ───────────────────────────────────────────────────────────
 const DATA_DIR = path.join(process.cwd(), "data")
@@ -68,9 +69,14 @@ export async function GET() {
   }
 }
 
-// ─── POST: Create Event ───────────────────────────────────────────────────────
+// ─── POST: Create Event (auth required) ───────────────────────────────────────
 export async function POST(request: Request) {
   try {
+    const { authenticated } = await verifyAuth(request)
+    if (!authenticated) {
+      return NextResponse.json({ success: false, errors: ["Unauthorized"] }, { status: 401 })
+    }
+
     const body = await request.json()
     const events = await getEvents()
     const newEvent = {
@@ -85,9 +91,14 @@ export async function POST(request: Request) {
   }
 }
 
-// ─── PUT: Update Event ────────────────────────────────────────────────────────
+// ─── PUT: Update Event (auth required) ────────────────────────────────────────
 export async function PUT(request: Request) {
   try {
+    const { authenticated } = await verifyAuth(request)
+    if (!authenticated) {
+      return NextResponse.json({ success: false, errors: ["Unauthorized"] }, { status: 401 })
+    }
+
     const body = await request.json()
     const { id, ...updates } = body
     const events = await getEvents()
@@ -103,9 +114,14 @@ export async function PUT(request: Request) {
   }
 }
 
-// ─── DELETE ───────────────────────────────────────────────────────────────────
+// ─── DELETE (auth required) ───────────────────────────────────────────────────
 export async function DELETE(request: Request) {
   try {
+    const { authenticated } = await verifyAuth(request)
+    if (!authenticated) {
+      return NextResponse.json({ success: false, errors: ["Unauthorized"] }, { status: 401 })
+    }
+
     const body = await request.json()
     const { id } = body
     const events = await getEvents()

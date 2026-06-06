@@ -1,23 +1,55 @@
-:81 {
-        @transform_port_query {
-                query XTransformPort=*
-        }
+# ─── Enkutatash Event — Production Caddy Configuration ────────────────────────
+# Domain: enkutatashevents.com
+# Auto-HTTPS via Let's Encrypt (Caddy provisions & renews automatically)
+# Reverse proxy to Next.js standalone on port 3000
 
-        handle @transform_port_query {
-                reverse_proxy localhost:{query.XTransformPort} {
-                        header_up Host {host}
-                        header_up X-Forwarded-For {remote_host}
-                        header_up X-Forwarded-Proto https
-                        header_up X-Real-IP {remote_host}
-                }
-        }
+enkutatashevents.com, www.enkutatashevents.com {
+    # ─── Compression ────────────────────────────────────────────────────────
+    encode gzip zstd
 
-        handle {
-                reverse_proxy localhost:3000 {
-                        header_up Host {host}
-                        header_up X-Forwarded-For {remote_host}
-                        header_up X-Forwarded-Proto https
-                        header_up X-Real-IP {remote_host}
-                }
+    # ─── Access Logging ─────────────────────────────────────────────────────
+    log {
+        output file /var/log/caddy/enkutatash-access.log {
+            roll_size 50mb
+            roll_keep 10
+            roll_keep_for 720h
         }
+        format json
+    }
+
+    # ─── Security Headers (defense-in-depth, duplicating Next.js headers) ──
+    header {
+        X-Content-Type-Options nosniff
+        X-Frame-Options DENY
+        Referrer-Policy strict-origin-when-cross-origin
+        Permissions-Policy "camera=(), microphone=(), geolocation=(self)"
+    }
+
+    # ─── Static Assets Cache ────────────────────────────────────────────────
+    @static path /_next/static/* /favicon.ico /favicon.svg /manifest.json /og-image.png /enkutatash-logo.png /apple-touch-icon.png /favicon-192.png /favicon-512.png /events/*
+    header @static Cache-Control "public, max-age=31536000, immutable"
+
+    # ─── API Routes ─────────────────────────────────────────────────────────
+    handle /api/* {
+        reverse_proxy localhost:3000 {
+            header_up Host {host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto https
+            header_up X-Real-IP {remote_host}
+            transport http {
+                read_timeout 300s
+                write_timeout 300s
+            }
+        }
+    }
+
+    # ─── All Other Routes ───────────────────────────────────────────────────
+    handle {
+        reverse_proxy localhost:3000 {
+            header_up Host {host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto https
+            header_up X-Real-IP {remote_host}
+        }
+    }
 }

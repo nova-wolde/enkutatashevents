@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { writeFile, readFile, mkdir } from "fs/promises"
 import { existsSync } from "fs"
 import path from "path"
+import { verifyAuth } from "@/lib/auth-helpers"
 
 // ─── Data File Path ───────────────────────────────────────────────────────────
 const DATA_DIR = path.join(process.cwd(), "data")
@@ -206,9 +207,14 @@ export async function GET() {
   }
 }
 
-// ─── PUT: Replace Full Content ────────────────────────────────────────────────
+// ─── PUT: Replace Full Content (auth required) ────────────────────────────────
 export async function PUT(request: Request) {
   try {
+    const { authenticated } = await verifyAuth(request)
+    if (!authenticated) {
+      return NextResponse.json({ success: false, errors: ["Unauthorized"] }, { status: 401 })
+    }
+
     const body = await request.json()
     const content = body.content as Record<string, unknown>
     if (!content) {
@@ -221,9 +227,14 @@ export async function PUT(request: Request) {
   }
 }
 
-// ─── PATCH: Update Partial Content ────────────────────────────────────────────
+// ─── PATCH: Update Partial Content (auth required) ────────────────────────────
 export async function PATCH(request: Request) {
   try {
+    const { authenticated } = await verifyAuth(request)
+    if (!authenticated) {
+      return NextResponse.json({ success: false, errors: ["Unauthorized"] }, { status: 401 })
+    }
+
     const body = await request.json()
     const current = await getContent()
     if (!current) {
@@ -237,9 +248,14 @@ export async function PATCH(request: Request) {
   }
 }
 
-// ─── POST: Seed Content ───────────────────────────────────────────────────────
+// ─── POST: Seed Content (auth required) ───────────────────────────────────────
 export async function POST(request: Request) {
   try {
+    const { authenticated } = await verifyAuth(request)
+    if (!authenticated) {
+      return NextResponse.json({ success: false, errors: ["Unauthorized"] }, { status: 401 })
+    }
+
     const body = await request.json()
     const force = body.force as boolean
 

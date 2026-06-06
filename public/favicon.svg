@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <style>
+      .bg { fill: #059669; }
+      .ring { fill: none; stroke: #D4AF37; stroke-width: 8; }
+      .star { fill: #D4AF37; }
+      .inner-circle { fill: #059669; }
+      .cross { fill: #D4AF37; }
+      .cross-inner { fill: #059669; }
+      .diamond { fill: #D4AF37; }
+    </style>
+  </defs>
+  <!-- Circle background -->
+  <circle class="bg" cx="256" cy="256" r="236"/>
+  <!-- Gold ring -->
+  <circle class="ring" cx="256" cy="256" r="211"/>
+  <!-- 8-pointed star -->
+  <polygon class="star" points="256,116 291,196 376,196 308,248 332,336 256,284 180,336 204,248 136,196 221,196"/>
+  <polygon class="star" points="256,116 291,196 376,196 308,248 332,336 256,284 180,336 204,248 136,196 221,196" transform="rotate(45 256 256)"/>
+  <!-- Inner circle -->
+  <circle class="inner-circle" cx="256" cy="256" r="50"/>
+  <!-- Ethiopian cross -->
+  <rect class="cross" x="250" y="221" width="12" height="70" rx="2"/>
+  <rect class="cross" x="221" y="250" width="70" height="12" rx="2"/>
+  <!-- Cross end squares -->
+  <rect class="cross" x="207" y="242" width="28" height="28" rx="2"/>
+  <rect class="cross" x="277" y="242" width="28" height="28" rx="2"/>
+  <rect class="cross" x="242" y="207" width="28" height="28" rx="2"/>
+  <rect class="cross" x="242" y="277" width="28" height="28" rx="2"/>
+  <!-- Inner squares -->
+  <rect class="cross-inner" x="210" y="245" width="22" height="22" rx="1"/>
+  <rect class="cross-inner" x="280" y="245" width="22" height="22" rx="1"/>
+  <rect class="cross-inner" x="245" y="210" width="22" height="22" rx="1"/>
+  <rect class="cross-inner" x="245" y="280" width="22" height="22" rx="1"/>
+  <!-- Center diamond -->
+  <polygon class="diamond" points="256,246 266,256 256,266 246,256"/>
+</svg>

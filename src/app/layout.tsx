@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/toaster";
+import { ServiceWorkerRegistration } from "@/components/service-worker-registration";
+import { CookieConsent } from "@/components/cookie-consent";
 import "./globals.css";
 
 // ─── Font Optimization ────────────────────────────────────────────────────────
@@ -243,6 +245,8 @@ export default function RootLayout({
         >
           <div id="main-content">{children}</div>
           <Toaster />
+          <CookieConsent />
+          <ServiceWorkerRegistration />
         </ThemeProvider>
         {/* Analytics — only loads if env vars are set */}
         <Analytics />

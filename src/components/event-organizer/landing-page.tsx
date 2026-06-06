@@ -46,6 +46,7 @@ import {
   Globe,
   Pause,
   Play,
+  Music,
 } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import Image from 'next/image'
@@ -938,11 +939,11 @@ function ContactSection({ content }: { content: SiteContent }) {
             </div>
 
             <div className="mt-6 sm:mt-8 flex gap-2 sm:gap-3">
-              {(content.socialLinks || []).map((social) => {
-                const iconMap: Record<string, React.ElementType> = { Instagram, Facebook, Twitter }
+              {(content.socialLinks || []).filter(s => s.url).map((social) => {
+                const iconMap: Record<string, React.ElementType> = { Instagram, Facebook, Twitter, TikTok: Music }
                 const Icon = iconMap[social.platform] || Instagram
                 return (
-                  <a key={social.platform} href={social.url || '#'} target="_blank" rel="noopener noreferrer">
+                  <a key={social.platform} href={social.url} target="_blank" rel="noopener noreferrer">
                     <Button variant="outline" size="icon" className="h-10 w-10 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl min-h-[44px] min-w-[44px]">
                       <Icon className="h-4 w-4" />
                     </Button>
@@ -1007,10 +1008,10 @@ function Footer({ content }: { content: SiteContent }) {
             </div>
             <p className="text-[11px] sm:text-sm text-muted-foreground max-w-xs">{content.description}</p>
             <div className="mt-3 sm:mt-4 flex gap-1.5 sm:gap-2">
-              {(content.socialLinks || []).map((social, i) => {
-                const iconMap: Record<string, React.ElementType> = { Instagram, Facebook, Twitter }
+              {(content.socialLinks || []).filter(s => s.url).map((social, i) => {
+                const iconMap: Record<string, React.ElementType> = { Instagram, Facebook, Twitter, TikTok: Music }
                 const Icon = iconMap[social.platform] || Instagram
-                return <Button key={i} variant="ghost" size="icon" className="h-10 w-10 sm:h-8 sm:w-8 min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0"><Icon className="h-4 w-4" /></Button>
+                return <a key={i} href={social.url} target="_blank" rel="noopener noreferrer"><Button variant="ghost" size="icon" className="h-10 w-10 sm:h-8 sm:w-8 min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0"><Icon className="h-4 w-4" /></Button></a>
               })}
             </div>
           </div>

@@ -6,7 +6,7 @@ import crypto from 'crypto'
 
 const DATA_DIR = path.join(process.cwd(), 'data')
 const SESSIONS_FILE = path.join(DATA_DIR, 'sessions.json')
-const OWNER_PASSWORD = process.env.OWNER_PASSWORD || 'Enkutatash2024'
+const OWNER_PASSWORD = process.env.OWNER_PASSWORD
 
 interface Session {
   token: string

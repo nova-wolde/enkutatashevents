@@ -1028,7 +1028,7 @@ function Footer({ content }: { content: SiteContent }) {
   return (
     <footer className="border-t border-border/50 py-6 sm:py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8 mb-6 sm:mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-8 mb-6 sm:mb-8">
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2 mb-3 sm:mb-4">
               <Image src="/enkutatash-logo.png" alt="Enkutatash Logo" width={32} height={32} unoptimized className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg object-contain" />
@@ -1047,14 +1047,6 @@ function Footer({ content }: { content: SiteContent }) {
             </div>
           </div>
           <div>
-            <h4 className="text-[11px] sm:text-sm font-semibold mb-2 sm:mb-3">{t('Services', 'አገልግሎቶች')}</h4>
-            <ul className="space-y-1 sm:space-y-2">
-              {content.services.slice(0, 8).map((s) => (
-                <li key={s.id}><a className="text-[10px] sm:text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer block py-0.5 min-h-[28px] sm:min-h-0 flex items-center">{language === 'am' && s.titleAmharic ? s.titleAmharic : s.title}</a></li>
-              ))}
-            </ul>
-          </div>
-          <div>
             <h4 className="text-[11px] sm:text-sm font-semibold mb-2 sm:mb-3">{t('Company', 'ድርጅት')}</h4>
             <ul className="space-y-1 sm:space-y-2">
               {[{ en: 'About Us', am: 'ስለ እኛ' }, { en: 'Portfolio', am: 'ስራዎቻችን' }, { en: 'Testimonials', am: 'ደንበኞቻችን' }, { en: 'Contact', am: 'ያግኙን' }].map((item) => (<li key={item.en}><a className="text-[10px] sm:text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">{t(item.en, item.am)}</a></li>))}
@@ -1069,12 +1061,8 @@ function Footer({ content }: { content: SiteContent }) {
             </ul>
           </div>
         </div>
-        <div className="pt-6 sm:pt-8 border-t border-border/50 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+        <div className="pt-6 sm:pt-8 border-t border-border/50 flex flex-col items-center justify-center gap-2">
           <p className="text-[10px] sm:text-sm text-muted-foreground">&copy; 2026 {content.businessName} Event / {content.businessNameAmharic}. All rights reserved.</p>
-          <div className="flex items-center gap-3 sm:gap-4">
-            <a className="text-[10px] sm:text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">Privacy Policy</a>
-            <a className="text-[10px] sm:text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">Terms of Service</a>
-          </div>
         </div>
       </div>
     </footer>

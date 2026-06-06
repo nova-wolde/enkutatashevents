@@ -25,7 +25,6 @@ import {
 } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
 import { useEventStore, EventCategory, EventItem } from './store'
-import { venues } from './data'
 import { useToast } from '@/hooks/use-toast'
 
 const gradients = [
@@ -36,11 +35,13 @@ const gradients = [
   'from-cyan-400 to-sky-600',
 ]
 
-const categories: EventCategory[] = ['Conference', 'Workshop', 'Social', 'Concert', 'Meetup']
+const defaultCategories: EventCategory[] = ['Conference', 'Workshop', 'Social', 'Concert', 'Meetup']
 
 export function CreateEventDialog() {
   const { createDialogOpen, setCreateDialogOpen, addEvent, editingEvent, setEditingEvent, updateEvent, addActivity } = useEventStore()
   const { toast } = useToast()
+  const [venues, setVenues] = useState<string[]>([])
+  const [categories, setCategories] = useState<EventCategory[]>(defaultCategories)
   const [name, setName] = useState('')
   const [date, setDate] = useState<Date | undefined>(undefined)
   const [time, setTime] = useState('09:00')
@@ -51,6 +52,23 @@ export function CreateEventDialog() {
   const [ticketPrice, setTicketPrice] = useState('0')
 
   const isEditing = !!editingEvent
+
+  // Fetch venues and categories from API
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch('/api/content')
+        const data = await res.json()
+        if (data.content) {
+          if (data.content.venues) setVenues(data.content.venues)
+          if (data.content.eventCategories) setCategories(data.content.eventCategories)
+        }
+      } catch {
+        // Use defaults
+      }
+    }
+    fetchData()
+  }, [])
 
   // Populate form when editing
   useEffect(() => {

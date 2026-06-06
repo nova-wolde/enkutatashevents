@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useTheme } from 'next-themes'
 import {
@@ -10,6 +10,7 @@ import {
   Calendar,
   AlertTriangle,
   Save,
+  Loader2,
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -36,7 +37,6 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Separator } from '@/components/ui/separator'
 import { useToast } from '@/hooks/use-toast'
-import { venues } from './data'
 
 export function SettingsView() {
   const { theme, setTheme } = useTheme()
@@ -58,11 +58,45 @@ export function SettingsView() {
   const [defaultCategory, setDefaultCategory] = useState('')
   const [defaultMaxAttendees, setDefaultMaxAttendees] = useState('100')
 
+  // Dynamic data from API
+  const [venues, setVenues] = useState<string[]>([])
+  const [categories, setCategories] = useState<string[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchContent = async () => {
+      try {
+        const res = await fetch('/api/content')
+        const data = await res.json()
+        if (data.content) {
+          setVenues(data.content.venues || [])
+          setCategories(data.content.eventCategories || [])
+          if (data.content.email) setEmail(data.content.email)
+          if (data.content.businessName) setCompany(data.content.businessName + ' Event')
+        }
+      } catch {
+        // Use defaults
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchContent()
+  }, [])
+
   const handleSave = () => {
     toast({
       title: 'Settings Saved',
       description: 'Your preferences have been updated successfully.',
     })
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
+        <span className="ml-3 text-muted-foreground">Loading settings...</span>
+      </div>
+    )
   }
 
   return (
@@ -202,14 +236,9 @@ export function SettingsView() {
                   <SelectValue placeholder="Select default category" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Wedding">Wedding</SelectItem>
-                  <SelectItem value="Corporate">Corporate</SelectItem>
-                  <SelectItem value="Cultural">Cultural</SelectItem>
-                  <SelectItem value="Concert">Concert</SelectItem>
-                  <SelectItem value="Conference">Conference</SelectItem>
-                  <SelectItem value="Symposium">Symposium</SelectItem>
-                  <SelectItem value="Government">Government</SelectItem>
-                  <SelectItem value="Social">Social</SelectItem>
+                  {categories.map((cat) => (
+                    <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>

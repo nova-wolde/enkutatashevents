@@ -56,7 +56,7 @@ export interface BookingItem {
   read: boolean
 }
 
-export type ViewTab = 'dashboard' | 'events' | 'attendees' | 'venues' | 'analytics' | 'settings' | 'messages' | 'bookings'
+export type ViewTab = 'dashboard' | 'events' | 'attendees' | 'venues' | 'analytics' | 'settings' | 'messages' | 'bookings' | 'content'
 export type AppView = 'landing' | 'app' | 'login'
 
 interface EventStore {

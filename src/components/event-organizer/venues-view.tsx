@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import {
   MapPin,
@@ -27,7 +27,6 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog'
 import { useEventStore } from './store'
-import { venues } from './data'
 
 interface VenueData {
   name: string
@@ -73,21 +72,36 @@ const amenityIcons: Record<string, React.ElementType> = {
   Stage: Building2,
 }
 
-const defaultVenues: VenueData[] = venues.map((v, i) => ({
-  name: v,
-  address: addresses[v] || `${100 + i} Main St, San Francisco, CA`,
-  capacity: capacities[v] || 150,
-  amenities: amenityOptions.filter(() => Math.random() > 0.35),
-  status: i % 3 === 0 ? 'Booked' : 'Available',
-}))
-
 export function VenuesView() {
   const { events } = useEventStore()
-  const [venueList, setVenueList] = useState<VenueData[]>(defaultVenues)
+  const [venueList, setVenueList] = useState<VenueData[]>([])
   const [addDialogOpen, setAddDialogOpen] = useState(false)
   const [newName, setNewName] = useState('')
   const [newAddress, setNewAddress] = useState('')
   const [newCapacity, setNewCapacity] = useState('')
+
+  // Fetch venues from API
+  useEffect(() => {
+    const fetchVenues = async () => {
+      try {
+        const res = await fetch('/api/content')
+        const data = await res.json()
+        if (data.content?.venues) {
+          const venueData: VenueData[] = data.content.venues.map((v: string, i: number) => ({
+            name: v,
+            address: addresses[v] || `${100 + i} Main St, Addis Ababa, Ethiopia`,
+            capacity: capacities[v] || 150,
+            amenities: amenityOptions.filter(() => Math.random() > 0.35),
+            status: i % 3 === 0 ? 'Booked' as const : 'Available' as const,
+          }))
+          setVenueList(venueData)
+        }
+      } catch {
+        // Use empty list
+      }
+    }
+    fetchVenues()
+  }, [])
 
   const getUpcomingCount = (venueName: string) =>
     events.filter((e) => e.venue === venueName && (e.status === 'upcoming' || e.status === 'ongoing')).length

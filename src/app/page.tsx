@@ -2,9 +2,8 @@
 
 import { useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Calendar, Users, MapPin, BarChart3, Settings, CalendarDays, Mail, CalendarCheck } from 'lucide-react'
+import { Calendar, Users, MapPin, BarChart3, Settings, CalendarDays, Mail, CalendarCheck, FileEdit } from 'lucide-react'
 import { useEventStore, ViewTab } from '@/components/event-organizer/store'
-import { sampleEvents, sampleActivities } from '@/components/event-organizer/data'
 import { Header } from '@/components/event-organizer/header'
 import { Sidebar } from '@/components/event-organizer/sidebar'
 import { Dashboard } from '@/components/event-organizer/dashboard'
@@ -18,6 +17,7 @@ import { SettingsView } from '@/components/event-organizer/settings-view'
 import { MessagesView } from '@/components/event-organizer/messages-view'
 import { BookingsView } from '@/components/event-organizer/bookings-view'
 import { LoginPage } from '@/components/event-organizer/login-page'
+import { ContentManager } from '@/components/event-organizer/content-manager'
 
 const viewTitles: Record<ViewTab, { title: string; subtitle: string; icon: React.ElementType }> = {
   dashboard: { title: 'Dashboard', subtitle: 'Welcome back! Here\'s what\'s happening.', icon: CalendarDays },
@@ -27,16 +27,30 @@ const viewTitles: Record<ViewTab, { title: string; subtitle: string; icon: React
   attendees: { title: 'Attendees', subtitle: 'Track and manage event attendees.', icon: Users },
   venues: { title: 'Venues', subtitle: 'Manage your event venues.', icon: MapPin },
   analytics: { title: 'Analytics', subtitle: 'Insights and performance metrics.', icon: BarChart3 },
+  content: { title: 'Content', subtitle: 'Manage all site content.', icon: FileEdit },
   settings: { title: 'Settings', subtitle: 'Configure your preferences.', icon: Settings },
 }
 
 function AppView() {
   const { currentView, setEvents, setActivities } = useEventStore()
 
-  // Initialize with sample data
+  // Fetch events and activities from API
   useEffect(() => {
-    setEvents(sampleEvents)
-    setActivities(sampleActivities)
+    const fetchData = async () => {
+      try {
+        const [eventsRes, activitiesRes] = await Promise.all([
+          fetch('/api/events'),
+          fetch('/api/activities'),
+        ])
+        const eventsData = await eventsRes.json()
+        const activitiesData = await activitiesRes.json()
+        if (eventsData.events) setEvents(eventsData.events)
+        if (activitiesData.activities) setActivities(activitiesData.activities)
+      } catch {
+        // ignore - data will be empty
+      }
+    }
+    fetchData()
   }, [setEvents, setActivities])
 
   const info = viewTitles[currentView]
@@ -64,90 +78,47 @@ function AppView() {
             {/* Content */}
             <AnimatePresence mode="wait">
               {currentView === 'dashboard' && (
-                <motion.div
-                  key="dashboard"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
+                <motion.div key="dashboard" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
                   <Dashboard />
                 </motion.div>
               )}
               {currentView === 'events' && (
-                <motion.div
-                  key="events"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
+                <motion.div key="events" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
                   <EventsList />
                 </motion.div>
               )}
               {currentView === 'messages' && (
-                <motion.div
-                  key="messages"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
+                <motion.div key="messages" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
                   <MessagesView />
                 </motion.div>
               )}
               {currentView === 'bookings' && (
-                <motion.div
-                  key="bookings"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
+                <motion.div key="bookings" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
                   <BookingsView />
                 </motion.div>
               )}
               {currentView === 'attendees' && (
-                <motion.div
-                  key="attendees"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
+                <motion.div key="attendees" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
                   <AttendeesView />
                 </motion.div>
               )}
               {currentView === 'venues' && (
-                <motion.div
-                  key="venues"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
+                <motion.div key="venues" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
                   <VenuesView />
                 </motion.div>
               )}
               {currentView === 'analytics' && (
-                <motion.div
-                  key="analytics"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
+                <motion.div key="analytics" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
                   <AnalyticsView />
                 </motion.div>
               )}
+              {currentView === 'content' && (
+                <motion.div key="content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
+                  <ContentManager />
+                </motion.div>
+              )}
               {currentView === 'settings' && (
-                <motion.div
-                  key="settings"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
+                <motion.div key="settings" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
                   <SettingsView />
                 </motion.div>
               )}

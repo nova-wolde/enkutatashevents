@@ -1,0 +1,66 @@
+[
+  {
+    "id": "a1",
+    "user": "Kidane Tadesse",
+    "avatar": "KT",
+    "action": "submitted a booking for",
+    "target": "Wedding Reception",
+    "timestamp": "2026-06-05T00:00:00.000Z"
+  },
+  {
+    "id": "a2",
+    "user": "Enkutatash Team",
+    "avatar": "ET",
+    "action": "set up venue at",
+    "target": "Sheraton Addis",
+    "timestamp": "2026-06-04T22:00:00.000Z"
+  },
+  {
+    "id": "a3",
+    "user": "Meron Bekele",
+    "avatar": "MB",
+    "action": "confirmed booking for",
+    "target": "Corporate Summit",
+    "timestamp": "2026-06-04T20:00:00.000Z"
+  },
+  {
+    "id": "a4",
+    "user": "Yohannes Alemu",
+    "avatar": "YA",
+    "action": "sent a message about",
+    "target": "Concert Setup",
+    "timestamp": "2026-06-04T18:00:00.000Z"
+  },
+  {
+    "id": "a5",
+    "user": "Sara Girma",
+    "avatar": "SG",
+    "action": "booked catering for",
+    "target": "Meskel Festival",
+    "timestamp": "2026-06-04T16:00:00.000Z"
+  },
+  {
+    "id": "a6",
+    "user": "Enkutatash Team",
+    "avatar": "ET",
+    "action": "completed decoration for",
+    "target": "Diamond Club Symposium",
+    "timestamp": "2026-06-04T12:00:00.000Z"
+  },
+  {
+    "id": "a7",
+    "user": "Abebe Worku",
+    "avatar": "AW",
+    "action": "registered for",
+    "target": "Ethiopian New Year Gala",
+    "timestamp": "2026-06-03T00:00:00.000Z"
+  },
+  {
+    "id": "a8",
+    "user": "Helen Desta",
+    "avatar": "HD",
+    "action": "requested sound & light for",
+    "target": "Ethio Jazz Night",
+    "timestamp": "2026-06-02T12:00:00.000Z"
+  }
+]

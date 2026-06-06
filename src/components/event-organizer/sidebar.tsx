@@ -12,6 +12,7 @@ import {
   X,
   Mail,
   CalendarCheck,
+  FileEdit,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -28,6 +29,7 @@ const navItems: { id: ViewTab; label: string; icon: React.ElementType; badgeKey?
   { id: 'attendees', label: 'Attendees', icon: Users },
   { id: 'venues', label: 'Venues', icon: MapPin },
   { id: 'analytics', label: 'Analytics', icon: BarChart3 },
+  { id: 'content', label: 'Content', icon: FileEdit },
   { id: 'settings', label: 'Settings', icon: Settings },
 ]
 

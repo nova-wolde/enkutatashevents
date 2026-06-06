@@ -50,5 +50,34 @@ test
 prompt
 
 server.log
+
 # Skills directory
 /skills/
+
+# Data files (contains sessions, user submissions)
+/data/
+
+# Backups
+/backups/
+
+# Logs
+/logs/
+
+# Uploaded files
+/upload/
+
+# Download directory
+/download/
+
+# PID and temp files
+/tmp/
+*.pid
+
+# Database
+db/
+
+# Standalone build output
+.next/standalone/
+
+# Worklog
+worklog.md

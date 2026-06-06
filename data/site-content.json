@@ -44,8 +44,9 @@
     }
   ],
   "heroTitle": "Where Every Event Becomes Legendary",
-  "heroTitleAmharic": "እንቁጣጣሽ ኤቨንት",
+  "heroTitleAmharic": "እያንዳንድ ዝግጅት ታሪካዊ የሚሆንበት",
   "heroSubtitle": "Enkutatash is Addis Ababa's premier event organizer. From breathtaking weddings to large-scale corporate events and cultural celebrations — we bring your vision to life with elegance, precision, and a touch of magic.",
+  "heroSubtitleAmharic": "እንቁጣጣሽ በአዲስ አበባ ዋነኛ ዝግጅት አደራጅ ነው። ከሚያስደንቅ ሰርግ እስከ ሰፊ የኮርፖሬት ዝግጅቶች እና የባህል ስብሰባዎች — ራዕይዎን በውበት፣ ትክክለኛነት እና በአስማት ወደ ህይወት እናቀርባለን።",
   "heroBadge": "Premium Event Organizers in Addis Ababa",
   "aboutTitle": "Crafting Unforgettable Moments Since 2022",
   "aboutSubtitle": "ከ2022 ዓ.ም ጀምሮ ያልተረሳ ትዝታዎችን እያደራጅን",
@@ -59,9 +60,9 @@
     "Catering & decoration"
   ],
   "vision": "To be the leading events management service provider for corporate events, delivering exceptional experiences and exceeding client expectations across Ethiopia.",
-  "visionAmharic": "ራዕያችን",
+  "visionAmharic": "ለኮርፖሬት ዝግጅቶች ዋነኛ የዝግጅት አደራጅ አገልግሎት መሪ ሆነን፣ በኢትዮጵያ አስደናቂ ልምዶችን በመስጠት የደንበኞች ተስፋ እንሽራለን።",
   "mission": "To create memorable and impactful corporate events that engage and inspire attendees, transforming gatherings into powerful experiences through innovative design and meticulous planning.",
-  "missionAmharic": "ተልዕኳችን",
+  "missionAmharic": "ማስታወሻ እና ተጽዕኖ ፈጣሪ የኮርፖሬት ዝግጅቶችን በመፍጠር ተሳታፊዎችን ማነቃቂያ፣ ስብሰባዎችን በፈጠራ ዲዛይን እና በዝርዝር እቅድ ወደ ኃይለኛ ልምዶች መቀየር።",
   "goals": [
     {
       "icon": "Heart",
@@ -140,25 +141,25 @@
     {
       "value": "500+",
       "label": "Events Organized",
-      "labelAmharic": "",
+      "labelAmharic": "የተደራጁ ዝግጅቶች",
       "icon": "CalendarDays"
     },
     {
       "value": "50K+",
       "label": "Happy Guests",
-      "labelAmharic": "",
+      "labelAmharic": "እርካታ እንግዶች",
       "icon": "Users"
     },
     {
       "value": "4+",
       "label": "Years of Excellence",
-      "labelAmharic": "",
+      "labelAmharic": "የስኬት ዓመታት",
       "icon": "Award"
     },
     {
       "value": "4.9",
       "label": "Average Rating",
-      "labelAmharic": "",
+      "labelAmharic": "አማካይ ደረጃ",
       "icon": "Star"
     }
   ],
@@ -166,9 +167,9 @@
     {
       "id": "s1",
       "title": "Advert & Promotion",
-      "titleAmharic": "",
+      "titleAmharic": "ማስታወቂያና ማስተዋወቅ",
       "description": "Strategic advertising and promotional campaigns to maximize your event's reach. We handle social media marketing, print materials, radio spots, and digital advertising to ensure your event gets the attention it deserves across Addis Ababa and beyond.",
-      "descriptionAmharic": "",
+      "descriptionAmharic": "የዝግጅትዎን ሽፋን ለማሳደግ ስልታዊ ማስታወቂያ እና ማስተዋወቂያ ዘመቻዎች። ማህበራዊ ሚዲያ ግብይት፣ የህትመት ቁሳቁሶች፣ ሬዲዮ ማስታወቂያ እና ዲጂታል ማስታወቂያ እንዲያገኝ እንደብር።",
       "icon": "Megaphone",
       "gradient": "from-amber-500 to-orange-600",
       "bgGlow": "bg-amber-500/10"
@@ -176,9 +177,9 @@
     {
       "id": "s2",
       "title": "Event Organization",
-      "titleAmharic": "",
+      "titleAmharic": "ዝግጅት አደራጅ",
       "description": "Full-service event planning and management from concept to completion. Whether it's a grand wedding, corporate conference, or cultural celebration, our experienced team coordinates every detail to deliver a seamless and memorable experience.",
-      "descriptionAmharic": "",
+      "descriptionAmharic": "ከሃሳብ እስከ ማብቃት ሙሉ የዝግጅት እቅድ እና አደራጅ። ታላቅ ሰርግ፣ የኮርፖሬት ስብሰባ ወይም የባህል ስብሰባ ቢሆን፣ ልምድ ያለው ቡድናችን እያንዳንዱን ዝርዝር ያስተባብራል።",
       "icon": "PartyPopper",
       "gradient": "from-emerald-500 to-teal-600",
       "bgGlow": "bg-emerald-500/10"
@@ -186,9 +187,9 @@
     {
       "id": "s3",
       "title": "Decoration",
-      "titleAmharic": "",
+      "titleAmharic": "ጌጣጌጥ",
       "description": "Stunning decorative designs tailored to your theme and vision. From elegant floral arrangements and balloon artistry to traditional Ethiopian motifs and modern aesthetics, our decoration team transforms any venue into a breathtaking setting.",
-      "descriptionAmharic": "",
+      "descriptionAmharic": "ለቴማዎ እና ራዕይዎ የተስተካከለ አስደናቂ የጌጣጌጥ ዲዛይን። ከምርጥ የአበባ ውቅር እና ባሎን ጥበብ እስከ ባህላዊ የኢትዮጵያ ሞቲፍ እና ዘመናዊ አስደናቂነት።",
       "icon": "Palette",
       "gradient": "from-rose-500 to-pink-600",
       "bgGlow": "bg-rose-500/10"
@@ -196,9 +197,9 @@
     {
       "id": "s4",
       "title": "Stage & Tent Rent",
-      "titleAmharic": "",
+      "titleAmharic": "መድረኽና ድንኳን ኪራይ",
       "description": "Professional stage setups and tent rentals for events of any scale. We provide high-quality tents, custom-built stages, podiums, and backdrop systems suitable for outdoor weddings, concerts, corporate events, and community gatherings.",
-      "descriptionAmharic": "",
+      "descriptionAmharic": "ለማንኛውም መጠን ዝግጅት ሙያዊ የመድረኽ ውቅር እና የድንኳን ኪራይ። ከባህር ውጪ ሰርግ፣ ሙዚቃ፣ የኮርፖሬት ዝግጅቶች እና ማህበረሰብ ስብሰባዎች ለሁሉም ተስማሚ።",
       "icon": "Tent",
       "gradient": "from-violet-500 to-purple-600",
       "bgGlow": "bg-violet-500/10"
@@ -206,9 +207,9 @@
     {
       "id": "s5",
       "title": "Sound & Light Supply",
-      "titleAmharic": "",
+      "titleAmharic": "ድምፅና ብርሃን አቅርቦት",
       "description": "State-of-the-art sound systems and professional lighting setups for events of all sizes. From intimate gatherings requiring subtle ambiance to large concerts demanding powerful PA systems and dynamic light shows, we deliver crystal-clear audio and stunning visual effects.",
-      "descriptionAmharic": "",
+      "descriptionAmharic": "ለሁሉም መጠን ዝግጅቶች ዘመናዊ የድምፅ ስርዓቶች እና ሙያዊ የብርሃን ውቅር። ከትንሽ ስብሰባ እስከ ትልቅ ሙዚቃ እና ተንቀሳቃሽ የብርሃን ትእይንት።",
       "icon": "Speaker",
       "gradient": "from-cyan-500 to-sky-600",
       "bgGlow": "bg-cyan-500/10"
@@ -216,9 +217,9 @@
     {
       "id": "s6",
       "title": "Chair & Table Supply",
-      "titleAmharic": "",
+      "titleAmharic": "ወንበርና ጠረጴዛ አቅርቦት",
       "description": "A wide selection of chairs, tables, and furniture rentals to match any event style. From banquet-style round tables and elegant chiavari chairs to functional conference setups and traditional Ethiopian seating arrangements, we have your needs covered.",
-      "descriptionAmharic": "",
+      "descriptionAmharic": "ለማንኛውም ዝግጅት ዓይነት ሰፊ የወንበር፣ ጠረጴዛ እና የቤት ዕቃ ኪራይ ምርጫ። ከባንኬት ዘይቤ ክብ ጠረጴዛ እና ምርጥ ቺያቫሪ ወንበሮች እስከ ባህላዊ የኢትዮጵያ የመቀመጫ ውቅር።",
       "icon": "Armchair",
       "gradient": "from-indigo-500 to-blue-600",
       "bgGlow": "bg-indigo-500/10"
@@ -226,9 +227,9 @@
     {
       "id": "s7",
       "title": "Catering Supply",
-      "titleAmharic": "",
+      "titleAmharic": "ምግብ አቅርቦት",
       "description": "Delicious catering services featuring the best of Ethiopian and international cuisine. Our culinary team prepares everything from traditional injera platters and coffee ceremonies to continental menus, ensuring every guest is treated to an unforgettable dining experience.",
-      "descriptionAmharic": "",
+      "descriptionAmharic": "ምርጥ የኢትዮጵያ እና ዓለም አቀፍ ምግብ ያካተተ ጣፋጭ የምግብ አቅርቦት አገልግሎት። ከባህላዊ የእንጀራ ዲስክ እና የቡና ስርዓት እስከ ኮንቲኔንታል ምግቦች።",
       "icon": "UtensilsCrossed",
       "gradient": "from-orange-500 to-red-600",
       "bgGlow": "bg-orange-500/10"
@@ -236,9 +237,9 @@
     {
       "id": "s8",
       "title": "Kids Game Material Supply",
-      "titleAmharic": "",
+      "titleAmharic": "የልጆች ጨዋታ ቁሳቁስ አቅርቦት",
       "description": "Fun and safe entertainment options for children at your event. We supply bouncy castles, ball pits, face painting stations, game booths, and age-appropriate activities that keep young guests engaged and happy while adults enjoy the celebration.",
-      "descriptionAmharic": "",
+      "descriptionAmharic": "በዝግጅትዎ ለልጆች አስደሳች እና ደህንነቱ የተጠበቀ መዝናኛ አማራጮች። የቡንሲ ካስል፣ የኳስ ጉድጓድ፣ የፊት ስዕል ጣቢያ፣ የጨዋታ ቦስ እና ዕድሜ-ተስማሚ እንቅስቃሴዎች።",
       "icon": "Gamepad2",
       "gradient": "from-lime-500 to-green-600",
       "bgGlow": "bg-lime-500/10"
@@ -253,7 +254,7 @@
       "roleAmharic": "ዋና ዳይሬክተር፣ አዲስ አበባ ሳይንስ እና ቴክኖሎጂ ዩኒቨርስቲ",
       "avatar": "ደ",
       "quote": "Enkutatash delivered an outstanding experience for our university event. Their attention to detail, professionalism, and ability to manage large-scale academic gatherings is truly impressive. I highly recommend their services to any institution seeking excellence.",
-      "quoteAmharic": "",
+      "quoteAmharic": "እንቁጣጣሽ ለዩኒቨርሲቲ ዝግጅታችን አስደናቂ ልምድ ሰጥቷል። የዝርዝር ትኩረታቸው፣ ሙያዊነታቸው እና ሰፊ የአካዳሚክ ስብሰባዎችን የማስተዳደር አቅም በጣም አስደናቂ ነው።",
       "rating": 5,
       "event": "University Event"
     },
@@ -265,7 +266,7 @@
       "roleAmharic": "ምክትል ስራ አስኪያጅ፣ ለሚ ኩራ ክ/ከተማ",
       "avatar": "ፅ",
       "quote": "We partnered with Enkutatash for our sub-city official events and the results were remarkable. Their team understands government protocols and delivers with precision. The decoration and stage setup were beyond our expectations — truly a trusted partner.",
-      "quoteAmharic": "",
+      "quoteAmharic": "ለክ/ከተማችን የይዞታ ዝግጅቶች ከእንቁጣጣሽ ጋር ተባብረናል እና ውጤቱ አስደናቂ ነበር። ቡድናቸው የመንግስት ስርዓቶችን ይረዳል እና በትክክል ያቀርባል። ጌጣጌጥ እና የመድረኽ ውቅር ከተስፋችን በላይ ነበር።",
       "rating": 5,
       "event": "Government Event"
     },
@@ -277,7 +278,7 @@
       "roleAmharic": "ምክትል የቢሮ ሀላፊ፣ አዲስ አበባ ሰላምና ፀጥታ አስተዳደር",
       "avatar": "ሚ",
       "quote": "Enkutatash handled our bureau's official ceremony with exceptional professionalism. From sound and lighting to catering and seating arrangements, everything was perfectly coordinated. They are the most reliable event organizer in Addis Ababa.",
-      "quoteAmharic": "",
+      "quoteAmharic": "እንቁጣጣሽ የቢሮዋን የይዞታ ስርዓት በተለይም ሙያዊነት አደርጓል። ከድምፅ እና ብርሃን እስከ ምግብ እና የመቀመጫ ውቅር፣ ሁሉም ነገር በፍጹም ተተባብሯል። በአዲስ አበባ በጣም አስተማማኝ ዝግጅት አደራጅ ናቸው።",
       "rating": 5,
       "event": "Official Ceremony"
     }
@@ -291,7 +292,7 @@
       "attendees": "1,000+",
       "image": "/events/event-5.jpg",
       "description": "A vibrant outdoor cultural celebration featuring traditional music, dance, and Ethiopian heritage under our signature tent setup.",
-      "descriptionAmharic": "",
+      "descriptionAmharic": "ባህላዊ ሙዚቃ፣ ድግስ እና የኢትዮጵያ ቅርስ ያካተተ ሀብታም የባህል ስብሰባ።",
       "gradient": "from-emerald-400 via-teal-500 to-cyan-600"
     },
     {
@@ -302,7 +303,7 @@
       "attendees": "350+",
       "image": "/events/event-2.jpg",
       "description": "An elegant wedding reception with breathtaking floral backdrops, gold accents, and a sweetheart table setup designed to perfection.",
-      "descriptionAmharic": "",
+      "descriptionAmharic": "አስደናቂ የአበባ ዳራ፣ የወርቅ ማጉያ እና ምርጥ የስዊትሃርት ቴብል ያለው ምርጥ የሰርግ ስብሰባ።",
       "gradient": "from-rose-400 via-pink-500 to-fuchsia-600"
     },
     {
@@ -313,7 +314,7 @@
       "attendees": "5,000+",
       "image": "/events/event-4.jpg",
       "description": "A spectacular live concert with full stage setup, professional sound systems, dynamic lighting, and traditional Ethiopian performances.",
-      "descriptionAmharic": "",
+      "descriptionAmharic": "ሙሉ የመድረኽ ውቅር፣ ሙያዊ የድም፽ ስርዓት፣ ተንቀሳቃሽ ብርሃን እና ባህላዊ የኢትዮጵያ ትንታኔዎች ያሉት ስፔክቲኩላር ቀጥታ ሙዚቃ።",
       "gradient": "from-violet-400 via-purple-500 to-indigo-600"
     },
     {
@@ -324,7 +325,7 @@
       "attendees": "500+",
       "image": "/events/event-6.jpg",
       "description": "A premium corporate gathering with elegant white leather seating, marble-topped tables, and VIP lounge areas for distinguished guests.",
-      "descriptionAmharic": "",
+      "descriptionAmharic": "ምርጥ ነጭ ቆዳ ወንበር፣ ማርብል ጠረጴዛ እና ለልዩ እንግዶች ቪአይፒ ሎውንጅ ያለው ፕሪሚየም የኮርፖሬት ስብሰባ።",
       "gradient": "from-amber-400 via-orange-500 to-red-500"
     },
     {
@@ -335,7 +336,7 @@
       "attendees": "200+",
       "image": "/events/event-7.jpg",
       "description": "Luxury VIP lounge with plush white leather armchairs, gold-framed marble tables, and an elegant atmosphere for exclusive gatherings.",
-      "descriptionAmharic": "",
+      "descriptionAmharic": "ለልዩ ስብሰባዎች ምቹ ነጭ ቆዳ አርምቼር፣ የወርቅ ማጉያ ማርብል ጠረጴዛ እና ምርጥ አቀማመጥ ያለው የቪአይፒ ሎውንጅ።",
       "gradient": "from-cyan-400 via-blue-500 to-indigo-600"
     },
     {
@@ -346,7 +347,7 @@
       "attendees": "800+",
       "image": "/events/event-8.jpg",
       "description": "A grand wedding ceremony in a multi-level venue with floral-patterned aisle, gold-framed VIP chairs, and tiered balcony seating.",
-      "descriptionAmharic": "",
+      "descriptionAmharic": "በብዙ-ደረጃ ቦታ ያለ ታላቅ የሰርግ ስርዓት፣ የአበባ አማራጭ ፎቅ፣ የወርቅ ማጉያ ቪአይፒ ወንበር እና ደረጃ የተሰጠ ባልኮኒ መቀመጫ።",
       "gradient": "from-rose-400 via-pink-500 to-fuchsia-600"
     },
     {
@@ -357,7 +358,7 @@
       "attendees": "600+",
       "image": "/events/event-9.jpg",
       "description": "A formal ceremony in an elegant auditorium with ornate gold chairs, fresh floral arrangements, and a beautifully decorated grand venue.",
-      "descriptionAmharic": "",
+      "descriptionAmharic": "በምርጥ አዳራሽ ውስጥ ያለ ቀልብ የወርቅ ወንበር፣ አዲስ የአበባ ውቅር እና ቆንጆ የተጌጠ ታላቅ ቦታ ያለው ቀልብ ስርዓት።",
       "gradient": "from-lime-400 via-green-500 to-emerald-600"
     },
     {
@@ -368,7 +369,7 @@
       "attendees": "3,000+",
       "image": "/events/event-3.jpg",
       "description": "A captivating musical performance with dynamic blue stage lighting, decorative floral columns, and professional broadcast setup.",
-      "descriptionAmharic": "",
+      "descriptionAmharic": "ተንቀሳቃሽ ሰማያዊ የመድረኽ ብርሃን፣ የጌጣጌጥ አበባ ማስያ እና ሙያዊ የስርጭት ውቅር ያለው የማራኪ ሙዚቃዊ ትንታኔ።",
       "gradient": "from-violet-400 via-purple-500 to-indigo-600"
     },
     {
@@ -379,7 +380,7 @@
       "attendees": "Various",
       "image": "/events/event-1.jpg",
       "description": "Premium decorative lighting and gold candelabra fixtures that add elegance and warmth to any event setting.",
-      "descriptionAmharic": "",
+      "descriptionAmharic": "ለማንኛውም ዝግጅት ውበት እና ሙቀት የሚጨምሩ ፕሪሚየም የጌጣጌጥ ብርሃን እና የወርቅ ካንዲላብራ ቁሳቁሶች።",
       "gradient": "from-amber-400 via-yellow-500 to-orange-500"
     },
     {
@@ -390,7 +391,7 @@
       "attendees": "600+",
       "image": "/events/event-10.jpg",
       "description": "A grand ceremony hall with blue-and-white draped curtains, glass podium, and floral-patterned aisle carpet for a prestigious formal event.",
-      "descriptionAmharic": "",
+      "descriptionAmharic": "ሰማያዊ-ነጭ የደረተ ወረቀት ማሳአት፣ መስታወት ፖዲየም እና የአበባ አማራጭ ካርፔት ያለው ታላቅ የሥርዓት አዳራሽ።",
       "gradient": "from-blue-400 via-indigo-500 to-violet-600"
     },
     {
@@ -401,7 +402,7 @@
       "attendees": "800+",
       "image": "/events/event-11.jpg",
       "description": "A spacious conference hall with tiered seating, VIP gold-accented chairs, and marble-topped tables for a high-profile professional gathering.",
-      "descriptionAmharic": "",
+      "descriptionAmharic": "ደረጃ የተሰጠ መቀመጫ፣ ቪአይፒ የወርቅ ማጉያ ወንበር እና ማርብል ጠረጴዛ ያለው ሰፊ የስብሰባ አዳራሽ።",
       "gradient": "from-slate-400 via-gray-500 to-zinc-600"
     },
     {
@@ -412,7 +413,7 @@
       "attendees": "300+",
       "image": "/events/event-12.jpg",
       "description": "An elegant celebration with ornate woven backdrop, vibrant floral arrangements, and traditional Ethiopian decorative elements for a cultural event.",
-      "descriptionAmharic": "",
+      "descriptionAmharic": "ቆንጆ የተሸከሰ ዳራ፣ ሀብታም የአበባ ውቅር እና ባህላዊ የኢትዮጵያ የጌጣጌጥ አካላት ያሉት ምሩር ስብሰባ።",
       "gradient": "from-emerald-400 via-green-500 to-teal-600"
     },
     {
@@ -423,7 +424,7 @@
       "attendees": "500+",
       "image": "/events/event-13.jpg",
       "description": "The Diamond Club Symposia 2025 with professional stage, branded backdrop, Ethiopian flags, and glass podium for a prestigious academic symposium.",
-      "descriptionAmharic": "",
+      "descriptionAmharic": "ሙያዊ መድረኽ፣ የብራንድ ዳራ፣ የኢትዮጵያ ባንዲራ እና መስታወት ፖዲየም ያለው ዳያሞንድ ክለብ ሲምፖዚየም 2025።",
       "gradient": "from-amber-400 via-yellow-500 to-emerald-600"
     },
     {
@@ -434,7 +435,7 @@
       "attendees": "400+",
       "image": "/events/event-14.jpg",
       "description": "A formal government event with blue curtain backdrop, green carpet stage, Amharic banner, and podium for an official ceremony.",
-      "descriptionAmharic": "",
+      "descriptionAmharic": "ሰማያዊ የደረተ ወረቀት ማሳአት፣ አረንጓዴ ካርፔት መድረኽ፣ አማርኛ ባነር እና ፖዲየም ያለው ቀልብ የመንግስት ዝግጅት።",
       "gradient": "from-blue-400 via-cyan-500 to-teal-600"
     },
     {
@@ -445,7 +446,7 @@
       "attendees": "10,000+",
       "image": "/events/event-15.jpg",
       "description": "A massive public national celebration with thousands waving Ethiopian flags, large tent stage, and organized crowd in matching vests.",
-      "descriptionAmharic": "",
+      "descriptionAmharic": "ሺዎች የኢትዮጵያ ባንዲራ የሚያወዛውሩ፣ ትልቅ የድንኳን መድረኽ እና ተደራጅቶ ሕዝብ ያለው ስፔክቲኩላር ብሔራዊ በዓል።",
       "gradient": "from-green-400 via-yellow-500 to-red-500"
     },
     {
@@ -456,7 +457,7 @@
       "attendees": "300+",
       "image": "/events/event-16.jpg",
       "description": "An elegant indoor gala with vibrant yellow floral-patterned green carpet aisle, blue and gold-framed VIP chairs, and multi-level balcony seating in a grand hall.",
-      "descriptionAmharic": "",
+      "descriptionAmharic": "ሀብታም ቢጫ የአበባ አማራጭ አረንጓዴ ካርፔት ፎቅ፣ ሰማያዊ እና የወርቅ ማጉያ ቪአይፒ ወንበር እና ብዙ-ደረጃ ባልኮኒ መቀመጫ ያለው ምሩር ውስጥ ጋላ።",
       "gradient": "from-yellow-400 via-amber-500 to-orange-600"
     },
     {
@@ -467,7 +468,7 @@
       "attendees": "300+",
       "image": "/events/event-17.jpg",
       "description": "A formal conference in a multi-level auditorium with blue carpet, white polka dots, ornate gold chairs, marble-topped tables, and tiered balcony seating.",
-      "descriptionAmharic": "",
+      "descriptionAmharic": "ሰማያዊ ካርፔት፣ ነጭ ፖልካ ነጥቦች፣ ቀልብ የወርቅ ወንበሮች፣ ማርብል ጠረጴዛ እና ደረጃ የተሰጠ ባልኮኒ መቀመጫ ያለው ቀልብ የአዳራሽ ስብሰባ።",
       "gradient": "from-blue-400 via-indigo-500 to-violet-600"
     },
     {
@@ -478,7 +479,7 @@
       "attendees": "100+",
       "image": "/events/event-18.jpg",
       "description": "A grand stage ceremony with blue and white draped curtains, glass podium, and a vibrant yellow-and-green floral-patterned carpet aisle in an elegant hall.",
-      "descriptionAmharic": "",
+      "descriptionAmharic": "ሰማያዊ እና ነጭ የደረተ ወረቀት ማሳአት፣ መስታወት ፖዲየም እና ሀብታም ቢጫ-አረንጓዴ የአበባ አማራጭ ካርፔት ፎቅ ያለው ታላቅ የመድረኽ ስርዓት።",
       "gradient": "from-teal-400 via-cyan-500 to-blue-600"
     },
     {
@@ -489,7 +490,7 @@
       "attendees": "300+",
       "image": "/events/event-19.jpg",
       "description": "A professional conference setup in a spacious multi-level venue with gold-accented VIP chairs, floral arrangements on marble tables, and tiered upper-level seating.",
-      "descriptionAmharic": "",
+      "descriptionAmharic": "ሰፊ ብዙ-ደረጃ ቦታ ውስጥ የወርቅ ማጉያ ቪአይፒ ወንበር፣ በማርብል ጠረጴዛ ላይ የአበባ ውቅር እና ደረጃ የተሰጠ የላይኛው ደረጃ መቀመጫ ያለው ሙያዊ የስብሰባ ውቅር።",
       "gradient": "from-slate-400 via-blue-500 to-indigo-600"
     },
     {
@@ -500,7 +501,7 @@
       "attendees": "150+",
       "image": "/events/event-20.jpg",
       "description": "An elegant wedding ceremony with golden circular-patterned backdrop, red and white floral arrangements, ornate wooden chairs, and chandelier-lit hall.",
-      "descriptionAmharic": "",
+      "descriptionAmharic": "የወርቅ ክብ ንድፍ ዳራ፣ ቀይ እና ነጭ የአበባ ውቅር፣ ቀልብ የእንጨት ወንበሮች እና ቻንዴሊየር ብርሃን ያለው ምሩር የሰርግ ስርዓት።",
       "gradient": "from-rose-400 via-pink-500 to-fuchsia-600"
     },
     {
@@ -511,7 +512,7 @@
       "attendees": "200+",
       "image": "/events/event-21.jpg",
       "description": "An academic symposium with professional stage setup, branded backdrop with Ethiopian flags, transparent podium, and green carpet stage at Addis Ababa Science and Technology University.",
-      "descriptionAmharic": "",
+      "descriptionAmharic": "በአዲስ አበባ ሳይንስ እና ቴክኖሎጂ ዩኒቨርሲቲ ሙያዊ የመድረኽ ውቅር፣ የብራንድ ዳራ፣ ግልጽ ፖዲየም እና አረንጓዴ ካርፔት መድረኽ ያለው የትምህርት ሲምፖዚየም።",
       "gradient": "from-emerald-400 via-green-500 to-teal-600"
     },
     {
@@ -522,7 +523,7 @@
       "attendees": "150+",
       "image": "/events/event-22.jpg",
       "description": "An official government conference with Amharic banner, blue curtain backdrop, green carpet stage, central podium, and gold-accented VIP seating.",
-      "descriptionAmharic": "",
+      "descriptionAmharic": "አማርኛ ባነር፣ ሰማያዊ የደረተ ወረቀት ማሳአት፣ አረንጓዴ ካርፔት መድረኽ፣ ማዕከላዊ ፖዲየም እና የወርቅ ማጉያ ቪአይፒ መቀመጫ ያለው የመንግስት ስብሰባ።",
       "gradient": "from-blue-400 via-cyan-500 to-teal-600"
     },
     {
@@ -533,7 +534,7 @@
       "attendees": "2,000+",
       "image": "/events/event-23.jpg",
       "description": "A large-scale patriotic rally with thousands waving Ethiopian flags, blue tent stage, organized crowd in matching vests, and an outdoor grassy field venue.",
-      "descriptionAmharic": "",
+      "descriptionAmharic": "ሺዎች የኢትዮጵያ ባንዲራ የሚያወዛውሩ፣ ሰማያዊ የድንኳን መድረኽ፣ ተደራጅቶ ሕዝብ እና የውጪ ሣር ሜዳ ቦታ ያለው ስፔክቲኩላር አገር አፍቃሪ ሰልፍ።",
       "gradient": "from-green-400 via-yellow-500 to-red-500"
     },
     {
@@ -544,7 +545,7 @@
       "attendees": "30+",
       "image": "/events/event-24.jpg",
       "description": "A stunning corporate floral centerpiece with red, pink, and orange roses arranged in a lavish bouquet, set in a modern office lobby with marble finishes.",
-      "descriptionAmharic": "",
+      "descriptionAmharic": "ቀይ፣ ሮዝ እና ብርቱካን ማርጋሪታ በሀብታም ቡኬ ውስጥ የተደረደሩ አስደናቂ የኮርፖሬት የአበባ ማዕከል።",
       "gradient": "from-rose-400 via-pink-500 to-red-600"
     },
     {
@@ -555,7 +556,7 @@
       "attendees": "50+",
       "image": "/events/event-25.jpg",
       "description": "An intimate wedding setup with chrome circular-backrest chairs on a shaggy rug, white draped curtain backdrop adorned with hanging floral garlands.",
-      "descriptionAmharic": "",
+      "descriptionAmharic": "ክሮም ክብ ወገብ ወንበሮች፣ ሻጊ ሱፍ ላይ፣ ነጭ የደረተ ወረቀት ማሳአት እና የተሰበሰቡ የአበባ ጋርላንድ ያለው የቤተሰብ ሰርግ ውቅር።",
       "gradient": "from-pink-400 via-rose-500 to-red-500"
     },
     {
@@ -566,7 +567,7 @@
       "attendees": "Various",
       "image": "/events/event-26.jpg",
       "description": "A rustic cultural decor display with peach and purple drapes, woven straw hats, ornate white chair, and traditional Ethiopian decorative elements against a stone wall.",
-      "descriptionAmharic": "",
+      "descriptionAmharic": "የፒች እና ሊላ ደረተ ወረቀት፣ የተሸከሰ ጥጥ ቦርሳ፣ ቀልብ ነጭ ወንበር እና ባህላዊ የኢትዮጵያ የጌጣጌጥ አካላት ያሉት የባህል ጌጣጌጥ ማሳያ።",
       "gradient": "from-purple-400 via-violet-500 to-indigo-600"
     },
     {
@@ -577,7 +578,7 @@
       "attendees": "Various",
       "image": "/events/event-27.jpg",
       "description": "An impressive collection of elegant event furniture including high-backed cream chairs with gold frames, ornate wooden chairs, and premium seating arrangements.",
-      "descriptionAmharic": "",
+      "descriptionAmharic": "ከወርቅ ማጉያ ጋር ከፍተኛ ወገብ ክሪም ወንበሮች፣ ቀልብ የእንጨት ወንበሮች እና ፕሪሚየም መቀመጫ ውቅር ያካተተ አስደናቂ የዝግጅት ዕቃዎች ስብስብ።",
       "gradient": "from-amber-400 via-yellow-500 to-orange-500"
     }
   ],

@@ -81,3 +81,49 @@ Stage Summary:
 - HTTPS redirect loop fixed: middleware no longer redirects behind reverse proxy
 - All routes and APIs verified working on production build
 - Build succeeds cleanly, server starts and responds with 200 on all endpoints
+---
+Task ID: 1
+Agent: Main Agent
+Task: Restore portfolio horizontal slider and fix multilingual/Amharic translations
+
+Work Log:
+- Investigated current state of codebase - found portfolio was using grid layout with "Show More/Less" toggle, not horizontal slider
+- Found hero section had reversed language switching (am/en were swapped)
+- Found many empty Amharic translations in site-content.json (services, testimonials, portfolio descriptions, stats labels)
+- Found hardcoded English text in section headings (Vision, Services, Portfolio, Process, Testimonials, Contact, CTA)
+- Converted PortfolioSection from grid layout to horizontal slider/carousel with:
+  - Category filter tabs (All, Cultural, Wedding, Concert, Corporate, etc.)
+  - Auto-play with pause on hover/touch
+  - Left/Right navigation arrows (appear on hover)
+  - Scroll snapping for smooth experience
+  - 280px-360px card widths with aspect-[4/3] images
+  - Play/Pause indicator button
+- Fixed hero section language switching (was reversed)
+- Added heroSubtitleAmharic field to SiteContent interface and data
+- Updated site-content.json with complete Amharic translations for:
+  - heroTitleAmharic, heroSubtitleAmharic
+  - All 8 services (titleAmharic + descriptionAmharic)
+  - All 3 testimonials (quoteAmharic)
+  - All 27 portfolio events (descriptionAmharic)
+  - All 4 stats (labelAmharic)
+  - visionAmharic, missionAmharic (full text instead of just labels)
+- Made all section headings bilingual using t() function:
+  - Vision & Mission: "Driven by Purpose, Defined by Excellence"
+  - Services: "Whatever the occasion, we make it extraordinary"
+  - Portfolio: "Events that speak for themselves"
+  - Process: "Your journey to a perfect event"
+  - Testimonials: "What our clients say about us"
+  - Contact: "Let's create something extraordinary"
+  - CTA: "Your Next Event Deserves the Enkutatash Touch"
+- Made ProcessSection steps bilingual (Consultation, Design & Planning, Coordination, The Big Day)
+- Added StatsSection Amharic label support
+- Added scrollbar-hide CSS utility class to globals.css
+- Added ChevronLeft, Pause, Play icons to imports
+- Added useRef to React imports
+- Built and deployed successfully (HTTP 200 on localhost:3000)
+
+Stage Summary:
+- Portfolio now has horizontal slide with category filters, auto-play, and navigation arrows
+- Full Amharic translation coverage for all dynamic content
+- All section headings and descriptive text are now bilingual
+- Server running and serving updated content

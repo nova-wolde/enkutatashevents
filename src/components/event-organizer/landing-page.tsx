@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback, createContext, useContext } from 'react'
+import { useState, useEffect, useCallback, useRef, createContext, useContext } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Sparkles,
@@ -10,6 +10,7 @@ import {
   ArrowRight,
   Star,
   ChevronRight,
+  ChevronLeft,
   Menu,
   X,
   Moon,
@@ -43,6 +44,8 @@ import {
   Heart,
   Loader2,
   Globe,
+  Pause,
+  Play,
 } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import Image from 'next/image'
@@ -116,6 +119,7 @@ interface SiteContent {
   heroTitle: string
   heroTitleAmharic: string
   heroSubtitle: string
+  heroSubtitleAmharic: string
   heroBadge: string
   aboutTitle: string
   aboutSubtitle: string
@@ -127,7 +131,7 @@ interface SiteContent {
   missionAmharic: string
   goals: { icon: string; title: string; titleAmharic: string; gradient: string }[]
   objectives: { icon: string; title: string; description: string }[]
-  stats: { value: string; label: string; icon: string }[]
+  stats: { value: string; label: string; labelAmharic: string; icon: string }[]
   services: { id: string; title: string; titleAmharic: string; description: string; descriptionAmharic: string; icon: string; gradient: string; bgGlow: string }[]
   testimonials: { id: string; name: string; nameAmharic: string; role: string; roleAmharic: string; avatar: string; quote: string; quoteAmharic: string; rating: number; event: string }[]
   portfolioEvents: { id: string; title: string; titleAmharic: string; category: string; attendees: string; image: string; description: string; descriptionAmharic: string; gradient: string }[]
@@ -278,11 +282,11 @@ function HeroSection({ content }: { content: SiteContent }) {
           </motion.div>
 
           <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.05 }} className="text-base sm:text-lg md:text-xl text-emerald-600 dark:text-emerald-400 font-medium mb-2">
-            {language === 'am' ? content.heroTitle : content.heroTitleAmharic}
+            {language === 'am' ? content.heroTitleAmharic : content.heroTitle}
           </motion.p>
 
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }} className="text-3xl sm:text-5xl md:text-7xl font-bold tracking-tight leading-tight">
-            {(language === 'am' ? content.heroTitleAmharic : content.heroTitle).split(' ').map((word, i, arr) => 
+            {(language === 'am' ? (content.heroTitleAmharic || content.heroTitle) : content.heroTitle).split(' ').map((word, i, arr) => 
               i >= arr.length - 1 ? (
                 <span key={i} className="bg-gradient-to-r from-emerald-600 via-teal-500 to-amber-500 bg-clip-text text-transparent"> {word}</span>
               ) : (
@@ -292,7 +296,7 @@ function HeroSection({ content }: { content: SiteContent }) {
           </motion.h1>
 
           <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }} className="mt-3 sm:mt-6 text-sm sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed px-2 sm:px-0">
-            {content.heroSubtitle}
+            {language === 'am' ? (content.heroSubtitleAmharic || content.heroSubtitle) : content.heroSubtitle}
           </motion.p>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.3 }} className="mt-6 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto">
@@ -379,6 +383,7 @@ function HeroSection({ content }: { content: SiteContent }) {
 }
 
 function StatsSection({ content }: { content: SiteContent }) {
+  const { language, t } = useLanguage()
   return (
     <section className="py-8 sm:py-16 border-y border-border/50 bg-muted/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -391,7 +396,7 @@ function StatsSection({ content }: { content: SiteContent }) {
                   <Icon className="h-5 w-5 sm:h-6 sm:w-6 text-emerald-600 dark:text-emerald-400" />
                 </div>
                 <p className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">{stat.value}</p>
-                <p className="text-[11px] sm:text-sm text-muted-foreground mt-1">{stat.label}</p>
+                <p className="text-[11px] sm:text-sm text-muted-foreground mt-1">{language === 'am' && stat.labelAmharic ? stat.labelAmharic : stat.label}</p>
               </motion.div>
             )
           })}
@@ -472,7 +477,7 @@ function VisionMissionSection({ content }: { content: SiteContent }) {
         <motion.div initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-100px' }} transition={{ duration: 0.4 }} className="text-center max-w-xl mx-auto mb-6 sm:mb-10">
           <Badge variant="secondary" className="mb-2 border-emerald-500/20 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400 text-[10px] sm:text-xs">{t('Vision & Mission', 'ራዕይና ተልዕኮ')}</Badge>
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">
-            Driven by Purpose, <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">Defined by Excellence</span>
+            {t('Driven by Purpose,', 'በዓላማ የሚመራፁ')} <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">{t('Defined by Excellence', 'በልቅናት የተገለጹ')}</span>
           </h2>
         </motion.div>
 
@@ -486,10 +491,10 @@ function VisionMissionSection({ content }: { content: SiteContent }) {
                   </div>
                   <div>
                     <h3 className="text-sm sm:text-base font-bold">{t('Our Vision', 'ራዕያችን')}</h3>
-                    <p className="text-[9px] sm:text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">{language === 'am' ? content.vision : content.visionAmharic}</p>
+                    <p className="text-[9px] sm:text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">{language === 'am' ? content.visionAmharic : t('Our Vision', 'ራዕያችን')}</p>
                   </div>
                 </div>
-                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{language === 'am' ? content.visionAmharic : content.vision}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{language === 'am' ? (content.visionAmharic || content.vision) : content.vision}</p>
               </CardContent>
             </Card>
           </motion.div>
@@ -502,10 +507,10 @@ function VisionMissionSection({ content }: { content: SiteContent }) {
                   </div>
                   <div>
                     <h3 className="text-sm sm:text-base font-bold">{t('Our Mission', 'ተልዕኳችን')}</h3>
-                    <p className="text-[9px] sm:text-[10px] text-amber-600 dark:text-amber-400 font-medium">{language === 'am' ? content.mission : content.missionAmharic}</p>
+                    <p className="text-[9px] sm:text-[10px] text-amber-600 dark:text-amber-400 font-medium">{language === 'am' ? content.missionAmharic : t('Our Mission', 'ተልዕኳችን')}</p>
                   </div>
                 </div>
-                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{language === 'am' ? content.missionAmharic : content.mission}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{language === 'am' ? (content.missionAmharic || content.mission) : content.mission}</p>
               </CardContent>
             </Card>
           </motion.div>
@@ -567,9 +572,9 @@ function ServicesSection({ content }: { content: SiteContent }) {
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-100px' }} transition={{ duration: 0.5 }} className="text-center max-w-2xl mx-auto mb-8 sm:mb-16">
           <Badge variant="secondary" className="mb-3 sm:mb-4 border-emerald-500/20 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400">{t('Our Services', 'አገልግሎቶቻችን')}</Badge>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
-            Whatever the occasion, <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">we make it extraordinary</span>
+            {t('Whatever the occasion,', 'ምንም ዓይነት ዝግጅት ቢሆን፣')} <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">{t('we make it extraordinary', 'ልዩ እናደርገዋለን')}</span>
           </h2>
-          <p className="mt-3 sm:mt-4 text-muted-foreground text-sm sm:text-lg">From intimate gatherings to grand spectacles, our team delivers world-class event experiences tailored to your vision.</p>
+          <p className="mt-3 sm:mt-4 text-muted-foreground text-sm sm:text-lg">{t('From intimate gatherings to grand spectacles, our team delivers world-class event experiences tailored to your vision.', 'ከትንሽ ስብሰባ እስከ ታላላቅ ዝግጅቶች፣ ቡድናችን ለራስዎ ራዕይ የተስተካከለ የዓለም አቀፍ ልምድ ያቀርባል።')}</p>
         </motion.div>
         <motion.div variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-100px' }} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
           {content.services.map((service) => {
@@ -600,55 +605,148 @@ function PortfolioSection({ content }: { content: SiteContent }) {
   const { language, t } = useLanguage()
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
   const [selectedEvent, setSelectedEvent] = useState<typeof content.portfolioEvents[0] | null>(null)
-  const [showAll, setShowAll] = useState(false)
+  const [activeCategory, setActiveCategory] = useState<string>('All')
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true)
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const [canScrollLeft, setCanScrollLeft] = useState(false)
+  const [canScrollRight, setCanScrollRight] = useState(true)
 
-  const INITIAL_COUNT = 9
-  const displayedEvents = showAll ? content.portfolioEvents : content.portfolioEvents.slice(0, INITIAL_COUNT)
-  const hasMore = content.portfolioEvents.length > INITIAL_COUNT
-  const largeIndices = [0, 7]
+  const categories = ['All', ...Array.from(new Set(content.portfolioEvents.map(e => e.category)))]
+  const filteredEvents = activeCategory === 'All' ? content.portfolioEvents : content.portfolioEvents.filter(e => e.category === activeCategory)
+
+  const checkScroll = useCallback(() => {
+    if (!scrollRef.current) return
+    const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current
+    setCanScrollLeft(scrollLeft > 5)
+    setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 5)
+  }, [])
+
+  useEffect(() => {
+    checkScroll()
+    const el = scrollRef.current
+    if (el) el.addEventListener('scroll', checkScroll, { passive: true })
+    return () => { if (el) el.removeEventListener('scroll', checkScroll) }
+  }, [checkScroll, activeCategory, filteredEvents.length])
+
+  useEffect(() => {
+    if (!isAutoPlaying || !scrollRef.current) return
+    const interval = setInterval(() => {
+      if (!scrollRef.current) return
+      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current
+      if (scrollLeft + clientWidth >= scrollWidth - 5) {
+        scrollRef.current.scrollTo({ left: 0, behavior: 'smooth' })
+      } else {
+        scrollRef.current.scrollBy({ left: 340, behavior: 'smooth' })
+      }
+    }, 3500)
+    return () => clearInterval(interval)
+  }, [isAutoPlaying, activeCategory])
+
+  const scrollByAmount = (direction: 'left' | 'right') => {
+    if (!scrollRef.current) return
+    scrollRef.current.scrollBy({ left: direction === 'left' ? -340 : 340, behavior: 'smooth' })
+  }
 
   return (
     <section id="portfolio" className="py-12 sm:py-20 md:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-100px' }} transition={{ duration: 0.5 }} className="text-center max-w-2xl mx-auto mb-8 sm:mb-16">
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-100px' }} transition={{ duration: 0.5 }} className="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
           <Badge variant="secondary" className="mb-3 sm:mb-4 border-emerald-500/20 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400">{t('Our Portfolio', 'የተሰሩ ስራዎች')}</Badge>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
-            Events that <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">speak for themselves</span>
+            {t('Events that', 'ዝግጅቶች የራሳቸውን')} <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">{t('speak for themselves', 'ድምጽ ይሰማሉ')}</span>
           </h2>
-          <p className="mt-3 sm:mt-4 text-muted-foreground text-sm sm:text-lg">A glimpse into some of our most memorable events — each one a unique story of creativity and flawless execution.</p>
+          <p className="mt-3 sm:mt-4 text-muted-foreground text-sm sm:text-lg">{t('A glimpse into some of our most memorable events — each one a unique story of creativity and flawless execution.', 'ከታሪካችን ውስጥ ካሉ አንዳንድ ማስታወሻ ዝግጅቶቻችን — እያንዳንዱ የፈጠራና የስኬት ልዩ ታሪክ ነው።')}</p>
         </motion.div>
 
-        <motion.div variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-100px' }} className="grid grid-cols-2 md:grid-cols-3 gap-2 sm:gap-4">
-          {displayedEvents.map((event, index) => {
-            const isLarge = largeIndices.includes(index)
-            return (
-              <motion.div key={event.id} variants={staggerItem} className={`${isLarge ? 'row-span-2' : ''} group cursor-pointer`} onClick={() => { setSelectedImage(event.image); setSelectedEvent(event) }}>
-                <div className={`relative rounded-xl sm:rounded-2xl overflow-hidden ${isLarge ? 'h-full min-h-[250px] sm:min-h-[400px]' : 'aspect-[4/3]'}`}>
+        {/* Category Filter */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-3 mb-6 scrollbar-hide">
+          {categories.map(cat => (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className={`shrink-0 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[11px] sm:text-sm font-medium transition-all border min-h-[36px] ${
+                activeCategory === cat
+                  ? 'bg-emerald-600 text-white border-emerald-600 shadow-md shadow-emerald-600/20'
+                  : 'bg-background border-border/50 text-muted-foreground hover:border-emerald-500/30 hover:text-foreground'
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        {/* Horizontal Slider */}
+        <div className="relative group/slider">
+          {/* Left Arrow */}
+          {canScrollLeft && (
+            <button
+              onClick={() => scrollByAmount('left')}
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 z-20 h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-background/90 border border-border/50 shadow-lg flex items-center justify-center hover:bg-background transition-all opacity-0 group-hover/slider:opacity-100 backdrop-blur-sm min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+          )}
+          {/* Right Arrow */}
+          {canScrollRight && (
+            <button
+              onClick={() => scrollByAmount('right')}
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 z-20 h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-background/90 border border-border/50 shadow-lg flex items-center justify-center hover:bg-background transition-all opacity-0 group-hover/slider:opacity-100 backdrop-blur-sm min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
+          )}
+
+          {/* Scrollable Container */}
+          <div
+            ref={scrollRef}
+            className="flex gap-3 sm:gap-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2"
+            style={{ scrollSnapType: 'x mandatory' }}
+            onMouseEnter={() => setIsAutoPlaying(false)}
+            onMouseLeave={() => setIsAutoPlaying(true)}
+            onTouchStart={() => setIsAutoPlaying(false)}
+            onTouchEnd={() => setTimeout(() => setIsAutoPlaying(true), 3000)}
+          >
+            {filteredEvents.map((event) => (
+              <motion.div
+                key={event.id}
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ duration: 0.4 }}
+                className="shrink-0 w-[280px] sm:w-[320px] md:w-[360px] snap-start group cursor-pointer"
+                onClick={() => { setSelectedImage(event.image); setSelectedEvent(event) }}
+              >
+                <div className="relative rounded-xl sm:rounded-2xl overflow-hidden aspect-[4/3]">
                   <Image src={event.image} alt={event.title} fill unoptimized className="object-cover transition-transform duration-500 group-hover:scale-110" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                  <div className={`absolute bottom-0 left-0 right-0 ${isLarge ? 'p-3 sm:p-5' : 'p-2.5 sm:p-4'}`}>
-                    <Badge className={`w-fit ${isLarge ? 'text-[9px] sm:text-xs' : 'text-[8px] sm:text-[10px]'} bg-white/20 text-white border-0 mb-1 ${isLarge ? 'sm:mb-2' : ''} backdrop-blur-sm`}>{event.category}</Badge>
-                    <h3 className={`${isLarge ? 'text-sm sm:text-lg' : 'text-xs sm:text-sm'} font-bold text-white`}>{language === 'am' && event.titleAmharic ? event.titleAmharic : event.title}</h3>
-                    <p className="text-[8px] sm:text-[10px] text-white/80 mt-0.5">{language === 'am' ? event.title : event.titleAmharic}</p>
-                    {isLarge && <p className="text-[10px] sm:text-sm text-white/70 mt-1">{event.attendees} {t('guests', 'እንግዶች')}</p>}
+                  <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
+                    <Badge className="w-fit text-[9px] sm:text-[10px] bg-white/20 text-white border-0 mb-1 sm:mb-2 backdrop-blur-sm">{event.category}</Badge>
+                    <h3 className="text-sm sm:text-base font-bold text-white leading-tight">{language === 'am' && event.titleAmharic ? event.titleAmharic : event.title}</h3>
+                    {event.titleAmharic && <p className="text-[8px] sm:text-[10px] text-white/80 mt-0.5">{language === 'am' ? event.title : event.titleAmharic}</p>}
+                    <p className="text-[10px] sm:text-sm text-white/70 mt-1">{event.attendees} {t('guests', 'እንግዶች')}</p>
                   </div>
                 </div>
               </motion.div>
-            )
-          })}
-        </motion.div>
+            ))}
+          </div>
 
-        {hasMore && (
-          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-center mt-6 sm:mt-10">
-            <Button variant="outline" size="lg" onClick={() => setShowAll(!showAll)} className="group min-h-[44px] border-emerald-500/30 hover:bg-emerald-500/5 hover:border-emerald-500/50">
-              {showAll ? (<>{t('Show Less', 'ትንሽ ያሳዩ')}<ChevronRight className="ml-2 h-4 w-4 -rotate-90 group-hover:-rotate-90 transition-transform" /></>) : (<>{t('Show More Events', 'ተጨማሪ ይመልከቱ')}<ChevronRight className="ml-2 h-4 w-4 rotate-90 group-hover:rotate-90 transition-transform" /></>)}
-            </Button>
-            <p className="mt-2 text-xs sm:text-sm text-muted-foreground">
-              {showAll ? `Showing all ${content.portfolioEvents.length} events` : `Showing ${INITIAL_COUNT} of ${content.portfolioEvents.length} events`}
-            </p>
-          </motion.div>
-        )}
+          {/* Auto-play / Pause indicator */}
+          <button
+            onClick={() => setIsAutoPlaying(!isAutoPlaying)}
+            className="absolute bottom-4 right-4 z-10 h-8 w-8 rounded-full bg-background/70 border border-border/50 flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-opacity backdrop-blur-sm"
+          >
+            {isAutoPlaying ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
+          </button>
+        </div>
 
+        {/* Scroll indicator dots */}
+        <div className="flex items-center justify-center gap-1.5 mt-4">
+          <span className="text-[10px] sm:text-xs text-muted-foreground">
+            {t('Scroll to explore', 'ለማሰስ ያሸብልሉ')} — {filteredEvents.length} {t('events', 'ዝግጅቶች')}
+          </span>
+        </div>
+
+        {/* Lightbox */}
         <AnimatePresence>
           {selectedImage && selectedEvent && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => { setSelectedImage(null); setSelectedEvent(null) }}>
@@ -663,7 +761,7 @@ function PortfolioSection({ content }: { content: SiteContent }) {
                     <span className="text-xs text-white/50">{selectedEvent.attendees} {t('guests', 'እንግዶች')}</span>
                   </div>
                   <h3 className="text-xl font-bold">{language === 'am' && selectedEvent.titleAmharic ? selectedEvent.titleAmharic : selectedEvent.title}</h3>
-                  <p className="text-sm text-emerald-400 mt-0.5">{language === 'am' ? selectedEvent.title : selectedEvent.titleAmharic}</p>
+                  {selectedEvent.titleAmharic && <p className="text-sm text-emerald-400 mt-0.5">{language === 'am' ? selectedEvent.title : selectedEvent.titleAmharic}</p>}
                   <p className="text-sm text-white/70 mt-2">{language === 'am' && selectedEvent.descriptionAmharic ? selectedEvent.descriptionAmharic : selectedEvent.description}</p>
                 </div>
               </motion.div>
@@ -682,19 +780,19 @@ function PortfolioSection({ content }: { content: SiteContent }) {
 }
 
 function ProcessSection() {
-  const { t } = useLanguage()
+  const { language, t } = useLanguage()
   const steps = [
-    { number: '01', title: 'Consultation', description: 'We start with a detailed conversation to understand your vision, budget, and expectations. This helps us tailor every detail to your needs.' },
-    { number: '02', title: 'Design & Planning', description: 'Our creative team develops a comprehensive plan including mood boards, timelines, vendor selections, and budget breakdowns for your approval.' },
-    { number: '03', title: 'Coordination', description: 'We coordinate with all vendors, manage logistics, and handle every detail behind the scenes so you can focus on what matters most.' },
-    { number: '04', title: 'The Big Day', description: 'Our team is on-site from setup to teardown, ensuring everything runs flawlessly. You just show up and enjoy your extraordinary event.' },
+    { number: '01', title: t('Consultation', 'ምክር'), titleAm: 'ምክር', description: t('We start with a detailed conversation to understand your vision, budget, and expectations. This helps us tailor every detail to your needs.', 'በመጀመሪያ ራዕይዎን፣ በጀትዎን እና ተስፋዎን ለመረዳት ዝርዝር ውይይት እናደርጋለን። ይህ እያንዳንዱን ዝርዝር ለእርስዎ ፍላጎት ለማስተካከል ይረዳል።') },
+    { number: '02', title: t('Design & Planning', 'ዲዛይንና እቅድ'), titleAm: 'ዲዛይንና እቅድ', description: t('Our creative team develops a comprehensive plan including mood boards, timelines, vendor selections, and budget breakdowns for your approval.', 'ፈጠራ ቡድናችን ሞድ ቦርድ፣ ጊዜያዊ መስመር፣ አቅራቢ ምርጫ እና በጀት ዝርዝር ያካተተ ሰፊ እቅድ ያዘጋጃል።') },
+    { number: '03', title: t('Coordination', 'ቅንብር'), titleAm: 'ቅንብር', description: t('We coordinate with all vendors, manage logistics, and handle every detail behind the scenes so you can focus on what matters most.', 'ከሁሉም አቅራቢዎች ጋር እንተባበራለን፣ ኮንትሮል እናደርጋለን፣ እና እያንዳንዱን ዝርዝር በትክክል እንደቅምቃምለን ስለሚስብዎት ትኩረት ማድረግ ይችላሉ።') },
+    { number: '04', title: t('The Big Day', 'ታላቁ ቀን'), titleAm: 'ታላቁ ቀን', description: t('Our team is on-site from setup to teardown, ensuring everything runs flawlessly. You just show up and enjoy your extraordinary event.', 'ቡድናችን ከመጫኛ እስከ መፍታት በቦታው ላይ ነው፣ ሁሉም ነገር በትክክል እንዲሄድ ያረጋግጣል። እርስዎ ብቻ ይገቡ እና ድንቅ ዝግጅትዎን ያስይዙ።') },
   ]
   return (
     <section className="py-12 sm:py-20 md:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-100px' }} transition={{ duration: 0.5 }} className="text-center max-w-2xl mx-auto mb-8 sm:mb-16">
           <Badge variant="secondary" className="mb-3 sm:mb-4 border-emerald-500/20 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400">{t('How It Works', 'እንዴት እንደሚሰራ')}</Badge>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">Your journey to a <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">perfect event</span></h2>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">{t('Your journey to a', 'ወደሚፈልጉት')} <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">{t('perfect event', 'ፍጹም ዝግጅት')}</span></h2>
         </motion.div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {steps.map((step, i) => (
@@ -719,8 +817,8 @@ function TestimonialsSection({ content }: { content: SiteContent }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-100px' }} transition={{ duration: 0.5 }} className="text-center max-w-2xl mx-auto mb-8 sm:mb-16">
           <Badge variant="secondary" className="mb-3 sm:mb-4 border-emerald-500/20 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400">{t('Testimonials', 'ደንበኞቻችን ምን ይላሉ')}</Badge>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">What our clients <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">say about us</span></h2>
-          <p className="mt-3 sm:mt-4 text-muted-foreground text-sm sm:text-lg">Don&apos;t just take our word for it — hear from the people who have experienced the Enkutatash difference.</p>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">{t('What our clients', 'ደንበኞቻችን')} <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">{t('say about us', 'ምን ይላሉ')}</span></h2>
+          <p className="mt-3 sm:mt-4 text-muted-foreground text-sm sm:text-lg">{t("Don't just take our word for it — hear from the people who have experienced the Enkutatash difference.", 'የእኛን ቃል ብቻ አይውሰዱ — የእንቁጣጣሽን ልዩነት ከተሞከሩት ሰዎች ይስሙ።')}</p>
         </motion.div>
         <motion.div variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-100px' }} className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-6">
           {content.testimonials.map((testimonial) => (
@@ -792,8 +890,8 @@ function ContactSection({ content }: { content: SiteContent }) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16">
           <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: '-100px' }} transition={{ duration: 0.5 }}>
             <Badge variant="secondary" className="mb-3 sm:mb-4 border-emerald-500/20 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400">{t('Get in Touch', 'ያግኙን')}</Badge>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">Let&apos;s create something <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">extraordinary</span></h2>
-            <p className="mt-3 sm:mt-4 text-muted-foreground text-sm sm:text-lg leading-relaxed">Ready to bring your event vision to life? Reach out to us and let&apos;s start planning. Every great event begins with a conversation.</p>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">{t("Let's create something", 'እንፍጠር')} <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">{t('extraordinary', 'ልዩ ነገር')}</span></h2>
+            <p className="mt-3 sm:mt-4 text-muted-foreground text-sm sm:text-lg leading-relaxed">{t("Ready to bring your event vision to life? Reach out to us and let's start planning. Every great event begins with a conversation.", 'የዝግጅት ራዕይዎን ለማሳደጵ ዝግጁ ነዎት? ያግኙን እና እንዳቅድ። እያንዳንዱ ታላቅ ዝግጅት ከውይይት ይጀምራል።')}</p>
 
             <div className="mt-6 sm:mt-8 space-y-4 sm:space-y-6">
               <div className="flex items-start gap-3 sm:gap-4">
@@ -904,11 +1002,11 @@ function CTASection({ content }: { content: SiteContent }) {
           <div className="absolute bottom-0 left-0 h-32 sm:h-48 w-32 sm:w-48 rounded-full bg-white/5 translate-y-1/3 -translate-x-1/4" />
           <div className="relative px-4 py-10 sm:px-6 sm:py-16 md:px-16 md:py-20 text-center">
             <Sparkles className="h-7 w-7 sm:h-12 sm:w-12 text-white/80 mx-auto mb-4 sm:mb-6" />
-            <h2 className="text-xl sm:text-3xl md:text-4xl font-bold text-white tracking-tight">Your Next Event Deserves<br />the Enkutatash Touch</h2>
-            <p className="mt-3 sm:mt-4 text-white/80 text-sm sm:text-lg max-w-xl mx-auto">Let us transform your vision into an unforgettable experience. Book a free consultation today and discover why hundreds of clients trust us.</p>
+            <h2 className="text-xl sm:text-3xl md:text-4xl font-bold text-white tracking-tight">{t('Your Next Event Deserves', 'ቀጣይ ዝግጅትዎ ይገባዋል')}<br />{t('the Enkutatash Touch', 'የእንቁጣጣሽ ንኪ')}</h2>
+            <p className="mt-3 sm:mt-4 text-white/80 text-sm sm:text-lg max-w-xl mx-auto">{t('Let us transform your vision into an unforgettable experience. Book a free consultation today and discover why hundreds of clients trust us.', 'ራዕይዎን ያልተረሳ ልምድ እንድናደርግ ያስገኙን። ዛሬ ነፃ ምክር ያስይዙ እና መቶዎች ደንበኞች ለምን እንደሚያምኑበት ይወቁ።')}</p>
             <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
               <Button size="lg" onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })} className="bg-white text-emerald-700 hover:bg-white/90 shadow-xl w-full sm:w-auto px-5 sm:px-8 h-11 sm:h-12 text-sm sm:text-base font-semibold min-h-[44px]">
-                Book a Free Consultation <ArrowRight className="ml-2 h-4 sm:h-5 w-4 sm:w-5" />
+                {t('Book a Free Consultation', 'ነፃ ምክር ያስይዙ')} <ArrowRight className="ml-2 h-4 sm:h-5 w-4 sm:w-5" />
               </Button>
               {content.phoneLinks && content.phoneLinks[0] && (
                 <a href={`tel:${content.phoneLinks[0]}`} className="w-full sm:w-auto">

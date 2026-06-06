@@ -990,38 +990,6 @@ function ContactSection({ content }: { content: SiteContent }) {
   )
 }
 
-function CTASection({ content }: { content: SiteContent }) {
-  const { t } = useLanguage()
-  return (
-    <section className="py-12 sm:py-20 md:py-28">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-100px' }} transition={{ duration: 0.5 }} className="relative rounded-xl sm:rounded-3xl overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-emerald-600 via-teal-600 to-amber-600" />
-          <div className="absolute inset-0 bg-grid-white/5 bg-[size:40px_40px]" />
-          <div className="absolute top-0 right-0 h-48 sm:h-64 w-48 sm:w-64 rounded-full bg-white/5 -translate-y-1/2 translate-x-1/4" />
-          <div className="absolute bottom-0 left-0 h-32 sm:h-48 w-32 sm:w-48 rounded-full bg-white/5 translate-y-1/3 -translate-x-1/4" />
-          <div className="relative px-4 py-10 sm:px-6 sm:py-16 md:px-16 md:py-20 text-center">
-            <Sparkles className="h-7 w-7 sm:h-12 sm:w-12 text-white/80 mx-auto mb-4 sm:mb-6" />
-            <h2 className="text-xl sm:text-3xl md:text-4xl font-bold text-white tracking-tight">{t('Your Next Event Deserves', 'ቀጣይ ዝግጅትዎ ይገባዋል')}<br />{t('the Enkutatash Touch', 'የእንቁጣጣሽ ንኪ')}</h2>
-            <p className="mt-3 sm:mt-4 text-white/80 text-sm sm:text-lg max-w-xl mx-auto">{t('Let us transform your vision into an unforgettable experience. Book a free consultation today and discover why hundreds of clients trust us.', 'ራዕይዎን ያልተረሳ ልምድ እንድናደርግ ያስገኙን። ዛሬ ነፃ ምክር ያስይዙ እና መቶዎች ደንበኞች ለምን እንደሚያምኑበት ይወቁ።')}</p>
-            <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
-              <Button size="lg" onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })} className="bg-white text-emerald-700 hover:bg-white/90 shadow-xl w-full sm:w-auto px-5 sm:px-8 h-11 sm:h-12 text-sm sm:text-base font-semibold min-h-[44px]">
-                {t('Book a Free Consultation', 'ነፃ ምክር ያስይዙ')} <ArrowRight className="ml-2 h-4 sm:h-5 w-4 sm:w-5" />
-              </Button>
-              {content.phoneLinks && content.phoneLinks[0] && (
-                <a href={`tel:${content.phoneLinks[0]}`} className="w-full sm:w-auto">
-                  <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 w-full sm:w-auto px-5 sm:px-8 h-11 sm:h-12 text-sm sm:text-base min-h-[44px]">
-                    <Phone className="mr-2 h-4 w-4" /> {t('Call Us Now', 'አሁን ይደውሉ')}
-                  </Button>
-                </a>
-              )}
-            </div>
-          </div>
-        </motion.div>
-      </div>
-    </section>
-  )
-}
 
 function Footer({ content }: { content: SiteContent }) {
   const { language, t } = useLanguage()
@@ -1119,7 +1087,6 @@ export function LandingPage() {
         <ProcessSection />
         <TestimonialsSection content={content} />
         <ContactSection content={content} />
-        <CTASection content={content} />
         <Footer content={content} />
         <BookingDialog />
       </div>

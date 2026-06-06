@@ -1464,12 +1464,37 @@ function ContactSection() {
     message: '',
   })
   const [submitted, setSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState('')
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setSubmitted(true)
-    setTimeout(() => setSubmitted(false), 3000)
-    setFormState({ name: '', email: '', phone: '', eventType: '', message: '' })
+    setSubmitting(true)
+    setSubmitError('')
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formState),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok || !data.success) {
+        const errorMsg = data.errors?.join(', ') || 'Something went wrong. Please try again.'
+        setSubmitError(errorMsg)
+        return
+      }
+
+      setSubmitted(true)
+      setFormState({ name: '', email: '', phone: '', eventType: '', message: '' })
+      setTimeout(() => setSubmitted(false), 5000)
+    } catch {
+      setSubmitError('Network error. Please check your connection and try again.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -1573,7 +1598,7 @@ function ContactSection() {
                     <div className="h-14 w-14 sm:h-16 sm:w-16 rounded-full bg-emerald-500/10 flex items-center justify-center mb-3 sm:mb-4">
                       <CheckCircle2 className="h-7 w-7 sm:h-8 sm:w-8 text-emerald-600 dark:text-emerald-400" />
                     </div>
-                    <h3 className="text-lg sm:text-xl font-semibold mb-2">Message Sent!</h3>
+                    <h3 className="text-lg sm:text-xl font-semibold mb-2">Message Sent! — መልእክት ተልኳል!</h3>
                     <p className="text-sm text-muted-foreground">
                       Thank you for reaching out. We&apos;ll get back to you within 24 hours.
                     </p>
@@ -1636,11 +1661,24 @@ function ContactSection() {
                     </div>
                     <Button
                       type="submit"
-                      className="w-full bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20 h-11 sm:h-11 min-h-[44px]"
+                      disabled={submitting}
+                      className="w-full bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20 h-11 sm:h-11 min-h-[44px] disabled:opacity-60 disabled:cursor-not-allowed"
                     >
-                      <Send className="mr-2 h-4 w-4" />
-                      Send Message
+                      {submitting ? (
+                        <>
+                          <div className="mr-2 h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                          Sending...
+                        </>
+                      ) : (
+                        <>
+                          <Send className="mr-2 h-4 w-4" />
+                          Send Message
+                        </>
+                      )}
                     </Button>
+                    {submitError && (
+                      <p className="text-xs text-red-500 dark:text-red-400 text-center mt-2">{submitError}</p>
+                    )}
                     <p className="text-[10px] sm:text-xs text-muted-foreground text-center">
                       We typically respond within 24 hours. Your information is kept confidential.
                     </p>

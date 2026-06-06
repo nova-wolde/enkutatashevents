@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, createContext, useContext } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Sparkles,
@@ -42,6 +42,7 @@ import {
   Rocket,
   Heart,
   Loader2,
+  Globe,
 } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import Image from 'next/image'
@@ -63,6 +64,48 @@ const iconLookup: Record<string, React.ElementType> = {
 
 function getIcon(name: string): React.ElementType {
   return iconLookup[name] || Sparkles
+}
+
+// ─── Language Context ────────────────────────────────────────────────────────
+type Language = 'en' | 'am'
+
+interface LanguageContextType {
+  language: Language
+  setLanguage: (lang: Language) => void
+  t: (en: string, am: string) => string
+}
+
+const LanguageContext = createContext<LanguageContextType>({
+  language: 'en',
+  setLanguage: () => {},
+  t: (en) => en,
+})
+
+function LanguageProvider({ children }: { children: React.ReactNode }) {
+  const [language, setLanguageState] = useState<Language>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('enkutatash-language')
+      if (saved === 'am' || saved === 'en') return saved
+    }
+    return 'en'
+  })
+
+  const setLanguage = (lang: Language) => {
+    setLanguageState(lang)
+    localStorage.setItem('enkutatash-language', lang)
+  }
+
+  const t = (en: string, am: string) => language === 'am' ? (am || en) : en
+
+  return (
+    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+      {children}
+    </LanguageContext.Provider>
+  )
+}
+
+function useLanguage() {
+  return useContext(LanguageContext)
 }
 
 // ─── Content Type ─────────────────────────────────────────────────────────────
@@ -112,6 +155,7 @@ const staggerItem = {
 function LandingNavbar({ content }: { content: SiteContent }) {
   const { setAppView, setBookingDialogOpen } = useEventStore()
   const { setTheme, theme } = useTheme()
+  const { language, setLanguage, t } = useLanguage()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
 
@@ -143,25 +187,33 @@ function LandingNavbar({ content }: { content: SiteContent }) {
           </div>
 
           <div className="hidden lg:flex items-center gap-6 xl:gap-8">
-            <a href="#about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">About</a>
-            <a href="#vision" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Vision</a>
-            <a href="#services" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Services</a>
-            <a href="#portfolio" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Portfolio</a>
-            <a href="#contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Contact</a>
+            <a href="#about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">{t('About', 'ስለ እኛ')}</a>
+            <a href="#vision" className="text-sm text-muted-foreground hover:text-foreground transition-colors">{t('Vision', 'ራዕይ')}</a>
+            <a href="#services" className="text-sm text-muted-foreground hover:text-foreground transition-colors">{t('Services', 'አገልግሎቶች')}</a>
+            <a href="#portfolio" className="text-sm text-muted-foreground hover:text-foreground transition-colors">{t('Portfolio', 'ስራዎቻችን')}</a>
+            <a href="#contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors">{t('Contact', 'ያግኙን')}</a>
           </div>
 
           <div className="hidden lg:flex items-center gap-3">
+            <Button variant="ghost" size="icon" className="h-9 w-9 relative" onClick={() => setLanguage(language === 'en' ? 'am' : 'en')}>
+              <Globe className="h-4 w-4" />
+              <span className="absolute -bottom-0.5 -right-0.5 text-[7px] font-bold leading-none">{language === 'en' ? 'EN' : 'አማ'}</span>
+            </Button>
             <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
               <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
               <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
             </Button>
-            <Button variant="ghost" onClick={() => setAppView('login')} className="text-sm">Owner Login</Button>
+            <Button variant="ghost" onClick={() => setAppView('login')} className="text-sm">{t('Owner Login', 'ባለቤት መግቢያ')}</Button>
             <Button onClick={() => setBookingDialogOpen(true)} className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20">
-              Book an Event <ArrowRight className="ml-1.5 h-4 w-4" />
+              {t('Book an Event', 'ዝግጅት ያስይዙ')} <ArrowRight className="ml-1.5 h-4 w-4" />
             </Button>
           </div>
 
           <div className="flex lg:hidden items-center gap-1.5 sm:gap-2">
+            <Button variant="ghost" size="icon" className="h-9 w-9 relative" onClick={() => setLanguage(language === 'en' ? 'am' : 'en')}>
+              <Globe className="h-4 w-4" />
+              <span className="absolute -bottom-0.5 -right-0.5 text-[7px] font-bold leading-none">{language === 'en' ? 'EN' : 'አማ'}</span>
+            </Button>
             <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
               <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
               <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
@@ -182,15 +234,15 @@ function LandingNavbar({ content }: { content: SiteContent }) {
             className="lg:hidden border-t border-border/50 bg-background/95 backdrop-blur-xl"
           >
             <div className="px-4 py-4 space-y-3">
-              {['About', 'Vision', 'Services', 'Portfolio', 'Contact'].map((item) => (
-                <a key={item} href={`#${item.toLowerCase()}`} className="block text-sm text-muted-foreground hover:text-foreground py-2.5 min-h-[44px] flex items-center" onClick={() => setMobileOpen(false)}>
-                  {item}
+              {[{ en: 'About', am: 'ስለ እኛ', href: 'about' }, { en: 'Vision', am: 'ራዕይ', href: 'vision' }, { en: 'Services', am: 'አገልግሎቶች', href: 'services' }, { en: 'Portfolio', am: 'ስራዎቻችን', href: 'portfolio' }, { en: 'Contact', am: 'ያግኙን', href: 'contact' }].map((item) => (
+                <a key={item.en} href={`#${item.href}`} className="block text-sm text-muted-foreground hover:text-foreground py-2.5 min-h-[44px] flex items-center" onClick={() => setMobileOpen(false)}>
+                  {t(item.en, item.am)}
                 </a>
               ))}
               <div className="pt-2 flex flex-col gap-2">
-                <Button variant="outline" onClick={() => { setAppView('login'); setMobileOpen(false) }} className="w-full min-h-[44px]">Owner Login</Button>
+                <Button variant="outline" onClick={() => { setAppView('login'); setMobileOpen(false) }} className="w-full min-h-[44px]">{t('Owner Login', 'ባለቤት መግቢያ')}</Button>
                 <Button onClick={() => { setMobileOpen(false); setBookingDialogOpen(true) }} className="w-full bg-emerald-600 hover:bg-emerald-700 text-white min-h-[44px]">
-                  Book an Event <ArrowRight className="ml-1.5 h-4 w-4" />
+                  {t('Book an Event', 'ዝግጅት ያስይዙ')} <ArrowRight className="ml-1.5 h-4 w-4" />
                 </Button>
               </div>
             </div>
@@ -203,6 +255,7 @@ function LandingNavbar({ content }: { content: SiteContent }) {
 
 function HeroSection({ content }: { content: SiteContent }) {
   const { setBookingDialogOpen } = useEventStore()
+  const { language, t } = useLanguage()
   return (
     <section className="relative pt-24 pb-16 sm:pt-32 sm:pb-20 md:pt-44 md:pb-32 overflow-hidden">
       <div className="absolute inset-0 -z-10">
@@ -225,11 +278,11 @@ function HeroSection({ content }: { content: SiteContent }) {
           </motion.div>
 
           <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.05 }} className="text-base sm:text-lg md:text-xl text-emerald-600 dark:text-emerald-400 font-medium mb-2">
-            {content.heroTitleAmharic}
+            {language === 'am' ? content.heroTitle : content.heroTitleAmharic}
           </motion.p>
 
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }} className="text-3xl sm:text-5xl md:text-7xl font-bold tracking-tight leading-tight">
-            {content.heroTitle.split(' ').map((word, i, arr) => 
+            {(language === 'am' ? content.heroTitleAmharic : content.heroTitle).split(' ').map((word, i, arr) => 
               i >= arr.length - 1 ? (
                 <span key={i} className="bg-gradient-to-r from-emerald-600 via-teal-500 to-amber-500 bg-clip-text text-transparent"> {word}</span>
               ) : (
@@ -244,12 +297,12 @@ function HeroSection({ content }: { content: SiteContent }) {
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.3 }} className="mt-6 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto">
             <Button size="lg" onClick={() => setBookingDialogOpen(true)} className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-xl shadow-emerald-600/20 px-5 sm:px-8 h-12 sm:h-12 text-sm sm:text-base w-full sm:w-auto min-h-[44px]">
-              Book Your Event <ArrowRight className="ml-2 h-4 sm:h-5 w-4 sm:w-5" />
+              {t('Book Your Event', 'ዝግጅትዎን ያስይዙ')} <ArrowRight className="ml-2 h-4 sm:h-5 w-4 sm:w-5" />
             </Button>
             {content.phoneLinks && content.phoneLinks[0] && (
               <a href={`tel:${content.phoneLinks[0]}`} className="w-full sm:w-auto">
                 <Button size="lg" variant="outline" className="px-5 sm:px-8 h-12 sm:h-12 text-sm sm:text-base group w-full min-h-[44px]">
-                  <Phone className="mr-2 h-4 w-4 group-hover:text-emerald-600 transition-colors" /> Call Us Now
+                  <Phone className="mr-2 h-4 w-4 group-hover:text-emerald-600 transition-colors" /> {t('Call Us Now', 'አሁን ይደውሉ')}
                 </Button>
               </a>
             )}
@@ -269,7 +322,7 @@ function HeroSection({ content }: { content: SiteContent }) {
                 {[1, 2, 3, 4, 5].map((s) => (<Star key={s} className="h-3.5 w-3.5 sm:h-4 sm:w-4 fill-amber-400 text-amber-400" />))}
               </div>
               <span className="text-xs sm:text-sm text-muted-foreground">
-                Trusted by <span className="font-semibold text-foreground">{content.stats[0]?.value || '500+'}</span> happy clients
+                {t('Trusted by', 'የሚያምኑት በ')} <span className="font-semibold text-foreground">{content.stats[0]?.value || '500+'}</span> {t('happy clients', 'እርካታ ደንበኞች')}
               </span>
             </div>
           </motion.div>
@@ -295,7 +348,7 @@ function HeroSection({ content }: { content: SiteContent }) {
                     <div className="relative z-10 p-2.5 sm:p-3 md:p-4">
                       <Badge className="w-fit text-[9px] sm:text-[10px] bg-white/20 text-white border-0 mb-1 sm:mb-2 backdrop-blur-sm">{event.category}</Badge>
                       <p className="text-xs sm:text-sm font-bold leading-tight text-white">{event.title}</p>
-                      <p className="text-[10px] sm:text-sm text-white/80 mt-0.5 sm:mt-1">{event.attendees} guests</p>
+                      <p className="text-[10px] sm:text-sm text-white/80 mt-0.5 sm:mt-1">{event.attendees} {t('guests', 'እንግዶች')}</p>
                     </div>
                   </div>
                 ))}
@@ -349,6 +402,7 @@ function StatsSection({ content }: { content: SiteContent }) {
 }
 
 function AboutSection({ content }: { content: SiteContent }) {
+  const { language, t } = useLanguage()
   return (
     <section id="about" className="py-10 sm:py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -383,14 +437,14 @@ function AboutSection({ content }: { content: SiteContent }) {
 
           <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: '-100px' }} transition={{ duration: 0.5 }}>
             <Badge variant="secondary" className="mb-2 sm:mb-3 border-emerald-500/20 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400 text-[10px] sm:text-xs">
-              About Us — ስለ እኛ
+              {t('About Us', 'ስለ እኛ')}
             </Badge>
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">
-              {content.aboutTitle.split(' ').map((word, i, arr) => 
+              {(language === 'am' ? content.aboutSubtitle : content.aboutTitle).split(' ').map((word, i, arr) => 
                 i >= arr.length - 2 ? <span key={i} className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent"> {word}</span> : <span key={i}>{i > 0 ? ' ' : ''}{word}</span>
               )}
             </h2>
-            <p className="mt-0.5 text-xs sm:text-sm text-emerald-600 dark:text-emerald-400 font-medium">{content.aboutSubtitle}</p>
+            <p className="mt-0.5 text-xs sm:text-sm text-emerald-600 dark:text-emerald-400 font-medium">{language === 'am' ? content.aboutTitle : content.aboutSubtitle}</p>
             <p className="mt-2 sm:mt-3 text-muted-foreground text-xs sm:text-sm leading-relaxed">{content.aboutDescription}</p>
             <div className="mt-3 sm:mt-4 flex flex-wrap gap-x-4 gap-y-1.5 sm:gap-y-2">
               {content.aboutHighlights.map((label) => (
@@ -401,7 +455,7 @@ function AboutSection({ content }: { content: SiteContent }) {
               ))}
             </div>
             <Button size="sm" className="mt-3 sm:mt-5 bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20 min-h-[40px] sm:min-h-[44px] text-xs sm:text-sm" onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}>
-              Get in Touch <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+              {t('Get in Touch', 'ያግኙን')} <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
             </Button>
           </motion.div>
         </div>
@@ -411,11 +465,12 @@ function AboutSection({ content }: { content: SiteContent }) {
 }
 
 function VisionMissionSection({ content }: { content: SiteContent }) {
+  const { language, t } = useLanguage()
   return (
     <section id="vision" className="py-8 sm:py-14 bg-muted/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-100px' }} transition={{ duration: 0.4 }} className="text-center max-w-xl mx-auto mb-6 sm:mb-10">
-          <Badge variant="secondary" className="mb-2 border-emerald-500/20 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400 text-[10px] sm:text-xs">Vision & Mission — ራዕይና ተልዕኮ</Badge>
+          <Badge variant="secondary" className="mb-2 border-emerald-500/20 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400 text-[10px] sm:text-xs">{t('Vision & Mission', 'ራዕይና ተልዕኮ')}</Badge>
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">
             Driven by Purpose, <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">Defined by Excellence</span>
           </h2>
@@ -430,11 +485,11 @@ function VisionMissionSection({ content }: { content: SiteContent }) {
                     <Eye className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
                   </div>
                   <div>
-                    <h3 className="text-sm sm:text-base font-bold">Our Vision</h3>
-                    <p className="text-[9px] sm:text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">{content.visionAmharic}</p>
+                    <h3 className="text-sm sm:text-base font-bold">{t('Our Vision', 'ራዕያችን')}</h3>
+                    <p className="text-[9px] sm:text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">{language === 'am' ? content.vision : content.visionAmharic}</p>
                   </div>
                 </div>
-                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{content.vision}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{language === 'am' ? content.visionAmharic : content.vision}</p>
               </CardContent>
             </Card>
           </motion.div>
@@ -446,11 +501,11 @@ function VisionMissionSection({ content }: { content: SiteContent }) {
                     <Target className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
                   </div>
                   <div>
-                    <h3 className="text-sm sm:text-base font-bold">Our Mission</h3>
-                    <p className="text-[9px] sm:text-[10px] text-amber-600 dark:text-amber-400 font-medium">{content.missionAmharic}</p>
+                    <h3 className="text-sm sm:text-base font-bold">{t('Our Mission', 'ተልዕኳችን')}</h3>
+                    <p className="text-[9px] sm:text-[10px] text-amber-600 dark:text-amber-400 font-medium">{language === 'am' ? content.mission : content.missionAmharic}</p>
                   </div>
                 </div>
-                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{content.mission}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{language === 'am' ? content.missionAmharic : content.mission}</p>
               </CardContent>
             </Card>
           </motion.div>
@@ -459,7 +514,7 @@ function VisionMissionSection({ content }: { content: SiteContent }) {
         {/* Goals */}
         <motion.div initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-100px' }} transition={{ duration: 0.4 }} className="mb-6 sm:mb-10">
           <div className="flex items-center justify-center gap-1.5 mb-3 sm:mb-4">
-            <Badge variant="secondary" className="border-amber-500/20 bg-amber-500/5 text-amber-700 dark:text-amber-400 text-[10px] sm:text-xs">Goals — ግቦቻችን</Badge>
+            <Badge variant="secondary" className="border-amber-500/20 bg-amber-500/5 text-amber-700 dark:text-amber-400 text-[10px] sm:text-xs">{t('Goals', 'ግቦቻችን')}</Badge>
           </div>
           <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
             {content.goals.map((goal) => {
@@ -469,8 +524,8 @@ function VisionMissionSection({ content }: { content: SiteContent }) {
                   <div className={`h-5 w-5 sm:h-6 sm:w-6 rounded-full bg-gradient-to-br ${goal.gradient} flex items-center justify-center`}>
                     <Icon className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-white" />
                   </div>
-                  <span className="text-[10px] sm:text-xs font-medium">{goal.title}</span>
-                  {goal.titleAmharic && <span className="text-[8px] sm:text-[10px] text-emerald-600 dark:text-emerald-400 font-medium hidden sm:inline">({goal.titleAmharic})</span>}
+                  <span className="text-[10px] sm:text-xs font-medium">{language === 'am' && goal.titleAmharic ? goal.titleAmharic : goal.title}</span>
+                  {goal.titleAmharic && <span className="text-[8px] sm:text-[10px] text-emerald-600 dark:text-emerald-400 font-medium hidden sm:inline">({language === 'am' ? goal.title : goal.titleAmharic})</span>}
                 </div>
               )
             })}
@@ -480,7 +535,7 @@ function VisionMissionSection({ content }: { content: SiteContent }) {
         {/* Objectives */}
         <motion.div initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-100px' }} transition={{ duration: 0.4 }} className="mb-2">
           <div className="flex items-center justify-center gap-1.5 mb-3 sm:mb-4">
-            <Badge variant="secondary" className="border-violet-500/20 bg-violet-500/5 text-violet-700 dark:text-violet-400 text-[10px] sm:text-xs">Objectives — የስራ ዓላማዎች</Badge>
+            <Badge variant="secondary" className="border-violet-500/20 bg-violet-500/5 text-violet-700 dark:text-violet-400 text-[10px] sm:text-xs">{t('Objectives', 'የስራ ዓላማዎች')}</Badge>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
             {content.objectives.map((objective) => {
@@ -505,11 +560,12 @@ function VisionMissionSection({ content }: { content: SiteContent }) {
 }
 
 function ServicesSection({ content }: { content: SiteContent }) {
+  const { language, t } = useLanguage()
   return (
     <section id="services" className="py-12 sm:py-20 md:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-100px' }} transition={{ duration: 0.5 }} className="text-center max-w-2xl mx-auto mb-8 sm:mb-16">
-          <Badge variant="secondary" className="mb-3 sm:mb-4 border-emerald-500/20 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400">Our Services</Badge>
+          <Badge variant="secondary" className="mb-3 sm:mb-4 border-emerald-500/20 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400">{t('Our Services', 'አገልግሎቶቻችን')}</Badge>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
             Whatever the occasion, <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">we make it extraordinary</span>
           </h2>
@@ -527,8 +583,8 @@ function ServicesSection({ content }: { content: SiteContent }) {
                         <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white" />
                       </div>
                     </div>
-                    <h3 className="text-base sm:text-lg font-semibold mb-1.5 sm:mb-2 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">{service.title}</h3>
-                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{service.description}</p>
+                    <h3 className="text-base sm:text-lg font-semibold mb-1.5 sm:mb-2 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">{language === 'am' && service.titleAmharic ? service.titleAmharic : service.title}</h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{language === 'am' && service.descriptionAmharic ? service.descriptionAmharic : service.description}</p>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -541,6 +597,7 @@ function ServicesSection({ content }: { content: SiteContent }) {
 }
 
 function PortfolioSection({ content }: { content: SiteContent }) {
+  const { language, t } = useLanguage()
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
   const [selectedEvent, setSelectedEvent] = useState<typeof content.portfolioEvents[0] | null>(null)
   const [showAll, setShowAll] = useState(false)
@@ -554,7 +611,7 @@ function PortfolioSection({ content }: { content: SiteContent }) {
     <section id="portfolio" className="py-12 sm:py-20 md:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-100px' }} transition={{ duration: 0.5 }} className="text-center max-w-2xl mx-auto mb-8 sm:mb-16">
-          <Badge variant="secondary" className="mb-3 sm:mb-4 border-emerald-500/20 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400">Our Portfolio</Badge>
+          <Badge variant="secondary" className="mb-3 sm:mb-4 border-emerald-500/20 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400">{t('Our Portfolio', 'የተሰሩ ስራዎች')}</Badge>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
             Events that <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">speak for themselves</span>
           </h2>
@@ -571,9 +628,9 @@ function PortfolioSection({ content }: { content: SiteContent }) {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                   <div className={`absolute bottom-0 left-0 right-0 ${isLarge ? 'p-3 sm:p-5' : 'p-2.5 sm:p-4'}`}>
                     <Badge className={`w-fit ${isLarge ? 'text-[9px] sm:text-xs' : 'text-[8px] sm:text-[10px]'} bg-white/20 text-white border-0 mb-1 ${isLarge ? 'sm:mb-2' : ''} backdrop-blur-sm`}>{event.category}</Badge>
-                    <h3 className={`${isLarge ? 'text-sm sm:text-lg' : 'text-xs sm:text-sm'} font-bold text-white`}>{event.title}</h3>
-                    <p className="text-[8px] sm:text-[10px] text-white/80 mt-0.5">{event.titleAmharic}</p>
-                    {isLarge && <p className="text-[10px] sm:text-sm text-white/70 mt-1">{event.attendees} guests</p>}
+                    <h3 className={`${isLarge ? 'text-sm sm:text-lg' : 'text-xs sm:text-sm'} font-bold text-white`}>{language === 'am' && event.titleAmharic ? event.titleAmharic : event.title}</h3>
+                    <p className="text-[8px] sm:text-[10px] text-white/80 mt-0.5">{language === 'am' ? event.title : event.titleAmharic}</p>
+                    {isLarge && <p className="text-[10px] sm:text-sm text-white/70 mt-1">{event.attendees} {t('guests', 'እንግዶች')}</p>}
                   </div>
                 </div>
               </motion.div>
@@ -584,7 +641,7 @@ function PortfolioSection({ content }: { content: SiteContent }) {
         {hasMore && (
           <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-center mt-6 sm:mt-10">
             <Button variant="outline" size="lg" onClick={() => setShowAll(!showAll)} className="group min-h-[44px] border-emerald-500/30 hover:bg-emerald-500/5 hover:border-emerald-500/50">
-              {showAll ? (<>{'Show Less'}<ChevronRight className="ml-2 h-4 w-4 -rotate-90 group-hover:-rotate-90 transition-transform" /></>) : (<>Show More Events<ChevronRight className="ml-2 h-4 w-4 rotate-90 group-hover:rotate-90 transition-transform" /></>)}
+              {showAll ? (<>{t('Show Less', 'ትንሽ ያሳዩ')}<ChevronRight className="ml-2 h-4 w-4 -rotate-90 group-hover:-rotate-90 transition-transform" /></>) : (<>{t('Show More Events', 'ተጨማሪ ይመልከቱ')}<ChevronRight className="ml-2 h-4 w-4 rotate-90 group-hover:rotate-90 transition-transform" /></>)}
             </Button>
             <p className="mt-2 text-xs sm:text-sm text-muted-foreground">
               {showAll ? `Showing all ${content.portfolioEvents.length} events` : `Showing ${INITIAL_COUNT} of ${content.portfolioEvents.length} events`}
@@ -603,11 +660,11 @@ function PortfolioSection({ content }: { content: SiteContent }) {
                 <div className="mt-4 text-white">
                   <div className="flex items-center gap-2 mb-2">
                     <Badge className="text-xs bg-emerald-500/20 text-emerald-300 border-emerald-500/30">{selectedEvent.category}</Badge>
-                    <span className="text-xs text-white/50">{selectedEvent.attendees} guests</span>
+                    <span className="text-xs text-white/50">{selectedEvent.attendees} {t('guests', 'እንግዶች')}</span>
                   </div>
-                  <h3 className="text-xl font-bold">{selectedEvent.title}</h3>
-                  <p className="text-sm text-emerald-400 mt-0.5">{selectedEvent.titleAmharic}</p>
-                  <p className="text-sm text-white/70 mt-2">{selectedEvent.description}</p>
+                  <h3 className="text-xl font-bold">{language === 'am' && selectedEvent.titleAmharic ? selectedEvent.titleAmharic : selectedEvent.title}</h3>
+                  <p className="text-sm text-emerald-400 mt-0.5">{language === 'am' ? selectedEvent.title : selectedEvent.titleAmharic}</p>
+                  <p className="text-sm text-white/70 mt-2">{language === 'am' && selectedEvent.descriptionAmharic ? selectedEvent.descriptionAmharic : selectedEvent.description}</p>
                 </div>
               </motion.div>
             </motion.div>
@@ -616,7 +673,7 @@ function PortfolioSection({ content }: { content: SiteContent }) {
 
         <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-center mt-8 sm:mt-12">
           <Button size="lg" onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })} className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20 min-h-[44px]">
-            Plan Your Event With Us <ArrowRight className="ml-2 h-4 w-4" />
+            {t('Plan Your Event With Us', 'ዝግጅትዎን ከእኛ ጋር ያቅዱ')} <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </motion.div>
       </div>
@@ -625,6 +682,7 @@ function PortfolioSection({ content }: { content: SiteContent }) {
 }
 
 function ProcessSection() {
+  const { t } = useLanguage()
   const steps = [
     { number: '01', title: 'Consultation', description: 'We start with a detailed conversation to understand your vision, budget, and expectations. This helps us tailor every detail to your needs.' },
     { number: '02', title: 'Design & Planning', description: 'Our creative team develops a comprehensive plan including mood boards, timelines, vendor selections, and budget breakdowns for your approval.' },
@@ -635,7 +693,7 @@ function ProcessSection() {
     <section className="py-12 sm:py-20 md:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-100px' }} transition={{ duration: 0.5 }} className="text-center max-w-2xl mx-auto mb-8 sm:mb-16">
-          <Badge variant="secondary" className="mb-3 sm:mb-4 border-emerald-500/20 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400">How It Works</Badge>
+          <Badge variant="secondary" className="mb-3 sm:mb-4 border-emerald-500/20 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400">{t('How It Works', 'እንዴት እንደሚሰራ')}</Badge>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">Your journey to a <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">perfect event</span></h2>
         </motion.div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
@@ -655,11 +713,12 @@ function ProcessSection() {
 }
 
 function TestimonialsSection({ content }: { content: SiteContent }) {
+  const { language, t } = useLanguage()
   return (
     <section id="testimonials" className="py-12 sm:py-20 md:py-28 bg-muted/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-100px' }} transition={{ duration: 0.5 }} className="text-center max-w-2xl mx-auto mb-8 sm:mb-16">
-          <Badge variant="secondary" className="mb-3 sm:mb-4 border-emerald-500/20 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400">Testimonials</Badge>
+          <Badge variant="secondary" className="mb-3 sm:mb-4 border-emerald-500/20 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400">{t('Testimonials', 'ደንበኞቻችን ምን ይላሉ')}</Badge>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">What our clients <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">say about us</span></h2>
           <p className="mt-3 sm:mt-4 text-muted-foreground text-sm sm:text-lg">Don&apos;t just take our word for it — hear from the people who have experienced the Enkutatash difference.</p>
         </motion.div>
@@ -675,14 +734,14 @@ function TestimonialsSection({ content }: { content: SiteContent }) {
                     <Badge variant="secondary" className="text-[9px] sm:text-[10px]">{testimonial.event}</Badge>
                   </div>
                   <Quote className="h-5 w-5 sm:h-6 sm:w-6 text-emerald-500/30 mb-2" />
-                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed mb-4 sm:mb-6">&ldquo;{testimonial.quote}&rdquo;</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed mb-4 sm:mb-6">&ldquo;{language === 'am' && testimonial.quoteAmharic ? testimonial.quoteAmharic : testimonial.quote}&rdquo;</p>
                   <div className="flex items-center gap-3">
                     <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white text-sm sm:text-base font-bold shrink-0">{testimonial.avatar}</div>
                     <div className="min-w-0">
-                      <p className="text-xs sm:text-sm font-semibold truncate">{testimonial.name}</p>
-                      {testimonial.nameAmharic && <p className="text-[10px] sm:text-xs text-emerald-600 dark:text-emerald-400 font-medium truncate">{testimonial.nameAmharic}</p>}
-                      <p className="text-[10px] sm:text-xs text-muted-foreground truncate">{testimonial.role}</p>
-                      {testimonial.roleAmharic && <p className="text-[9px] sm:text-[10px] text-muted-foreground/70 truncate">{testimonial.roleAmharic}</p>}
+                      <p className="text-xs sm:text-sm font-semibold truncate">{language === 'am' && testimonial.nameAmharic ? testimonial.nameAmharic : testimonial.name}</p>
+                      {testimonial.nameAmharic && <p className="text-[10px] sm:text-xs text-emerald-600 dark:text-emerald-400 font-medium truncate">{language === 'am' ? testimonial.name : testimonial.nameAmharic}</p>}
+                      <p className="text-[10px] sm:text-xs text-muted-foreground truncate">{language === 'am' && testimonial.roleAmharic ? testimonial.roleAmharic : testimonial.role}</p>
+                      {testimonial.roleAmharic && <p className="text-[9px] sm:text-[10px] text-muted-foreground/70 truncate">{language === 'am' ? testimonial.role : testimonial.roleAmharic}</p>}
                     </div>
                   </div>
                 </CardContent>
@@ -697,6 +756,7 @@ function TestimonialsSection({ content }: { content: SiteContent }) {
 
 function ContactSection({ content }: { content: SiteContent }) {
   const { setBookingDialogOpen } = useEventStore()
+  const { t } = useLanguage()
   const [formState, setFormState] = useState({ name: '', email: '', phone: '', eventType: '', message: '' })
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
@@ -731,7 +791,7 @@ function ContactSection({ content }: { content: SiteContent }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16">
           <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: '-100px' }} transition={{ duration: 0.5 }}>
-            <Badge variant="secondary" className="mb-3 sm:mb-4 border-emerald-500/20 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400">Get in Touch</Badge>
+            <Badge variant="secondary" className="mb-3 sm:mb-4 border-emerald-500/20 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400">{t('Get in Touch', 'ያግኙን')}</Badge>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">Let&apos;s create something <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">extraordinary</span></h2>
             <p className="mt-3 sm:mt-4 text-muted-foreground text-sm sm:text-lg leading-relaxed">Ready to bring your event vision to life? Reach out to us and let&apos;s start planning. Every great event begins with a conversation.</p>
 
@@ -741,7 +801,7 @@ function ContactSection({ content }: { content: SiteContent }) {
                   <Phone className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-600 dark:text-emerald-400" />
                 </div>
                 <div>
-                  <p className="font-medium text-sm sm:text-base">Call Us</p>
+                  <p className="font-medium text-sm sm:text-base">{t('Call Us', 'ደውሉልን')}</p>
                   {(content.phones || []).map((phone, i) => (
                     <a key={i} href={`tel:${(content.phoneLinks || [])[i] || phone}`} className="text-xs sm:text-sm text-muted-foreground hover:text-emerald-600 transition-colors block">{phone}</a>
                   ))}
@@ -752,7 +812,7 @@ function ContactSection({ content }: { content: SiteContent }) {
                   <Mail className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-600 dark:text-emerald-400" />
                 </div>
                 <div>
-                  <p className="font-medium text-sm sm:text-base">Email Us</p>
+                  <p className="font-medium text-sm sm:text-base">{t('Email Us', 'ኢሜይል ይላኩ')}</p>
                   <a href={`mailto:${content.email}`} className="text-xs sm:text-sm text-muted-foreground hover:text-emerald-600 transition-colors block">{content.email}</a>
                 </div>
               </div>
@@ -761,7 +821,7 @@ function ContactSection({ content }: { content: SiteContent }) {
                   <MapPin className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-600 dark:text-emerald-400" />
                 </div>
                 <div>
-                  <p className="font-medium text-sm sm:text-base">Visit Us</p>
+                  <p className="font-medium text-sm sm:text-base">{t('Visit Us', 'ይጠብቁን')}</p>
                   <p className="text-xs sm:text-sm text-muted-foreground">{content.address}</p>
                   <p className="text-xs sm:text-sm text-muted-foreground">Ethiopia</p>
                 </div>
@@ -771,7 +831,7 @@ function ContactSection({ content }: { content: SiteContent }) {
                   <Clock className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-600 dark:text-emerald-400" />
                 </div>
                 <div>
-                  <p className="font-medium text-sm sm:text-base">Working Hours</p>
+                  <p className="font-medium text-sm sm:text-base">{t('Working Hours', 'የስራ ሰዓታት')}</p>
                   {(content.workingHours || []).map((wh, i) => (
                     <p key={i} className="text-xs sm:text-sm text-muted-foreground">{wh.day}: {wh.hours}</p>
                   ))}
@@ -808,16 +868,16 @@ function ContactSection({ content }: { content: SiteContent }) {
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                      <div><label className="text-xs sm:text-sm font-medium mb-1.5 block">Full Name</label><Input placeholder="Your name" value={formState.name} onChange={(e) => setFormState({ ...formState, name: e.target.value })} required className="h-10 sm:h-11 min-h-[44px]" /></div>
-                      <div><label className="text-xs sm:text-sm font-medium mb-1.5 block">Email</label><Input type="email" placeholder="you@email.com" value={formState.email} onChange={(e) => setFormState({ ...formState, email: e.target.value })} required className="h-10 sm:h-11 min-h-[44px]" /></div>
+                      <div><label className="text-xs sm:text-sm font-medium mb-1.5 block">{t('Your Name', 'ስምዎ')}</label><Input placeholder={t('Your name', 'ስምዎ')} value={formState.name} onChange={(e) => setFormState({ ...formState, name: e.target.value })} required className="h-10 sm:h-11 min-h-[44px]" /></div>
+                      <div><label className="text-xs sm:text-sm font-medium mb-1.5 block">{t('Your Email', 'ኢሜይል')}</label><Input type="email" placeholder="you@email.com" value={formState.email} onChange={(e) => setFormState({ ...formState, email: e.target.value })} required className="h-10 sm:h-11 min-h-[44px]" /></div>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                      <div><label className="text-xs sm:text-sm font-medium mb-1.5 block">Phone Number</label><Input placeholder="+251 ..." value={formState.phone} onChange={(e) => setFormState({ ...formState, phone: e.target.value })} className="h-10 sm:h-11 min-h-[44px]" /></div>
-                      <div><label className="text-xs sm:text-sm font-medium mb-1.5 block">Event Type</label><Input placeholder="Wedding, Corporate, etc." value={formState.eventType} onChange={(e) => setFormState({ ...formState, eventType: e.target.value })} className="h-10 sm:h-11 min-h-[44px]" /></div>
+                      <div><label className="text-xs sm:text-sm font-medium mb-1.5 block">{t('Phone', 'ስልክ')}</label><Input placeholder="+251 ..." value={formState.phone} onChange={(e) => setFormState({ ...formState, phone: e.target.value })} className="h-10 sm:h-11 min-h-[44px]" /></div>
+                      <div><label className="text-xs sm:text-sm font-medium mb-1.5 block">{t('Event Date', 'የዝግጅት ቀን')}</label><Input placeholder="Wedding, Corporate, etc." value={formState.eventType} onChange={(e) => setFormState({ ...formState, eventType: e.target.value })} className="h-10 sm:h-11 min-h-[44px]" /></div>
                     </div>
-                    <div><label className="text-xs sm:text-sm font-medium mb-1.5 block">Tell Us About Your Event</label><Textarea placeholder="Share your vision — date, venue preferences, number of guests, special requirements..." value={formState.message} onChange={(e) => setFormState({ ...formState, message: e.target.value })} required rows={4} className="resize-none" /></div>
+                    <div><label className="text-xs sm:text-sm font-medium mb-1.5 block">{t('Message', 'መልዕክት')}</label><Textarea placeholder="Share your vision — date, venue preferences, number of guests, special requirements..." value={formState.message} onChange={(e) => setFormState({ ...formState, message: e.target.value })} required rows={4} className="resize-none" /></div>
                     <Button type="submit" disabled={submitting} className="w-full bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20 h-11 sm:h-11 min-h-[44px] disabled:opacity-60 disabled:cursor-not-allowed">
-                      {submitting ? (<><div className="mr-2 h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Sending...</>) : (<><Send className="mr-2 h-4 w-4" />Send Message</>)}
+                      {submitting ? (<><div className="mr-2 h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Sending...</>) : (<><Send className="mr-2 h-4 w-4" />{t('Send Message', 'መልዕክት ይላኩ')}</>)}
                     </Button>
                     {submitError && <p className="text-xs text-red-500 dark:text-red-400 text-center mt-2">{submitError}</p>}
                     <p className="text-[10px] sm:text-xs text-muted-foreground text-center">We typically respond within 24 hours. Your information is kept confidential.</p>
@@ -833,6 +893,7 @@ function ContactSection({ content }: { content: SiteContent }) {
 }
 
 function CTASection({ content }: { content: SiteContent }) {
+  const { t } = useLanguage()
   return (
     <section className="py-12 sm:py-20 md:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -852,7 +913,7 @@ function CTASection({ content }: { content: SiteContent }) {
               {content.phoneLinks && content.phoneLinks[0] && (
                 <a href={`tel:${content.phoneLinks[0]}`} className="w-full sm:w-auto">
                   <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 w-full sm:w-auto px-5 sm:px-8 h-11 sm:h-12 text-sm sm:text-base min-h-[44px]">
-                    <Phone className="mr-2 h-4 w-4" /> Call Us Now
+                    <Phone className="mr-2 h-4 w-4" /> {t('Call Us Now', 'አሁን ይደውሉ')}
                   </Button>
                 </a>
               )}
@@ -865,6 +926,7 @@ function CTASection({ content }: { content: SiteContent }) {
 }
 
 function Footer({ content }: { content: SiteContent }) {
+  const { language, t } = useLanguage()
   return (
     <footer className="border-t border-border/50 py-6 sm:py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -887,21 +949,21 @@ function Footer({ content }: { content: SiteContent }) {
             </div>
           </div>
           <div>
-            <h4 className="text-[11px] sm:text-sm font-semibold mb-2 sm:mb-3">Services</h4>
+            <h4 className="text-[11px] sm:text-sm font-semibold mb-2 sm:mb-3">{t('Services', 'አገልግሎቶች')}</h4>
             <ul className="space-y-1 sm:space-y-2">
               {content.services.slice(0, 8).map((s) => (
-                <li key={s.id}><a className="text-[10px] sm:text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer block py-0.5 min-h-[28px] sm:min-h-0 flex items-center">{s.title}</a></li>
+                <li key={s.id}><a className="text-[10px] sm:text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer block py-0.5 min-h-[28px] sm:min-h-0 flex items-center">{language === 'am' && s.titleAmharic ? s.titleAmharic : s.title}</a></li>
               ))}
             </ul>
           </div>
           <div>
-            <h4 className="text-[11px] sm:text-sm font-semibold mb-2 sm:mb-3">Company</h4>
+            <h4 className="text-[11px] sm:text-sm font-semibold mb-2 sm:mb-3">{t('Company', 'ድርጅት')}</h4>
             <ul className="space-y-1 sm:space-y-2">
-              {['About Us', 'Portfolio', 'Testimonials', 'Contact'].map((item) => (<li key={item}><a className="text-[10px] sm:text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">{item}</a></li>))}
+              {[{ en: 'About Us', am: 'ስለ እኛ' }, { en: 'Portfolio', am: 'ስራዎቻችን' }, { en: 'Testimonials', am: 'ደንበኞቻችን' }, { en: 'Contact', am: 'ያግኙን' }].map((item) => (<li key={item.en}><a className="text-[10px] sm:text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">{t(item.en, item.am)}</a></li>))}
             </ul>
           </div>
           <div>
-            <h4 className="text-[11px] sm:text-sm font-semibold mb-2 sm:mb-3">Contact</h4>
+            <h4 className="text-[11px] sm:text-sm font-semibold mb-2 sm:mb-3">{t('Contact Us', 'ያግኙን')}</h4>
             <ul className="space-y-1 sm:space-y-2">
               {(content.phones || []).slice(0, 2).map((phone, i) => (<li key={i} className="text-[10px] sm:text-sm text-muted-foreground">{phone}</li>))}
               <li className="text-[10px] sm:text-sm text-muted-foreground break-all">{content.email}</li>
@@ -959,20 +1021,22 @@ export function LandingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <LandingNavbar content={content} />
-      <HeroSection content={content} />
-      <StatsSection content={content} />
-      <AboutSection content={content} />
-      <VisionMissionSection content={content} />
-      <ServicesSection content={content} />
-      <PortfolioSection content={content} />
-      <ProcessSection />
-      <TestimonialsSection content={content} />
-      <ContactSection content={content} />
-      <CTASection content={content} />
-      <Footer content={content} />
-      <BookingDialog />
-    </div>
+    <LanguageProvider>
+      <div className="min-h-screen bg-background">
+        <LandingNavbar content={content} />
+        <HeroSection content={content} />
+        <StatsSection content={content} />
+        <AboutSection content={content} />
+        <VisionMissionSection content={content} />
+        <ServicesSection content={content} />
+        <PortfolioSection content={content} />
+        <ProcessSection />
+        <TestimonialsSection content={content} />
+        <ContactSection content={content} />
+        <CTASection content={content} />
+        <Footer content={content} />
+        <BookingDialog />
+      </div>
+    </LanguageProvider>
   )
 }

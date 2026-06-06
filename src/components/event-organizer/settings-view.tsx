@@ -43,9 +43,9 @@ export function SettingsView() {
   const { toast } = useToast()
 
   // Profile
-  const [name, setName] = useState('John Doe')
-  const [email, setEmail] = useState('john@eventhub.com')
-  const [company, setCompany] = useState('EventHub Inc.')
+  const [name, setName] = useState('Enkutatash Owner')
+  const [email, setEmail] = useState('enkutatashevents@gmail.com')
+  const [company, setCompany] = useState('Enkutatash Event')
 
   // Notifications
   const [emailNotif, setEmailNotif] = useState(true)
@@ -150,7 +150,7 @@ export function SettingsView() {
             <Palette className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
             <CardTitle className="text-base font-semibold">Appearance</CardTitle>
           </div>
-          <CardDescription>Customize how EventHub looks</CardDescription>
+          <CardDescription>Customize how the dashboard looks</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
@@ -202,11 +202,14 @@ export function SettingsView() {
                   <SelectValue placeholder="Select default category" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Conference">Conference</SelectItem>
-                  <SelectItem value="Workshop">Workshop</SelectItem>
-                  <SelectItem value="Social">Social</SelectItem>
+                  <SelectItem value="Wedding">Wedding</SelectItem>
+                  <SelectItem value="Corporate">Corporate</SelectItem>
+                  <SelectItem value="Cultural">Cultural</SelectItem>
                   <SelectItem value="Concert">Concert</SelectItem>
-                  <SelectItem value="Meetup">Meetup</SelectItem>
+                  <SelectItem value="Conference">Conference</SelectItem>
+                  <SelectItem value="Symposium">Symposium</SelectItem>
+                  <SelectItem value="Government">Government</SelectItem>
+                  <SelectItem value="Social">Social</SelectItem>
                 </SelectContent>
               </Select>
             </div>

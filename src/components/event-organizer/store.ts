@@ -3,7 +3,7 @@
 import { create } from 'zustand'
 
 export type EventStatus = 'upcoming' | 'ongoing' | 'completed' | 'cancelled'
-export type EventCategory = 'Conference' | 'Workshop' | 'Social' | 'Concert' | 'Meetup'
+export type EventCategory = 'Conference' | 'Workshop' | 'Social' | 'Concert' | 'Meetup' | 'Wedding' | 'Corporate' | 'Cultural' | 'Symposium' | 'Government'
 
 export interface EventItem {
   id: string
@@ -29,8 +29,35 @@ export interface ActivityItem {
   timestamp: string
 }
 
-export type ViewTab = 'dashboard' | 'events' | 'attendees' | 'venues' | 'analytics' | 'settings'
-export type AppView = 'landing' | 'app'
+export interface ContactSubmission {
+  id: string
+  name: string
+  email: string
+  phone: string
+  eventType: string
+  message: string
+  createdAt: string
+  read: boolean
+}
+
+export interface BookingItem {
+  id: string
+  name: string
+  email: string
+  phone: string
+  eventType: string
+  eventDate: string
+  guestCount: number
+  venue: string
+  services: string[]
+  message: string
+  status: 'pending' | 'confirmed' | 'cancelled' | 'completed'
+  createdAt: string
+  read: boolean
+}
+
+export type ViewTab = 'dashboard' | 'events' | 'attendees' | 'venues' | 'analytics' | 'settings' | 'messages' | 'bookings'
+export type AppView = 'landing' | 'app' | 'login'
 
 interface EventStore {
   events: EventItem[]
@@ -44,6 +71,11 @@ interface EventStore {
   filterStatus: EventStatus | 'all'
   selectedEvent: EventItem | null
   editingEvent: EventItem | null
+  messages: ContactSubmission[]
+  bookings: BookingItem[]
+  unreadCount: number
+  pendingBookingsCount: number
+  bookingDialogOpen: boolean
 
   setEvents: (events: EventItem[]) => void
   addEvent: (event: EventItem) => void
@@ -60,6 +92,11 @@ interface EventStore {
   setFilterStatus: (status: EventStatus | 'all') => void
   setSelectedEvent: (event: EventItem | null) => void
   setEditingEvent: (event: EventItem | null) => void
+  setMessages: (messages: ContactSubmission[]) => void
+  setBookings: (bookings: BookingItem[]) => void
+  setUnreadCount: (count: number) => void
+  setPendingBookingsCount: (count: number) => void
+  setBookingDialogOpen: (open: boolean) => void
 }
 
 export const useEventStore = create<EventStore>((set) => ({
@@ -74,6 +111,11 @@ export const useEventStore = create<EventStore>((set) => ({
   filterStatus: 'all',
   selectedEvent: null,
   editingEvent: null,
+  messages: [],
+  bookings: [],
+  unreadCount: 0,
+  pendingBookingsCount: 0,
+  bookingDialogOpen: false,
 
   setEvents: (events) => set({ events }),
   addEvent: (event) => set((state) => ({ events: [event, ...state.events] })),
@@ -99,4 +141,9 @@ export const useEventStore = create<EventStore>((set) => ({
   setFilterStatus: (filterStatus) => set({ filterStatus }),
   setSelectedEvent: (selectedEvent) => set({ selectedEvent }),
   setEditingEvent: (editingEvent) => set({ editingEvent }),
+  setMessages: (messages) => set({ messages }),
+  setBookings: (bookings) => set({ bookings }),
+  setUnreadCount: (unreadCount) => set({ unreadCount }),
+  setPendingBookingsCount: (pendingBookingsCount) => set({ pendingBookingsCount }),
+  setBookingDialogOpen: (bookingDialogOpen) => set({ bookingDialogOpen }),
 }))

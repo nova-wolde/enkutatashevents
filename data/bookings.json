@@ -1,0 +1,21 @@
+[
+  {
+    "id": "bk_1780714158079_0qfsow",
+    "name": "Abebe Kebede",
+    "email": "abebe@example.com",
+    "phone": "+251911123456",
+    "eventType": "Wedding",
+    "eventDate": "2026-08-15",
+    "guestCount": 300,
+    "venue": "Sheraton Addis",
+    "services": [
+      "Event Organization",
+      "Decoration",
+      "Catering Supply"
+    ],
+    "message": "We want a traditional Ethiopian wedding with modern touches.",
+    "status": "pending",
+    "createdAt": "2026-06-06T02:49:18.079Z",
+    "read": false
+  }
+]

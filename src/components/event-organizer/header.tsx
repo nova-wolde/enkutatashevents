@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import {
   Sparkles,
@@ -11,6 +11,7 @@ import {
   Menu,
   Command,
   Globe,
+  LogOut,
 } from 'lucide-react'
 import Image from 'next/image'
 import { useTheme } from 'next-themes'
@@ -29,8 +30,17 @@ import { useEventStore } from './store'
 
 export function Header() {
   const { setTheme, theme } = useTheme()
-  const { setMobileSidebarOpen, setSearchQuery, setAppView } = useEventStore()
+  const { setMobileSidebarOpen, setSearchQuery, setAppView, setCurrentView, unreadCount } = useEventStore()
   const [searchFocused, setSearchFocused] = useState(false)
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' })
+    } catch {
+      // ignore
+    }
+    setAppView('landing')
+  }
 
   return (
     <motion.header
@@ -57,6 +67,7 @@ export function Header() {
           alt="Enkutatash"
           width={32}
           height={32}
+          unoptimized
           className="h-8 w-8 rounded-lg object-contain"
         />
         <span className="text-lg font-bold tracking-tight hidden sm:block">
@@ -100,11 +111,18 @@ export function Header() {
         </Button>
 
         {/* Notifications */}
-        <Button variant="ghost" size="icon" className="h-9 w-9 relative">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-9 w-9 relative"
+          onClick={() => setCurrentView('messages')}
+        >
           <Bell className="h-4 w-4" />
-          <Badge className="absolute -top-0.5 -right-0.5 h-4 min-w-4 px-1 text-[10px] bg-emerald-600 text-white border-0">
-            3
-          </Badge>
+          {unreadCount > 0 && (
+            <Badge className="absolute -top-0.5 -right-0.5 h-4 min-w-4 px-1 text-[10px] bg-emerald-600 text-white border-0">
+              {unreadCount > 99 ? '99+' : unreadCount}
+            </Badge>
+          )}
           <span className="sr-only">Notifications</span>
         </Button>
 
@@ -125,15 +143,19 @@ export function Header() {
               <span className="text-xs text-muted-foreground">enkutatashevents@gmail.com</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem>Settings</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setCurrentView('settings')}>
+              Settings
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => setAppView('landing')}>
               <Globe className="h-4 w-4 mr-2" />
               View Public Page
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-destructive" onClick={() => setAppView('landing')}>Sign out</DropdownMenuItem>
+            <DropdownMenuItem className="text-destructive" onClick={handleLogout}>
+              <LogOut className="h-4 w-4 mr-2" />
+              Sign out
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

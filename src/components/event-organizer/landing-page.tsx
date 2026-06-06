@@ -50,6 +50,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { useEventStore } from './store'
+import { BookingDialog } from './booking-dialog'
 
 const services = [
   {
@@ -421,7 +422,7 @@ const staggerItem = {
 }
 
 function LandingNavbar() {
-  const { setAppView } = useEventStore()
+  const { setAppView, setBookingDialogOpen } = useEventStore()
   const { setTheme, theme } = useTheme()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -497,16 +498,13 @@ function LandingNavbar() {
             </Button>
             <Button
               variant="ghost"
-              onClick={() => setAppView('app')}
+              onClick={() => setAppView('login')}
               className="text-sm"
             >
               Owner Login
             </Button>
             <Button
-              onClick={() => {
-                const el = document.getElementById('contact')
-                el?.scrollIntoView({ behavior: 'smooth' })
-              }}
+              onClick={() => setBookingDialogOpen(true)}
               className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20"
             >
               Book an Event <ArrowRight className="ml-1.5 h-4 w-4" />
@@ -559,13 +557,13 @@ function LandingNavbar() {
               <div className="pt-2 flex flex-col gap-2">
                 <Button
                   variant="outline"
-                  onClick={() => { setAppView('app'); setMobileOpen(false) }}
+                  onClick={() => { setAppView('login'); setMobileOpen(false) }}
                   className="w-full min-h-[44px]"
                 >
                   Owner Login
                 </Button>
                 <Button
-                  onClick={() => { setMobileOpen(false); document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }) }}
+                  onClick={() => { setMobileOpen(false); setBookingDialogOpen(true) }}
                   className="w-full bg-emerald-600 hover:bg-emerald-700 text-white min-h-[44px]"
                 >
                   Book an Event <ArrowRight className="ml-1.5 h-4 w-4" />
@@ -580,6 +578,7 @@ function LandingNavbar() {
 }
 
 function HeroSection() {
+  const { setBookingDialogOpen } = useEventStore()
   return (
     <section className="relative pt-24 pb-16 sm:pt-32 sm:pb-20 md:pt-44 md:pb-32 overflow-hidden">
       {/* Background decorations */}
@@ -660,7 +659,7 @@ function HeroSection() {
           >
             <Button
               size="lg"
-              onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => setBookingDialogOpen(true)}
               className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-xl shadow-emerald-600/20 px-5 sm:px-8 h-12 sm:h-12 text-sm sm:text-base w-full sm:w-auto min-h-[44px]"
             >
               Book Your Event
@@ -1844,6 +1843,7 @@ export function LandingPage() {
       <ContactSection />
       <CTASection />
       <Footer />
+      <BookingDialog />
     </div>
   )
 }

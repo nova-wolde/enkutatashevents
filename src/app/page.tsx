@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Calendar, Users, MapPin, BarChart3, Settings, CalendarDays } from 'lucide-react'
+import { Calendar, Users, MapPin, BarChart3, Settings, CalendarDays, Mail, CalendarCheck } from 'lucide-react'
 import { useEventStore, ViewTab } from '@/components/event-organizer/store'
 import { sampleEvents, sampleActivities } from '@/components/event-organizer/data'
 import { Header } from '@/components/event-organizer/header'
@@ -15,10 +15,15 @@ import { AttendeesView } from '@/components/event-organizer/attendees-view'
 import { VenuesView } from '@/components/event-organizer/venues-view'
 import { AnalyticsView } from '@/components/event-organizer/analytics-view'
 import { SettingsView } from '@/components/event-organizer/settings-view'
+import { MessagesView } from '@/components/event-organizer/messages-view'
+import { BookingsView } from '@/components/event-organizer/bookings-view'
+import { LoginPage } from '@/components/event-organizer/login-page'
 
 const viewTitles: Record<ViewTab, { title: string; subtitle: string; icon: React.ElementType }> = {
   dashboard: { title: 'Dashboard', subtitle: 'Welcome back! Here\'s what\'s happening.', icon: CalendarDays },
   events: { title: 'Events', subtitle: 'Manage all your events in one place.', icon: Calendar },
+  messages: { title: 'Messages', subtitle: 'View and manage contact submissions.', icon: Mail },
+  bookings: { title: 'Bookings', subtitle: 'Manage event bookings and requests.', icon: CalendarCheck },
   attendees: { title: 'Attendees', subtitle: 'Track and manage event attendees.', icon: Users },
   venues: { title: 'Venues', subtitle: 'Manage your event venues.', icon: MapPin },
   analytics: { title: 'Analytics', subtitle: 'Insights and performance metrics.', icon: BarChart3 },
@@ -80,6 +85,28 @@ function AppView() {
                   <EventsList />
                 </motion.div>
               )}
+              {currentView === 'messages' && (
+                <motion.div
+                  key="messages"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <MessagesView />
+                </motion.div>
+              )}
+              {currentView === 'bookings' && (
+                <motion.div
+                  key="bookings"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <BookingsView />
+                </motion.div>
+              )}
               {currentView === 'attendees' && (
                 <motion.div
                   key="attendees"
@@ -135,7 +162,22 @@ function AppView() {
 }
 
 export default function Home() {
-  const { appView } = useEventStore()
+  const { appView, setAppView } = useEventStore()
+
+  // Check auth on mount
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await fetch('/api/auth/session')
+        const data = await response.json()
+        // If already authenticated and trying to access app, allow it
+        // But we don't auto-redirect - user explicitly navigates
+      } catch {
+        // ignore
+      }
+    }
+    checkAuth()
+  }, [])
 
   return (
     <AnimatePresence mode="wait">
@@ -148,6 +190,17 @@ export default function Home() {
           transition={{ duration: 0.3 }}
         >
           <LandingPage />
+        </motion.div>
+      )}
+      {appView === 'login' && (
+        <motion.div
+          key="login"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <LoginPage />
         </motion.div>
       )}
       {appView === 'app' && (

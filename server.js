@@ -47,6 +47,28 @@ function ensureStandaloneAssets() {
   if (!fs.existsSync(standalonePublic) && fs.existsSync(rootPublic)) {
     fs.cpSync(rootPublic, standalonePublic, { recursive: true });
   }
+
+  // Ensure .next/static symlink exists (standalone build omits static assets)
+  const standaloneStatic = path.join(STANDALONE, '.next', 'static');
+  const rootStatic = path.join(ROOT, '.next', 'static');
+  if (fs.existsSync(rootStatic)) {
+    // Remove existing symlink/dir if broken or wrong type
+    try {
+      if (fs.lstatSync(standaloneStatic).isSymbolicLink()) {
+        // Already a symlink — verify it points to the right place
+        const target = fs.readlinkSync(standaloneStatic);
+        if (target !== rootStatic) {
+          fs.unlinkSync(standaloneStatic);
+          fs.symlinkSync(rootStatic, standaloneStatic);
+        }
+      } else {
+        // It's a real directory — leave it (could be from a custom build step)
+      }
+    } catch {
+      // Doesn't exist — create symlink
+      fs.symlinkSync(rootStatic, standaloneStatic);
+    }
+  }
 }
 
 // ── Kill any previous instance ────────────────────────────────────────────

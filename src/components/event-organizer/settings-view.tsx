@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { useTheme } from 'next-themes'
 import {
@@ -11,6 +11,7 @@ import {
   AlertTriangle,
   Save,
   Loader2,
+  RefreshCw,
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -38,56 +39,116 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { useToast } from '@/hooks/use-toast'
 
+interface SettingsData {
+  name: string
+  email: string
+  company: string
+  emailNotif: boolean
+  pushNotif: boolean
+  eventReminders: boolean
+  weeklyDigest: boolean
+  defaultVenue: string
+  defaultCategory: string
+  defaultMaxAttendees: string
+}
+
+const SETTINGS_KEY = 'enkutatash_settings'
+
+function loadSettings(): SettingsData {
+  try {
+    const stored = localStorage.getItem(SETTINGS_KEY)
+    if (stored) return JSON.parse(stored)
+  } catch {}
+  return {
+    name: 'Enkutatash Owner',
+    email: 'enkutatashevents@gmail.com',
+    company: 'Enkutatash Event',
+    emailNotif: true,
+    pushNotif: true,
+    eventReminders: true,
+    weeklyDigest: false,
+    defaultVenue: '',
+    defaultCategory: '',
+    defaultMaxAttendees: '100',
+  }
+}
+
+function saveSettings(settings: SettingsData) {
+  localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings))
+}
+
 export function SettingsView() {
   const { theme, setTheme } = useTheme()
   const { toast } = useToast()
 
-  // Profile
-  const [name, setName] = useState('Enkutatash Owner')
-  const [email, setEmail] = useState('enkutatashevents@gmail.com')
-  const [company, setCompany] = useState('Enkutatash Event')
-
-  // Notifications
-  const [emailNotif, setEmailNotif] = useState(true)
-  const [pushNotif, setPushNotif] = useState(true)
-  const [eventReminders, setEventReminders] = useState(true)
-  const [weeklyDigest, setWeeklyDigest] = useState(false)
-
-  // Event Defaults
-  const [defaultVenue, setDefaultVenue] = useState('')
-  const [defaultCategory, setDefaultCategory] = useState('')
-  const [defaultMaxAttendees, setDefaultMaxAttendees] = useState('100')
+  const [settings, setSettings] = useState<SettingsData>(loadSettings)
+  const [saving, setSaving] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   // Dynamic data from API
   const [venues, setVenues] = useState<string[]>([])
   const [categories, setCategories] = useState<string[]>([])
-  const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    const fetchContent = async () => {
-      try {
-        const res = await fetch('/api/content')
-        const data = await res.json()
-        if (data.content) {
-          setVenues(data.content.venues || [])
-          setCategories(data.content.eventCategories || [])
-          if (data.content.email) setEmail(data.content.email)
-          if (data.content.businessName) setCompany(data.content.businessName + ' Event')
-        }
-      } catch {
-        // Use defaults
-      } finally {
-        setLoading(false)
+  const fetchContent = useCallback(async () => {
+    try {
+      const res = await fetch('/api/content')
+      const data = await res.json()
+      if (data.content) {
+        setVenues(data.content.venues || [])
+        setCategories(data.content.eventCategories || [])
       }
+    } catch {
+      // Use defaults
+    } finally {
+      setLoading(false)
     }
-    fetchContent()
   }, [])
 
-  const handleSave = () => {
-    toast({
-      title: 'Settings Saved',
-      description: 'Your preferences have been updated successfully.',
-    })
+  useEffect(() => {
+    fetchContent()
+  }, [fetchContent])
+
+  const updateSetting = <K extends keyof SettingsData>(key: K, value: SettingsData[K]) => {
+    setSettings((prev) => ({ ...prev, [key]: value }))
+  }
+
+  const handleSave = async () => {
+    setSaving(true)
+    try {
+      // Save settings to localStorage
+      saveSettings(settings)
+
+      // Also update the business name/email in site content if changed
+      const res = await fetch('/api/content')
+      const data = await res.json()
+      if (data.content) {
+        const updates: Record<string, unknown> = {}
+        if (settings.email !== data.content.email) updates.email = settings.email
+        if (settings.businessName !== settings.company.replace(' Event', '')) {
+          updates.businessName = settings.company.replace(' Event', '')
+        }
+        if (Object.keys(updates).length > 0) {
+          await fetch('/api/content', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updates),
+          })
+        }
+      }
+
+      toast({
+        title: 'Settings Saved',
+        description: 'Your preferences have been updated successfully.',
+      })
+    } catch {
+      toast({
+        title: 'Error',
+        description: 'Failed to save some settings.',
+        variant: 'destructive',
+      })
+    } finally {
+      setSaving(false)
+    }
   }
 
   if (loading) {
@@ -119,16 +180,16 @@ export function SettingsView() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="settings-name">Name</Label>
-              <Input id="settings-name" value={name} onChange={(e) => setName(e.target.value)} />
+              <Input id="settings-name" value={settings.name} onChange={(e) => updateSetting('name', e.target.value)} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="settings-email">Email</Label>
-              <Input id="settings-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+              <Input id="settings-email" type="email" value={settings.email} onChange={(e) => updateSetting('email', e.target.value)} />
             </div>
           </div>
           <div className="space-y-2">
             <Label htmlFor="settings-company">Company</Label>
-            <Input id="settings-company" value={company} onChange={(e) => setCompany(e.target.value)} />
+            <Input id="settings-company" value={settings.company} onChange={(e) => updateSetting('company', e.target.value)} />
           </div>
         </CardContent>
       </Card>
@@ -148,7 +209,7 @@ export function SettingsView() {
               <p className="text-sm font-medium">Email Notifications</p>
               <p className="text-xs text-muted-foreground">Receive updates via email</p>
             </div>
-            <Switch checked={emailNotif} onCheckedChange={setEmailNotif} />
+            <Switch checked={settings.emailNotif} onCheckedChange={(v) => updateSetting('emailNotif', v)} />
           </div>
           <Separator />
           <div className="flex items-center justify-between">
@@ -156,7 +217,7 @@ export function SettingsView() {
               <p className="text-sm font-medium">Push Notifications</p>
               <p className="text-xs text-muted-foreground">Get browser push notifications</p>
             </div>
-            <Switch checked={pushNotif} onCheckedChange={setPushNotif} />
+            <Switch checked={settings.pushNotif} onCheckedChange={(v) => updateSetting('pushNotif', v)} />
           </div>
           <Separator />
           <div className="flex items-center justify-between">
@@ -164,7 +225,7 @@ export function SettingsView() {
               <p className="text-sm font-medium">Event Reminders</p>
               <p className="text-xs text-muted-foreground">Remind me before events start</p>
             </div>
-            <Switch checked={eventReminders} onCheckedChange={setEventReminders} />
+            <Switch checked={settings.eventReminders} onCheckedChange={(v) => updateSetting('eventReminders', v)} />
           </div>
           <Separator />
           <div className="flex items-center justify-between">
@@ -172,7 +233,7 @@ export function SettingsView() {
               <p className="text-sm font-medium">Weekly Digest</p>
               <p className="text-xs text-muted-foreground">Get a weekly summary email</p>
             </div>
-            <Switch checked={weeklyDigest} onCheckedChange={setWeeklyDigest} />
+            <Switch checked={settings.weeklyDigest} onCheckedChange={(v) => updateSetting('weeklyDigest', v)} />
           </div>
         </CardContent>
       </Card>
@@ -216,7 +277,7 @@ export function SettingsView() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Default Venue</Label>
-              <Select value={defaultVenue || undefined} onValueChange={setDefaultVenue}>
+              <Select value={settings.defaultVenue || undefined} onValueChange={(v) => updateSetting('defaultVenue', v)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select default venue" />
                 </SelectTrigger>
@@ -231,7 +292,7 @@ export function SettingsView() {
             </div>
             <div className="space-y-2">
               <Label>Default Category</Label>
-              <Select value={defaultCategory || undefined} onValueChange={setDefaultCategory}>
+              <Select value={settings.defaultCategory || undefined} onValueChange={(v) => updateSetting('defaultCategory', v)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select default category" />
                 </SelectTrigger>
@@ -248,8 +309,8 @@ export function SettingsView() {
             <Input
               id="default-max"
               type="number"
-              value={defaultMaxAttendees}
-              onChange={(e) => setDefaultMaxAttendees(e.target.value)}
+              value={settings.defaultMaxAttendees}
+              onChange={(e) => updateSetting('defaultMaxAttendees', e.target.value)}
               className="w-full sm:w-[200px]"
             />
           </div>
@@ -268,27 +329,44 @@ export function SettingsView() {
         <CardContent>
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div>
-              <p className="text-sm font-medium">Delete Account</p>
-              <p className="text-xs text-muted-foreground">Permanently delete your account and all data</p>
+              <p className="text-sm font-medium">Reset Content to Defaults</p>
+              <p className="text-xs text-muted-foreground">Reset all site content back to the original seed data</p>
             </div>
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button variant="destructive" size="sm">
-                  Delete Account
+                  Reset Content
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    This action cannot be undone. This will permanently delete your account
-                    and remove all of your data from our servers.
+                    This will reset all site content (services, portfolio, testimonials, etc.) back to the default values.
+                    Custom changes will be lost. This action cannot be undone.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction className="bg-destructive text-white hover:bg-destructive/90">
-                    Delete Account
+                  <AlertDialogAction
+                    className="bg-destructive text-white hover:bg-destructive/90"
+                    onClick={async () => {
+                      try {
+                        const res = await fetch('/api/content', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ force: true }),
+                        })
+                        const data = await res.json()
+                        if (data.success) {
+                          toast({ title: 'Content Reset', description: 'All content has been reset to defaults.' })
+                        }
+                      } catch {
+                        toast({ title: 'Error', description: 'Failed to reset content.', variant: 'destructive' })
+                      }
+                    }}
+                  >
+                    Reset Content
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
@@ -301,9 +379,11 @@ export function SettingsView() {
       <div className="flex justify-center sm:justify-end pb-6">
         <Button
           onClick={handleSave}
+          disabled={saving}
           className="gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white"
         >
-          <Save className="h-4 w-4" /> Save Changes
+          {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+          {saving ? 'Saving...' : 'Save Changes'}
         </Button>
       </div>
     </motion.div>

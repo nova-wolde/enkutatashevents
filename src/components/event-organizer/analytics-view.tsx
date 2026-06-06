@@ -1,12 +1,13 @@
 'use client'
 
-import { useMemo } from 'react'
+import { useMemo, useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import {
   DollarSign,
   Users,
   TrendingUp,
   Ticket,
+  Loader2,
 } from 'lucide-react'
 import {
   LineChart,
@@ -24,38 +25,46 @@ import {
   Legend,
 } from 'recharts'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { useEventStore, EventCategory } from './store'
+import { useEventStore, EventCategory, BookingItem } from './store'
 
-const COLORS = ['#10b981', '#14b8a6', '#f59e0b', '#8b5cf6', '#f43f5e']
+const COLORS = ['#10b981', '#14b8a6', '#f59e0b', '#8b5cf6', '#f43f5e', '#06b6d4', '#ec4899', '#84cc16']
 
-const monthlyRevenue = [
-  { month: 'Jan', revenue: 12400 },
-  { month: 'Feb', revenue: 18200 },
-  { month: 'Mar', revenue: 15800 },
-  { month: 'Apr', revenue: 22400 },
-  { month: 'May', revenue: 28600 },
-  { month: 'Jun', revenue: 24800 },
-]
-
-const monthlyAttendees = [
-  { month: 'Jan', attendees: 420 },
-  { month: 'Feb', attendees: 680 },
-  { month: 'Mar', attendees: 540 },
-  { month: 'Apr', attendees: 820 },
-  { month: 'May', attendees: 1050 },
-  { month: 'Jun', attendees: 890 },
-]
-
-const categoryColors: Record<EventCategory, string> = {
+const categoryColors: Record<string, string> = {
   Conference: '#10b981',
   Workshop: '#8b5cf6',
   Social: '#f59e0b',
   Concert: '#f43f5e',
   Meetup: '#14b8a6',
+  Wedding: '#ec4899',
+  Corporate: '#06b6d4',
+  Cultural: '#84cc16',
+  Symposium: '#f97316',
+  Government: '#6366f1',
 }
 
 export function AnalyticsView() {
   const { events } = useEventStore()
+  const [bookings, setBookings] = useState<BookingItem[]>([])
+  const [loading, setLoading] = useState(true)
+
+  // Fetch bookings for real data
+  const fetchBookings = useCallback(async () => {
+    try {
+      const res = await fetch('/api/bookings')
+      const data = await res.json()
+      if (data.bookings) {
+        setBookings(data.bookings)
+      }
+    } catch {
+      // ignore
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchBookings()
+  }, [fetchBookings])
 
   const categoryData = useMemo(() => {
     const counts: Record<string, number> = {}
@@ -92,6 +101,84 @@ export function AnalyticsView() {
   const totalTicketSales = useMemo(() =>
     events.reduce((sum, e) => sum + e.attendees, 0)
   , [events])
+
+  // Compute monthly revenue from events
+  const monthlyRevenue = useMemo(() => {
+    const monthMap: Record<string, number> = {}
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+    // Initialize last 6 months
+    const now = new Date()
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
+      const key = `${d.getFullYear()}-${d.getMonth()}`
+      monthMap[key] = 0
+    }
+
+    // Accumulate event revenue by month
+    events.forEach((e) => {
+      try {
+        const d = new Date(e.date)
+        const key = `${d.getFullYear()}-${d.getMonth()}`
+        if (key in monthMap) {
+          monthMap[key] += e.attendees * e.ticketPrice
+        }
+      } catch {}
+    })
+
+    return Object.entries(monthMap).map(([key, revenue]) => {
+      const [year, month] = key.split('-').map(Number)
+      return { month: monthNames[month], revenue }
+    })
+  }, [events])
+
+  // Compute monthly attendees from events
+  const monthlyAttendees = useMemo(() => {
+    const monthMap: Record<string, number> = {}
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+    const now = new Date()
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
+      const key = `${d.getFullYear()}-${d.getMonth()}`
+      monthMap[key] = 0
+    }
+
+    events.forEach((e) => {
+      try {
+        const d = new Date(e.date)
+        const key = `${d.getFullYear()}-${d.getMonth()}`
+        if (key in monthMap) {
+          monthMap[key] += e.attendees
+        }
+      } catch {}
+    })
+
+    return Object.entries(monthMap).map(([key, attendees]) => {
+      const [year, month] = key.split('-').map(Number)
+      return { month: monthNames[month], attendees }
+    })
+  }, [events])
+
+  // Compute bookings by status from bookings data
+  const bookingsByStatus = useMemo(() => {
+    const counts: Record<string, number> = { pending: 0, confirmed: 0, completed: 0, cancelled: 0 }
+    bookings.forEach((b) => {
+      counts[b.status] = (counts[b.status] || 0) + 1
+    })
+    return Object.entries(counts)
+      .filter(([, value]) => value > 0)
+      .map(([name, value]) => ({ name: name.charAt(0).toUpperCase() + name.slice(1), value }))
+  }, [bookings])
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
+        <span className="ml-3 text-muted-foreground">Loading analytics...</span>
+      </div>
+    )
+  }
 
   return (
     <motion.div
@@ -264,6 +351,40 @@ export function AnalyticsView() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Bookings by Status */}
+      {bookingsByStatus.length > 0 && (
+        <Card className="rounded-xl shadow-sm">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base font-semibold">Bookings by Status</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={250}>
+              <PieChart>
+                <Pie
+                  data={bookingsByStatus}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={100}
+                  paddingAngle={4}
+                  dataKey="value"
+                  nameKey="name"
+                  label={({ name, percent }: { name: string; percent: number }) =>
+                    `${name} ${(percent * 100).toFixed(0)}%`
+                  }
+                >
+                  {bookingsByStatus.map((entry, i) => (
+                    <Cell key={entry.name} fill={COLORS[i % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      )}
     </motion.div>
   )
 }

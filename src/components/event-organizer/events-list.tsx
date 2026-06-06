@@ -149,23 +149,39 @@ export function EventsList() {
     }
   }
 
-  const handleDeleteConfirm = () => {
+  const [deleting, setDeleting] = useState(false)
+
+  const handleDeleteConfirm = async () => {
     if (!deleteTarget) return
-    const event = events.find((e) => e.id === deleteTarget)
-    deleteEvent(deleteTarget)
-    if (event) {
-      addActivity({
-        id: Date.now().toString(),
-        user: 'John Doe',
-        avatar: 'JD',
-        action: 'deleted',
-        target: event.name,
-        timestamp: new Date().toISOString(),
+    setDeleting(true)
+    try {
+      const event = events.find((e) => e.id === deleteTarget)
+      const res = await fetch('/api/events', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: deleteTarget }),
       })
-      toast({
-        title: 'Event Deleted',
-        description: `${event.name} has been deleted.`,
-      })
+      const data = await res.json()
+      if (data.success) {
+        deleteEvent(deleteTarget)
+        if (event) {
+          addActivity({
+            id: Date.now().toString(),
+            user: 'Owner',
+            avatar: 'OW',
+            action: 'deleted',
+            target: event.name,
+            timestamp: new Date().toISOString(),
+          })
+          toast({ title: 'Event Deleted', description: `${event.name} has been deleted.` })
+        }
+      } else {
+        toast({ title: 'Error', description: 'Failed to delete event', variant: 'destructive' })
+      }
+    } catch {
+      toast({ title: 'Error', description: 'Network error', variant: 'destructive' })
+    } finally {
+      setDeleting(false)
     }
     setDeleteTarget(null)
   }
@@ -343,9 +359,10 @@ export function EventsList() {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteConfirm}
+              disabled={deleting}
               className="bg-destructive text-white hover:bg-destructive/90"
             >
-              Delete
+              {deleting ? 'Deleting...' : 'Delete'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

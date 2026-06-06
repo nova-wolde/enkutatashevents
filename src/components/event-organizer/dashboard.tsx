@@ -195,6 +195,28 @@ function RecentBookingsCard() {
 }
 
 export function Dashboard() {
+  const { events, setEvents, setActivities } = useEventStore()
+
+  // Fetch events and activities from API on mount
+  useEffect(() => {
+    const fetchData = async () => {
+      if (events.length > 0) return // Already loaded
+      try {
+        const [eventsRes, activitiesRes] = await Promise.all([
+          fetch('/api/events'),
+          fetch('/api/activities'),
+        ])
+        const eventsData = await eventsRes.json()
+        const activitiesData = await activitiesRes.json()
+        if (eventsData.events) setEvents(eventsData.events)
+        if (activitiesData.activities) setActivities(activitiesData.activities)
+      } catch {
+        // ignore
+      }
+    }
+    fetchData()
+  }, [events.length, setEvents, setActivities])
+
   return (
     <div className="space-y-6">
       <StatsCards />

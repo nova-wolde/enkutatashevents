@@ -84,61 +84,84 @@ export function CreateEventDialog() {
     }
   }, [editingEvent])
 
-  const handleSubmit = () => {
+  const [submitting, setSubmitting] = useState(false)
+
+  const handleSubmit = async () => {
     if (!name || !date || !venue || !category) return
+    setSubmitting(true)
 
-    if (isEditing && editingEvent) {
-      updateEvent(editingEvent.id, {
-        name,
-        date: format(date, 'yyyy-MM-dd'),
-        time,
-        venue,
-        category: category as EventCategory,
-        description,
-        maxAttendees: parseInt(maxAttendees) || 100,
-        ticketPrice: parseFloat(ticketPrice) || 0,
-      })
-      addActivity({
-        id: Date.now().toString(),
-        user: 'John Doe',
-        avatar: 'JD',
-        action: 'updated details for',
-        target: name,
-        timestamp: new Date().toISOString(),
-      })
-      toast({
-        title: 'Event Updated',
-        description: `${name} has been updated successfully.`,
-      })
-    } else {
-      const newEvent: EventItem = {
-        id: Date.now().toString(),
-        name,
-        date: format(date, 'yyyy-MM-dd'),
-        time,
-        venue,
-        attendees: 0,
-        maxAttendees: parseInt(maxAttendees) || 100,
-        category: category as EventCategory || 'Conference',
-        status: 'upcoming',
-        description,
-        ticketPrice: parseFloat(ticketPrice) || 0,
-        imageGradient: gradients[Math.floor(Math.random() * gradients.length)],
+    try {
+      if (isEditing && editingEvent) {
+        const updates = {
+          id: editingEvent.id,
+          name,
+          date: format(date, 'yyyy-MM-dd'),
+          time,
+          venue,
+          category: category as EventCategory,
+          description,
+          maxAttendees: parseInt(maxAttendees) || 100,
+          ticketPrice: parseFloat(ticketPrice) || 0,
+        }
+        const res = await fetch('/api/events', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updates),
+        })
+        const data = await res.json()
+        if (data.success) {
+          updateEvent(editingEvent.id, updates)
+          addActivity({
+            id: Date.now().toString(),
+            user: 'Owner',
+            avatar: 'OW',
+            action: 'updated details for',
+            target: name,
+            timestamp: new Date().toISOString(),
+          })
+          toast({ title: 'Event Updated', description: `${name} has been updated successfully.` })
+        } else {
+          toast({ title: 'Error', description: 'Failed to update event', variant: 'destructive' })
+        }
+      } else {
+        const newEvent = {
+          name,
+          date: format(date, 'yyyy-MM-dd'),
+          time,
+          venue,
+          attendees: 0,
+          maxAttendees: parseInt(maxAttendees) || 100,
+          category: category as EventCategory || 'Conference',
+          status: 'upcoming' as const,
+          description,
+          ticketPrice: parseFloat(ticketPrice) || 0,
+          imageGradient: gradients[Math.floor(Math.random() * gradients.length)],
+        }
+        const res = await fetch('/api/events', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newEvent),
+        })
+        const data = await res.json()
+        if (data.success) {
+          addEvent(data.event as EventItem)
+          addActivity({
+            id: Date.now().toString(),
+            user: 'Owner',
+            avatar: 'OW',
+            action: 'created event',
+            target: name,
+            timestamp: new Date().toISOString(),
+          })
+          toast({ title: 'Event Created', description: `${name} has been created successfully.` })
+        } else {
+          toast({ title: 'Error', description: 'Failed to create event', variant: 'destructive' })
+        }
       }
-
-      addEvent(newEvent)
-      addActivity({
-        id: Date.now().toString(),
-        user: 'John Doe',
-        avatar: 'JD',
-        action: 'created event',
-        target: name,
-        timestamp: new Date().toISOString(),
-      })
-      toast({
-        title: 'Event Created',
-        description: `${name} has been created successfully.`,
-      })
+    } catch {
+      toast({ title: 'Error', description: 'Network error. Please try again.', variant: 'destructive' })
+    } finally {
+      setSubmitting(false)
     }
 
     handleClose()
@@ -306,10 +329,10 @@ export function CreateEventDialog() {
             </Button>
             <Button
               onClick={handleSubmit}
-              disabled={!name || !date || !venue || !category}
+              disabled={!name || !date || !venue || !category || submitting}
               className="bg-emerald-600 hover:bg-emerald-700 text-white"
             >
-              {isEditing ? 'Save Changes' : 'Create Event'}
+              {submitting ? 'Saving...' : isEditing ? 'Save Changes' : 'Create Event'}
             </Button>
           </div>
         </div>

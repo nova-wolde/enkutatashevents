@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import {
   MapPin,
@@ -13,6 +13,8 @@ import {
   Coffee,
   Building2,
   X,
+  Trash2,
+  Loader2,
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -27,6 +29,7 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog'
 import { useEventStore } from './store'
+import { useToast } from '@/hooks/use-toast'
 
 interface VenueData {
   name: string
@@ -34,32 +37,6 @@ interface VenueData {
   capacity: number
   amenities: string[]
   status: 'Available' | 'Booked'
-}
-
-const addresses: Record<string, string> = {
-  'Grand Convention Center': '500 Market St, San Francisco, CA',
-  'Creative Hub Studio': '123 Art Lane, San Francisco, CA',
-  'Riverside Amphitheater': '800 River Walk, San Francisco, CA',
-  'Innovation Loft': '45 Startup Blvd, San Francisco, CA',
-  'Tech Campus Hall': '200 Innovation Dr, San Francisco, CA',
-  'Central Park Pavilion': '1 Park Avenue, San Francisco, CA',
-  'Art Gallery Downtown': '78 Gallery Row, San Francisco, CA',
-  'Blue Note Lounge': '350 Jazz Alley, San Francisco, CA',
-  'Mountain View Resort': '1000 Summit Rd, Mountain View, CA',
-  'Grand Hall': '250 Heritage Sq, San Francisco, CA',
-}
-
-const capacities: Record<string, number> = {
-  'Grand Convention Center': 2000,
-  'Creative Hub Studio': 60,
-  'Riverside Amphitheater': 3000,
-  'Innovation Loft': 120,
-  'Tech Campus Hall': 500,
-  'Central Park Pavilion': 200,
-  'Art Gallery Downtown': 40,
-  'Blue Note Lounge': 80,
-  'Mountain View Resort': 100,
-  'Grand Hall': 800,
 }
 
 const amenityOptions = ['WiFi', 'Parking', 'AV Equipment', 'Catering', 'Green Room', 'Stage']
@@ -72,56 +49,153 @@ const amenityIcons: Record<string, React.ElementType> = {
   Stage: Building2,
 }
 
+// Default venue details (used as fallback)
+const defaultVenueDetails: Record<string, { address: string; capacity: number; amenities: string[] }> = {
+  'Sheraton Addis Grand Ballroom': { address: 'Tito St, Addis Ababa, Ethiopia', capacity: 800, amenities: ['WiFi', 'Parking', 'AV Equipment', 'Catering', 'Stage'] },
+  'Hyatt Regency Addis Ababa': { address: 'Ras Desta Damtew Ave, Addis Ababa, Ethiopia', capacity: 500, amenities: ['WiFi', 'Parking', 'AV Equipment', 'Catering', 'Green Room'] },
+  'Millennium Hall': { address: 'Addis Ababa, Ethiopia', capacity: 5000, amenities: ['WiFi', 'Parking', 'AV Equipment', 'Stage'] },
+  'African Jazz Village': { address: 'Gabon St, Addis Ababa, Ethiopia', capacity: 250, amenities: ['WiFi', 'AV Equipment', 'Catering'] },
+  'Meskel Square': { address: 'Meskel Square, Addis Ababa, Ethiopia', capacity: 10000, amenities: ['Parking', 'Stage'] },
+  'Unity Park': { address: 'National Palace, Addis Ababa, Ethiopia', capacity: 2000, amenities: ['WiFi', 'Parking', 'Catering'] },
+  'Addis Ababa University Main Hall': { address: '6 Kilo, Addis Ababa, Ethiopia', capacity: 500, amenities: ['WiFi', 'AV Equipment', 'Parking'] },
+  'ICT Park': { address: 'Lideta, Addis Ababa, Ethiopia', capacity: 300, amenities: ['WiFi', 'AV Equipment', 'Parking'] },
+  'Lemi Kuraa Sub-city Hall': { address: 'Lemi Kuraa, Addis Ababa, Ethiopia', capacity: 300, amenities: ['WiFi', 'Parking', 'AV Equipment'] },
+  'National Palace Grounds': { address: 'National Palace, Addis Ababa, Ethiopia', capacity: 5000, amenities: ['Parking', 'Security', 'Stage'] },
+  'Bole Millennium Hall': { address: 'Bole, Addis Ababa, Ethiopia', capacity: 3000, amenities: ['WiFi', 'Parking', 'AV Equipment', 'Catering', 'Stage'] },
+  'Ghion Hotel': { address: 'Ras Desta Damtew, Addis Ababa, Ethiopia', capacity: 600, amenities: ['WiFi', 'Parking', 'Catering', 'AV Equipment'] },
+  'Ras Hotel': { address: 'Churchill Rd, Addis Ababa, Ethiopia', capacity: 400, amenities: ['WiFi', 'Parking', 'Catering'] },
+  'Hilton Addis Ababa': { address: 'Menelik II Ave, Addis Ababa, Ethiopia', capacity: 700, amenities: ['WiFi', 'Parking', 'AV Equipment', 'Catering', 'Green Room'] },
+  'Capital Hotel & Spa': { address: 'Rwanda St, Addis Ababa, Ethiopia', capacity: 350, amenities: ['WiFi', 'Parking', 'Catering', 'AV Equipment'] },
+}
+
 export function VenuesView() {
   const { events } = useEventStore()
+  const { toast } = useToast()
   const [venueList, setVenueList] = useState<VenueData[]>([])
   const [addDialogOpen, setAddDialogOpen] = useState(false)
   const [newName, setNewName] = useState('')
   const [newAddress, setNewAddress] = useState('')
   const [newCapacity, setNewCapacity] = useState('')
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
 
   // Fetch venues from API
-  useEffect(() => {
-    const fetchVenues = async () => {
-      try {
-        const res = await fetch('/api/content')
-        const data = await res.json()
-        if (data.content?.venues) {
-          const venueData: VenueData[] = data.content.venues.map((v: string, i: number) => ({
+  const fetchVenues = useCallback(async () => {
+    try {
+      const res = await fetch('/api/content')
+      const data = await res.json()
+      if (data.content?.venues) {
+        const venueData: VenueData[] = data.content.venues.map((v: string, i: number) => {
+          const details = defaultVenueDetails[v] || {
+            address: `${100 + i} Main St, Addis Ababa, Ethiopia`,
+            capacity: 150,
+            amenities: ['WiFi', 'Parking'],
+          }
+          return {
             name: v,
-            address: addresses[v] || `${100 + i} Main St, Addis Ababa, Ethiopia`,
-            capacity: capacities[v] || 150,
-            amenities: amenityOptions.filter(() => Math.random() > 0.35),
-            status: i % 3 === 0 ? 'Booked' as const : 'Available' as const,
-          }))
-          setVenueList(venueData)
-        }
-      } catch {
-        // Use empty list
+            address: details.address,
+            capacity: details.capacity,
+            amenities: details.amenities,
+            status: i % 4 === 0 ? 'Booked' as const : 'Available' as const,
+          }
+        })
+        setVenueList(venueData)
       }
+    } catch {
+      // Use empty list
+    } finally {
+      setLoading(false)
     }
-    fetchVenues()
   }, [])
+
+  useEffect(() => {
+    fetchVenues()
+  }, [fetchVenues])
 
   const getUpcomingCount = (venueName: string) =>
     events.filter((e) => e.venue === venueName && (e.status === 'upcoming' || e.status === 'ongoing')).length
 
-  const handleAddVenue = () => {
+  const handleAddVenue = async () => {
     if (!newName) return
-    setVenueList((prev) => [
-      ...prev,
-      {
-        name: newName,
-        address: newAddress || '123 Main St, San Francisco, CA',
-        capacity: parseInt(newCapacity) || 100,
-        amenities: ['WiFi', 'Parking'],
-        status: 'Available' as const,
-      },
-    ])
+    setSaving(true)
+    try {
+      // Fetch current content
+      const res = await fetch('/api/content')
+      const data = await res.json()
+      if (data.content) {
+        const currentVenues: string[] = data.content.venues || []
+        if (currentVenues.includes(newName)) {
+          toast({ title: 'Duplicate', description: 'This venue already exists.', variant: 'destructive' })
+          setSaving(false)
+          return
+        }
+        const updatedVenues = [...currentVenues, newName]
+        // Save to API
+        const saveRes = await fetch('/api/content', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ content: { ...data.content, venues: updatedVenues } }),
+        })
+        const saveData = await saveRes.json()
+        if (saveData.success) {
+          // Add to local state
+          setVenueList((prev) => [
+            ...prev,
+            {
+              name: newName,
+              address: newAddress || 'Addis Ababa, Ethiopia',
+              capacity: parseInt(newCapacity) || 100,
+              amenities: ['WiFi', 'Parking'],
+              status: 'Available' as const,
+            },
+          ])
+          toast({ title: 'Venue Added', description: `${newName} has been added successfully.` })
+        } else {
+          toast({ title: 'Error', description: 'Failed to add venue', variant: 'destructive' })
+        }
+      }
+    } catch {
+      toast({ title: 'Error', description: 'Network error', variant: 'destructive' })
+    } finally {
+      setSaving(false)
+    }
     setNewName('')
     setNewAddress('')
     setNewCapacity('')
     setAddDialogOpen(false)
+  }
+
+  const handleDeleteVenue = async (venueName: string) => {
+    try {
+      const res = await fetch('/api/content')
+      const data = await res.json()
+      if (data.content) {
+        const updatedVenues = (data.content.venues as string[]).filter((v) => v !== venueName)
+        const saveRes = await fetch('/api/content', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ content: { ...data.content, venues: updatedVenues } }),
+        })
+        const saveData = await saveRes.json()
+        if (saveData.success) {
+          setVenueList((prev) => prev.filter((v) => v.name !== venueName))
+          toast({ title: 'Venue Removed', description: `${venueName} has been removed.` })
+        } else {
+          toast({ title: 'Error', description: 'Failed to remove venue', variant: 'destructive' })
+        }
+      }
+    } catch {
+      toast({ title: 'Error', description: 'Network error', variant: 'destructive' })
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
+        <span className="ml-3 text-muted-foreground">Loading venues...</span>
+      </div>
+    )
   }
 
   return (
@@ -165,16 +239,26 @@ export function VenuesView() {
                         <span className="truncate">{venue.address}</span>
                       </div>
                     </div>
-                    <Badge
-                      variant="outline"
-                      className={`text-xs shrink-0 ${
-                        venue.status === 'Available'
-                          ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/20'
-                          : 'bg-amber-500/15 text-amber-700 dark:text-amber-400 border-amber-500/20'
-                      }`}
-                    >
-                      {venue.status}
-                    </Badge>
+                    <div className="flex items-center gap-1">
+                      <Badge
+                        variant="outline"
+                        className={`text-xs shrink-0 ${
+                          venue.status === 'Available'
+                            ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/20'
+                            : 'bg-amber-500/15 text-amber-700 dark:text-amber-400 border-amber-500/20'
+                        }`}
+                      >
+                        {venue.status}
+                      </Badge>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 text-muted-foreground hover:text-red-500"
+                        onClick={() => handleDeleteVenue(venue.name)}
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </Button>
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent className="pt-0 space-y-3">
@@ -234,7 +318,7 @@ export function VenuesView() {
               <Label htmlFor="venue-address">Address</Label>
               <Input
                 id="venue-address"
-                placeholder="123 Main St, San Francisco, CA"
+                placeholder="Addis Ababa, Ethiopia"
                 value={newAddress}
                 onChange={(e) => setNewAddress(e.target.value)}
               />
@@ -255,10 +339,11 @@ export function VenuesView() {
               </Button>
               <Button
                 onClick={handleAddVenue}
-                disabled={!newName}
+                disabled={!newName || saving}
                 className="bg-emerald-600 hover:bg-emerald-700 text-white"
               >
-                <Plus className="h-4 w-4 mr-1.5" /> Add Venue
+                {saving ? <Loader2 className="h-4 w-4 mr-1.5 animate-spin" /> : <Plus className="h-4 w-4 mr-1.5" />}
+                {saving ? 'Adding...' : 'Add Venue'}
               </Button>
             </div>
           </div>

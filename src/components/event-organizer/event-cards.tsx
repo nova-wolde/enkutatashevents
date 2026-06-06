@@ -8,12 +8,17 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useEventStore, EventCategory } from './store'
 
-const categoryColors: Record<EventCategory, string> = {
+const categoryColors: Record<string, string> = {
   Conference: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/20',
   Workshop: 'bg-violet-500/15 text-violet-700 dark:text-violet-400 border-violet-500/20',
   Social: 'bg-amber-500/15 text-amber-700 dark:text-amber-400 border-amber-500/20',
   Concert: 'bg-rose-500/15 text-rose-700 dark:text-rose-400 border-rose-500/20',
   Meetup: 'bg-cyan-500/15 text-cyan-700 dark:text-cyan-400 border-cyan-500/20',
+  Wedding: 'bg-pink-500/15 text-pink-700 dark:text-pink-400 border-pink-500/20',
+  Corporate: 'bg-blue-500/15 text-blue-700 dark:text-blue-400 border-blue-500/20',
+  Cultural: 'bg-lime-500/15 text-lime-700 dark:text-lime-400 border-lime-500/20',
+  Symposium: 'bg-orange-500/15 text-orange-700 dark:text-orange-400 border-orange-500/20',
+  Government: 'bg-indigo-500/15 text-indigo-700 dark:text-indigo-400 border-indigo-500/20',
 }
 
 const containerVariants = {
@@ -30,7 +35,7 @@ const itemVariants = {
 }
 
 export function EventCards() {
-  const { events } = useEventStore()
+  const { events, setCurrentView, setSelectedEvent } = useEventStore()
 
   const upcomingEvents = events
     .filter((e) => e.status === 'upcoming' || e.status === 'ongoing')
@@ -43,7 +48,7 @@ export function EventCards() {
           <h2 className="text-lg font-semibold">Upcoming Events</h2>
           <p className="text-sm text-muted-foreground">Events happening soon</p>
         </div>
-        <Button variant="ghost" size="sm" className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-700">
+        <Button variant="ghost" size="sm" className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-700" onClick={() => setCurrentView('events')}>
           View All <ArrowRight className="ml-1 h-3.5 w-3.5" />
         </Button>
       </div>
@@ -98,7 +103,7 @@ export function EventCards() {
                   <span className="text-lg font-bold text-emerald-600 dark:text-emerald-400">
                     {event.ticketPrice === 0 ? 'Free' : `$${event.ticketPrice}`}
                   </span>
-                  <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white h-8">
+                  <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white h-8" onClick={() => { setSelectedEvent(event); setCurrentView('events') }}>
                     View Details
                   </Button>
                 </div>

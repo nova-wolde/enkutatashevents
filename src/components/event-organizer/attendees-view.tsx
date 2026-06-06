@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import {
   Users,
@@ -10,6 +10,7 @@ import {
   XCircle,
   Clock,
   UserCheck,
+  Loader2,
 } from 'lucide-react'
 import {
   Table,
@@ -30,46 +31,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { useEventStore } from './store'
+import { useEventStore, BookingItem } from './store'
 import { useToast } from '@/hooks/use-toast'
 
 interface Attendee {
   id: string
   name: string
   email: string
-  eventName: string
-  ticketType: 'VIP' | 'General' | 'Student'
+  phone: string
+  eventType: string
   status: 'Confirmed' | 'Pending' | 'Cancelled'
   checkedIn: boolean
-}
-
-const firstNames = ['Sarah', 'Alex', 'Maya', 'Tom', 'Priya', 'Jordan', 'Emily', 'Marcus', 'Olivia', 'Liam', 'Emma', 'Noah', 'Ava', 'Ethan', 'Sophia', 'Mason', 'Isabella', 'Lucas', 'Mia', 'Aiden']
-const lastNames = ['Chen', 'Rivera', 'Johnson', 'Wilson', 'Patel', 'Lee', 'Davis', 'Brown', 'Garcia', 'Martinez', 'Anderson', 'Taylor', 'Thomas', 'Moore', 'Jackson', 'White', 'Harris', 'Clark', 'Lewis', 'Young']
-
-function generateAttendees(events: Attendee['eventName'][]): Attendee[] {
-  const attendees: Attendee[] = []
-  const ticketTypes: Attendee['ticketType'][] = ['VIP', 'General', 'Student']
-  const statuses: Attendee['status'][] = ['Confirmed', 'Confirmed', 'Confirmed', 'Pending', 'Cancelled']
-  let idCounter = 1
-
-  events.forEach((eventName) => {
-    const count = 8 + Math.floor(Math.random() * 12)
-    for (let i = 0; i < count; i++) {
-      const fn = firstNames[Math.floor(Math.random() * firstNames.length)]
-      const ln = lastNames[Math.floor(Math.random() * lastNames.length)]
-      attendees.push({
-        id: `att-${idCounter++}`,
-        name: `${fn} ${ln}`,
-        email: `${fn.toLowerCase()}.${ln.toLowerCase()}@email.com`,
-        eventName,
-        ticketType: ticketTypes[Math.floor(Math.random() * ticketTypes.length)],
-        status: statuses[Math.floor(Math.random() * statuses.length)],
-        checkedIn: Math.random() > 0.6,
-      })
-    }
-  })
-
-  return attendees
+  guestCount: number
+  eventDate: string
+  venue: string
 }
 
 const statusColors: Record<string, string> = {
@@ -78,26 +53,55 @@ const statusColors: Record<string, string> = {
   Cancelled: 'bg-red-500/15 text-red-700 dark:text-red-400 border-red-500/20',
 }
 
-const ticketColors: Record<string, string> = {
-  VIP: 'bg-violet-500/15 text-violet-700 dark:text-violet-400 border-violet-500/20',
-  General: 'bg-teal-500/15 text-teal-700 dark:text-teal-400 border-teal-500/20',
-  Student: 'bg-cyan-500/15 text-cyan-700 dark:text-cyan-400 border-cyan-500/20',
-}
-
 export function AttendeesView() {
   const { events } = useEventStore()
   const { toast } = useToast()
   const [searchQuery, setSearchQuery] = useState('')
   const [filterEvent, setFilterEvent] = useState('all')
-  const [attendees, setAttendees] = useState<Attendee[]>(() =>
-    generateAttendees(events.map((e) => e.name))
-  )
+  const [checkedInIds, setCheckedInIds] = useState<Set<string>>(new Set())
+  const [bookings, setBookings] = useState<BookingItem[]>([])
+  const [loading, setLoading] = useState(true)
+
+  // Fetch bookings from API
+  const fetchBookings = useCallback(async () => {
+    try {
+      const response = await fetch('/api/bookings')
+      const data = await response.json()
+      if (data.bookings) {
+        setBookings(data.bookings)
+      }
+    } catch {
+      // ignore
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchBookings()
+  }, [fetchBookings])
+
+  // Convert bookings to attendees
+  const attendees: Attendee[] = useMemo(() => {
+    return bookings.map((b) => ({
+      id: b.id,
+      name: b.name,
+      email: b.email,
+      phone: b.phone,
+      eventType: b.eventType,
+      status: b.status === 'confirmed' ? 'Confirmed' : b.status === 'cancelled' ? 'Cancelled' : 'Pending',
+      checkedIn: checkedInIds.has(b.id),
+      guestCount: b.guestCount,
+      eventDate: b.eventDate,
+      venue: b.venue,
+    }))
+  }, [bookings, checkedInIds])
 
   const filteredAttendees = useMemo(() => {
     let result = [...attendees]
 
     if (filterEvent !== 'all') {
-      result = result.filter((a) => a.eventName === filterEvent)
+      result = result.filter((a) => a.eventType === filterEvent)
     }
 
     if (searchQuery) {
@@ -106,7 +110,7 @@ export function AttendeesView() {
         (a) =>
           a.name.toLowerCase().includes(q) ||
           a.email.toLowerCase().includes(q) ||
-          a.eventName.toLowerCase().includes(q)
+          a.eventType.toLowerCase().includes(q)
       )
     }
 
@@ -114,29 +118,29 @@ export function AttendeesView() {
   }, [attendees, filterEvent, searchQuery])
 
   const totalAttendees = attendees.length
+  const totalGuests = attendees.reduce((sum, a) => sum + a.guestCount, 0)
   const checkedInCount = attendees.filter((a) => a.checkedIn).length
   const confirmedCount = attendees.filter((a) => a.status === 'Confirmed').length
 
   const handleCheckIn = (attendeeId: string) => {
-    setAttendees((prev) =>
-      prev.map((a) =>
-        a.id === attendeeId ? { ...a, checkedIn: !a.checkedIn } : a
-      )
-    )
-    const attendee = attendees.find((a) => a.id === attendeeId)
-    if (attendee) {
-      toast({
-        title: attendee.checkedIn ? 'Check-in Reverted' : 'Checked In',
-        description: `${attendee.name} has been ${attendee.checkedIn ? 'unchecked' : 'checked in'}.`,
-      })
-    }
+    setCheckedInIds((prev) => {
+      const next = new Set(prev)
+      if (next.has(attendeeId)) {
+        next.delete(attendeeId)
+        toast({ title: 'Check-in Reverted', description: 'Attendee has been unchecked.' })
+      } else {
+        next.add(attendeeId)
+        toast({ title: 'Checked In', description: 'Attendee has been checked in.' })
+      }
+      return next
+    })
   }
 
   const handleExport = () => {
     const csv = [
-      ['Name', 'Email', 'Event', 'Ticket Type', 'Status', 'Checked In'].join(','),
+      ['Name', 'Email', 'Phone', 'Event Type', 'Status', 'Guest Count', 'Event Date', 'Venue', 'Checked In'].join(','),
       ...filteredAttendees.map((a) =>
-        [a.name, a.email, a.eventName, a.ticketType, a.status, a.checkedIn ? 'Yes' : 'No'].join(',')
+        [a.name, a.email, a.phone, a.eventType, a.status, a.guestCount, a.eventDate, a.venue, a.checkedIn ? 'Yes' : 'No'].join(',')
       ),
     ].join('\n')
     const blob = new Blob([csv], { type: 'text/csv' })
@@ -152,6 +156,21 @@ export function AttendeesView() {
     })
   }
 
+  // Get unique event types for filter
+  const eventTypes = useMemo(() => {
+    const types = new Set(attendees.map((a) => a.eventType))
+    return Array.from(types).filter(Boolean)
+  }, [attendees])
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
+        <span className="ml-3 text-muted-foreground">Loading attendees...</span>
+      </div>
+    )
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -160,14 +179,14 @@ export function AttendeesView() {
       className="space-y-6"
     >
       {/* Stats row */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
         <Card className="rounded-xl shadow-sm">
           <CardContent className="p-4 flex items-center gap-4">
             <div className="h-10 w-10 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0">
               <Users className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Total Attendees</p>
+              <p className="text-sm text-muted-foreground">Bookings</p>
               <p className="text-2xl font-bold">{totalAttendees}</p>
             </div>
           </CardContent>
@@ -178,19 +197,30 @@ export function AttendeesView() {
               <UserCheck className="h-5 w-5 text-teal-600 dark:text-teal-400" />
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Checked In</p>
-              <p className="text-2xl font-bold">{checkedInCount}</p>
+              <p className="text-sm text-muted-foreground">Total Guests</p>
+              <p className="text-2xl font-bold">{totalGuests.toLocaleString()}</p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="rounded-xl shadow-sm">
+          <CardContent className="p-4 flex items-center gap-4">
+            <div className="h-10 w-10 rounded-lg bg-violet-500/10 flex items-center justify-center shrink-0">
+              <CheckCircle2 className="h-5 w-5 text-violet-600 dark:text-violet-400" />
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Confirmed</p>
+              <p className="text-2xl font-bold">{confirmedCount}</p>
             </div>
           </CardContent>
         </Card>
         <Card className="rounded-xl shadow-sm">
           <CardContent className="p-4 flex items-center gap-4">
             <div className="h-10 w-10 rounded-lg bg-amber-500/10 flex items-center justify-center shrink-0">
-              <CheckCircle2 className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+              <Clock className="h-5 w-5 text-amber-600 dark:text-amber-400" />
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Confirmed</p>
-              <p className="text-2xl font-bold">{confirmedCount}</p>
+              <p className="text-sm text-muted-foreground">Checked In</p>
+              <p className="text-2xl font-bold">{checkedInCount}</p>
             </div>
           </CardContent>
         </Card>
@@ -200,7 +230,7 @@ export function AttendeesView() {
       <Card className="rounded-xl shadow-sm">
         <CardHeader className="pb-4">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <CardTitle className="text-lg font-semibold">Attendee List</CardTitle>
+            <CardTitle className="text-lg font-semibold">Booking List</CardTitle>
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -214,25 +244,25 @@ export function AttendeesView() {
               <div className="flex items-center gap-2">
                 <Select value={filterEvent} onValueChange={setFilterEvent}>
                   <SelectTrigger className="w-full sm:w-[180px] h-9 text-sm">
-                    <SelectValue placeholder="Filter by event" />
+                    <SelectValue placeholder="Filter by event type" />
                   </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Events</SelectItem>
-                  {events.map((e) => (
-                    <SelectItem key={e.id} value={e.name}>
-                      {e.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleExport}
-                className="h-9 gap-1.5 w-full sm:w-auto"
-              >
-                <Download className="h-3.5 w-3.5" /> Export
-              </Button>
+                  <SelectContent>
+                    <SelectItem value="all">All Events</SelectItem>
+                    {eventTypes.map((type) => (
+                      <SelectItem key={type} value={type}>
+                        {type}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleExport}
+                  className="h-9 gap-1.5 w-full sm:w-auto"
+                >
+                  <Download className="h-3.5 w-3.5" /> Export
+                </Button>
               </div>
             </div>
           </div>
@@ -245,7 +275,7 @@ export function AttendeesView() {
                   <TableHead>Name</TableHead>
                   <TableHead className="hidden md:table-cell">Email</TableHead>
                   <TableHead>Event</TableHead>
-                  <TableHead className="hidden sm:table-cell">Ticket</TableHead>
+                  <TableHead className="hidden sm:table-cell">Guests</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="hidden sm:table-cell">Check-in</TableHead>
                   <TableHead className="w-[80px]" />
@@ -255,20 +285,26 @@ export function AttendeesView() {
                 {filteredAttendees.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
-                      No attendees found
+                      No bookings found. They will appear here when clients book events.
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredAttendees.slice(0, 20).map((attendee) => (
+                  filteredAttendees.slice(0, 50).map((attendee) => (
                     <TableRow key={attendee.id} className="hover:bg-muted/30 transition-colors">
-                      <TableCell className="font-medium text-sm">{attendee.name}</TableCell>
-                      <TableCell className="text-sm text-muted-foreground hidden md:table-cell">{attendee.email}</TableCell>
-                      <TableCell className="text-sm">{attendee.eventName}</TableCell>
-                      <TableCell className="hidden sm:table-cell">
-                        <Badge variant="outline" className={`text-xs ${ticketColors[attendee.ticketType]}`}>
-                          {attendee.ticketType}
-                        </Badge>
+                      <TableCell>
+                        <div>
+                          <p className="font-medium text-sm">{attendee.name}</p>
+                          <p className="text-xs text-muted-foreground md:hidden">{attendee.email}</p>
+                        </div>
                       </TableCell>
+                      <TableCell className="text-sm text-muted-foreground hidden md:table-cell">{attendee.email}</TableCell>
+                      <TableCell className="text-sm">
+                        <div>
+                          <p>{attendee.eventType}</p>
+                          <p className="text-xs text-muted-foreground">{attendee.venue || 'TBD'}</p>
+                        </div>
+                      </TableCell>
+                      <TableCell className="hidden sm:table-cell text-sm">{attendee.guestCount}</TableCell>
                       <TableCell>
                         <Badge variant="outline" className={`text-xs ${statusColors[attendee.status]}`}>
                           {attendee.status === 'Confirmed' && <CheckCircle2 className="mr-1 h-3 w-3" />}
@@ -289,17 +325,19 @@ export function AttendeesView() {
                         )}
                       </TableCell>
                       <TableCell>
-                        <Button
-                          variant={attendee.checkedIn ? 'outline' : 'default'}
-                          size="sm"
-                          className={`h-7 text-xs gap-1 ${
-                            !attendee.checkedIn ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : ''
-                          }`}
-                          onClick={() => handleCheckIn(attendee.id)}
-                        >
-                          <UserCheck className="h-3 w-3" />
-                          {attendee.checkedIn ? 'Undo' : 'Check In'}
-                        </Button>
+                        {attendee.status !== 'Cancelled' && (
+                          <Button
+                            variant={attendee.checkedIn ? 'outline' : 'default'}
+                            size="sm"
+                            className={`h-7 text-xs gap-1 ${
+                              !attendee.checkedIn ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : ''
+                            }`}
+                            onClick={() => handleCheckIn(attendee.id)}
+                          >
+                            <UserCheck className="h-3 w-3" />
+                            {attendee.checkedIn ? 'Undo' : 'Check In'}
+                          </Button>
+                        )}
                       </TableCell>
                     </TableRow>
                   ))
@@ -307,9 +345,9 @@ export function AttendeesView() {
               </TableBody>
             </Table>
           </div>
-          {filteredAttendees.length > 20 && (
+          {filteredAttendees.length > 50 && (
             <p className="text-sm text-muted-foreground mt-3 text-center">
-              Showing 20 of {filteredAttendees.length} attendees. Use search to narrow results.
+              Showing 50 of {filteredAttendees.length} bookings. Use search to narrow results.
             </p>
           )}
         </CardContent>

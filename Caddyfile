@@ -1,7 +1,7 @@
-# ─── Enkutatash Event — Production Caddy Configuration ────────────────────────
+# ─── Enkutatash Event — Production Caddy Configuration (Docker) ─────────────
 # Domain: enkutatashevents.com
 # Auto-HTTPS via Let's Encrypt (Caddy provisions & renews automatically)
-# Reverse proxy to Next.js standalone on port 3000
+# Reverse proxy to Next.js app container on port 3000
 
 enkutatashevents.com, www.enkutatashevents.com {
     # ─── Compression ────────────────────────────────────────────────────────
@@ -17,7 +17,7 @@ enkutatashevents.com, www.enkutatashevents.com {
         format json
     }
 
-    # ─── Security Headers (defense-in-depth, duplicating Next.js headers) ──
+    # ─── Security Headers (defense-in-depth) ───────────────────────────────
     header {
         X-Content-Type-Options nosniff
         X-Frame-Options DENY
@@ -31,7 +31,7 @@ enkutatashevents.com, www.enkutatashevents.com {
 
     # ─── API Routes ─────────────────────────────────────────────────────────
     handle /api/* {
-        reverse_proxy localhost:3000 {
+        reverse_proxy app:3000 {
             header_up Host {host}
             header_up X-Forwarded-For {remote_host}
             header_up X-Forwarded-Proto https
@@ -45,7 +45,7 @@ enkutatashevents.com, www.enkutatashevents.com {
 
     # ─── All Other Routes ───────────────────────────────────────────────────
     handle {
-        reverse_proxy localhost:3000 {
+        reverse_proxy app:3000 {
             header_up Host {host}
             header_up X-Forwarded-For {remote_host}
             header_up X-Forwarded-Proto https
@@ -53,3 +53,6 @@ enkutatashevents.com, www.enkutatashevents.com {
         }
     }
 }
+
+# ─── HTTP→HTTPS redirect (Caddy handles this automatically with domain) ────
+# When a domain is specified, Caddy auto-redirects HTTP to HTTPS

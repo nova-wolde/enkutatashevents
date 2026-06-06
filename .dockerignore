@@ -1,0 +1,49 @@
+# Dependencies
+node_modules
+npm-debug.log*
+
+# Next.js build output
+.next
+out
+
+# Environment files
+.env
+.env*.local
+
+# Data (will be mounted as volume)
+data/
+backups/
+
+# Logs
+logs/
+*.log
+
+# Docker
+docker-compose*.yml
+Dockerfile
+
+# IDE
+.vscode
+.idea
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Upload/Download dirs
+upload/
+download/
+
+# Misc
+db/
+tmp/
+*.pid
+skills/
+.claude
+.z-ai-config
+prompt
+test
+dev.log
+dev.out.log
+server.log
+worklog.md

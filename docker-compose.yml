@@ -1,0 +1,82 @@
+services:
+  # ─── Next.js Application ────────────────────────────────────────────────
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_SITE_URL=https://enkutatashevents.com
+    container_name: enkutatash-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+      - OWNER_PASSWORD=${OWNER_PASSWORD:-Enkutatash2024}
+      - NEXT_PUBLIC_SITE_URL=https://enkutatashevents.com
+      # Analytics (uncomment when ready)
+      # - NEXT_PUBLIC_GA_MEASUREMENT_ID=
+      # - NEXT_PUBLIC_GSC_VERIFICATION=
+      # - NEXT_PUBLIC_META_PIXEL_ID=
+    volumes:
+      - app-data:/app/data
+      - app-logs:/app/logs
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 5s
+      start_period: 15s
+      retries: 3
+    networks:
+      - enkutatash-network
+
+  # ─── Caddy Reverse Proxy ───────────────────────────────────────────────
+  caddy:
+    image: caddy:2-alpine
+    container_name: enkutatash-caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      app:
+        condition: service_healthy
+    networks:
+      - enkutatash-network
+
+  # ─── Backup Service (runs daily at 2 AM) ──────────────────────────────
+  backup:
+    image: alpine:3.20
+    container_name: enkutatash-backup
+    restart: unless-stopped
+    volumes:
+      - app-data:/data:ro
+      - backup-data:/backups
+    entrypoint: >
+      /bin/sh -c "
+        apk add --no-cache dcron &&
+        echo '0 2 * * * cd /data && tar czf /backups/data-$$(date +\\%Y\\%m\\%d_\\%H\\%M\\%S).tar.gz . && find /backups -name \"data-*.tar.gz\" -mtime +30 -delete' > /etc/crontabs/root &&
+        crond -f -l 2
+      "
+
+volumes:
+  app-data:
+    driver: local
+  app-logs:
+    driver: local
+  caddy-data:
+    driver: local
+  caddy-config:
+    driver: local
+  backup-data:
+    driver: local
+
+networks:
+  enkutatash-network:
+    driver: bridge

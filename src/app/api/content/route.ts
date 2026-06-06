@@ -53,7 +53,7 @@ function getSeedData(): Record<string, unknown> {
     // Hero Section
     heroTitle: "Where Every Event Becomes Legendary",
     heroTitleAmharic: "እንቁጣጣሽ ኤቨንት",
-    heroSubtitle: "Enkutatash is Addis Ababa's premier event organizer. From breathtaking weddings to large-scale corporate events and cultural celebrations — we bring your vision to life with elegance, precision, and a touch of magic.",
+    heroSubtitle: "Enkutatash is Addis Ababa's premier event organizer. From breathtaking weddings to large-scale corporate events and cultural celebrations — we bring your vision to life with elegance, precision, and a touch of creativity.",
     heroBadge: "Premium Event Organizers in Addis Ababa",
 
     // About Section

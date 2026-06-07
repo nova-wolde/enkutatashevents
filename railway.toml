@@ -1,0 +1,12 @@
+# ─── Railway Configuration ──────────────────────────────────────────────────
+# Docs: https://docs.railway.app/guides/services
+
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+healthcheckPath = "/api/health"
+healthcheckTimeout = 10
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10

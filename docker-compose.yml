@@ -15,7 +15,7 @@ services:
       - PORT=3000
       - HOSTNAME=0.0.0.0
       - OWNER_PASSWORD=${OWNER_PASSWORD:-Enkutatash2024}
-      - NEXT_PUBLIC_SITE_URL=https://enkutatashevents.com
+      - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL:-https://enkutatashevents.com}
       # Analytics (uncomment when ready)
       # - NEXT_PUBLIC_GA_MEASUREMENT_ID=
       # - NEXT_PUBLIC_GSC_VERIFICATION=
@@ -35,13 +35,37 @@ services:
   # ─── Cloudflare Tunnel (Zero Trust) ────────────────────────────────────
   # Connects your app to Cloudflare without opening any public ports.
   # Set TUNNEL_TOKEN in .env before running.
+  # Comment out this section if not using Cloudflare Tunnel.
   tunnel:
     image: cloudflare/cloudflared:latest
     container_name: enkutatash-tunnel
     restart: unless-stopped
     command: tunnel run
     environment:
-      - TUNNEL_TOKEN=${TUNNEL_TOKEN:?TUNNEL_TOKEN is required — get it from Cloudflare Zero Trust dashboard}
+      - TUNNEL_TOKEN=${TUNNEL_TOKEN:-skip}
+    profiles:
+      - tunnel
+    depends_on:
+      app:
+        condition: service_healthy
+    networks:
+      - enkutatash-network
+
+  # ─── Caddy Reverse Proxy (for non-tunnel deployments) ──────────────────
+  # Use this when NOT using Cloudflare Tunnel (direct VPS deployment)
+  caddy:
+    image: caddy:2-alpine
+    container_name: enkutatash-caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    profiles:
+      - caddy
     depends_on:
       app:
         condition: service_healthy
@@ -67,6 +91,10 @@ volumes:
   app-data:
     driver: local
   app-logs:
+    driver: local
+  caddy-data:
+    driver: local
+  caddy-config:
     driver: local
   backup-data:
     driver: local

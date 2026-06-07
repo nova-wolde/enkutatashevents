@@ -60,7 +60,7 @@ export async function POST(request: Request) {
     const sessionCreated = await createSession(session)
     if (!sessionCreated) {
       return NextResponse.json(
-        { success: false, error: 'Login failed — KV store is not configured. Please set up Vercel KV in your dashboard.' },
+        { success: false, error: 'Login failed — Upstash Redis is not configured. Please add UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN to your environment variables.' },
         { status: 503 }
       )
     }

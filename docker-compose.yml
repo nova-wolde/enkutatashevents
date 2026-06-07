@@ -32,18 +32,16 @@ services:
     networks:
       - enkutatash-network
 
-  # ─── Caddy Reverse Proxy ───────────────────────────────────────────────
-  caddy:
-    image: caddy:2-alpine
-    container_name: enkutatash-caddy
+  # ─── Cloudflare Tunnel (Zero Trust) ────────────────────────────────────
+  # Connects your app to Cloudflare without opening any public ports.
+  # Set TUNNEL_TOKEN in .env before running.
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: enkutatash-tunnel
     restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile:ro
-      - caddy-data:/data
-      - caddy-config:/config
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=${TUNNEL_TOKEN:?TUNNEL_TOKEN is required — get it from Cloudflare Zero Trust dashboard}
     depends_on:
       app:
         condition: service_healthy
@@ -69,10 +67,6 @@ volumes:
   app-data:
     driver: local
   app-logs:
-    driver: local
-  caddy-data:
-    driver: local
-  caddy-config:
     driver: local
   backup-data:
     driver: local

@@ -6,35 +6,13 @@
  * - Login rate limiting (in-memory, per IP)
  */
 
-import { readFile } from "fs/promises"
-import { existsSync } from "fs"
-import path from "path"
 import crypto from "crypto"
-
-// ─── Session Types ────────────────────────────────────────────────────────────
-interface Session {
-  token: string
-  createdAt: string
-  expiresAt: string
-}
-
-// ─── Session Helper ───────────────────────────────────────────────────────────
-const DATA_DIR = path.join(process.cwd(), "data")
-const SESSIONS_FILE = path.join(DATA_DIR, "sessions.json")
-
-async function getSessions(): Promise<Session[]> {
-  if (!existsSync(SESSIONS_FILE)) return []
-  try {
-    const raw = await readFile(SESSIONS_FILE, "utf-8")
-    return JSON.parse(raw)
-  } catch {
-    return []
-  }
-}
+import { getSession } from "@/lib/kv-data"
 
 // ─── Verify Auth ──────────────────────────────────────────────────────────────
 /**
  * Check if the request has a valid session cookie.
+ * Looks up the session token directly in KV (no need to scan all sessions).
  * Returns { authenticated: true } or { authenticated: false }.
  */
 export async function verifyAuth(request: Request): Promise<{ authenticated: boolean }> {
@@ -42,11 +20,9 @@ export async function verifyAuth(request: Request): Promise<{ authenticated: boo
     const token = request.cookies.get("enkutatash_session")?.value
     if (!token) return { authenticated: false }
 
-    const sessions = await getSessions()
-    const session = sessions.find(s => s.token === token)
+    // Direct lookup by token in KV — O(1) instead of scanning an array
+    const session = await getSession(token)
     if (!session) return { authenticated: false }
-
-    if (new Date(session.expiresAt) < new Date()) return { authenticated: false }
 
     return { authenticated: true }
   } catch {

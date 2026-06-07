@@ -1,8 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // ─── Output ──────────────────────────────────────────────────────────────────
-  output: "standalone",
+  // ─── No standalone output — Vercel handles deployment natively ─────────────
+  // output: "standalone",  // Removed for Vercel
 
   // ─── Strict Mode ─────────────────────────────────────────────────────────────
   reactStrictMode: true,

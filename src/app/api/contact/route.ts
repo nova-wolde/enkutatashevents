@@ -1,41 +1,6 @@
 import { NextResponse } from "next/server";
-import { writeFile, readFile, mkdir } from "fs/promises";
-import { existsSync } from "fs";
-import path from "path";
 import { verifyAuth } from "@/lib/auth-helpers";
-
-// ─── Contact Submission Type ──────────────────────────────────────────────────
-interface ContactSubmission {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  eventType: string;
-  message: string;
-  createdAt: string;
-  read: boolean;
-}
-
-// ─── Data File Path ───────────────────────────────────────────────────────────
-const DATA_DIR = path.join(process.cwd(), "data");
-const DATA_FILE = path.join(DATA_DIR, "contact-submissions.json");
-
-async function getSubmissions(): Promise<ContactSubmission[]> {
-  if (!existsSync(DATA_FILE)) return [];
-  try {
-    const raw = await readFile(DATA_FILE, "utf-8");
-    return JSON.parse(raw);
-  } catch {
-    return [];
-  }
-}
-
-async function saveSubmissions(submissions: ContactSubmission[]): Promise<void> {
-  if (!existsSync(DATA_DIR)) {
-    await mkdir(DATA_DIR, { recursive: true });
-  }
-  await writeFile(DATA_FILE, JSON.stringify(submissions, null, 2), "utf-8");
-}
+import { getContactSubmissions, saveContactSubmissions, type ContactSubmission } from "@/lib/kv-data";
 
 // ─── Validation ───────────────────────────────────────────────────────────────
 function validateBody(body: Record<string, unknown>): {
@@ -87,10 +52,10 @@ export async function POST(request: Request) {
       read: false,
     };
 
-    // Save to file
-    const submissions = await getSubmissions();
+    // Save to KV
+    const submissions = await getContactSubmissions();
     submissions.unshift(submission); // newest first
-    await saveSubmissions(submissions);
+    await saveContactSubmissions(submissions);
 
     // Log for server-side visibility
     console.log(`[Contact Form] New submission from ${submission.name} (${submission.email})`);
@@ -116,7 +81,7 @@ export async function GET(request: Request) {
     if (!authenticated) {
       return NextResponse.json({ submissions: [] }, { status: 401 });
     }
-    const submissions = await getSubmissions();
+    const submissions = await getContactSubmissions();
     return NextResponse.json({ submissions });
   } catch {
     return NextResponse.json({ submissions: [] });
@@ -134,7 +99,7 @@ export async function PATCH(request: Request) {
     const body = await request.json();
     const { id, read } = body as { id: string; read: boolean };
 
-    const submissions = await getSubmissions();
+    const submissions = await getContactSubmissions();
     const index = submissions.findIndex((s) => s.id === id);
     if (index === -1) {
       return NextResponse.json(
@@ -144,7 +109,7 @@ export async function PATCH(request: Request) {
     }
 
     submissions[index].read = read;
-    await saveSubmissions(submissions);
+    await saveContactSubmissions(submissions);
 
     return NextResponse.json({ success: true });
   } catch {
@@ -166,9 +131,9 @@ export async function DELETE(request: Request) {
     const body = await request.json();
     const { id } = body as { id: string };
 
-    const submissions = await getSubmissions();
+    const submissions = await getContactSubmissions();
     const filtered = submissions.filter((s) => s.id !== id);
-    await saveSubmissions(filtered);
+    await saveContactSubmissions(filtered);
 
     return NextResponse.json({ success: true });
   } catch {

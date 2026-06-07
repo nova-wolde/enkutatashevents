@@ -1,29 +1,15 @@
 import { NextResponse } from "next/server"
-import { existsSync } from "fs"
-import path from "path"
+import { checkKVHealth, checkDataKeys } from "@/lib/kv-data"
 
 export async function GET() {
   const startTime = Date.now()
 
   try {
-    // ── Check data directory accessibility ──────────────────────────────────
-    const dataDir = path.join(process.cwd(), "data")
-    const dataDirExists = existsSync(dataDir)
+    // ── Check KV connection ─────────────────────────────────────────────────
+    const kvHealth = await checkKVHealth()
+    const dataKeys = await checkDataKeys()
 
-    // ── Check critical files ────────────────────────────────────────────────
-    const criticalFiles = [
-      "sessions.json",
-      "site-content.json",
-      "events.json",
-    ]
-
-    const fileStatuses: Record<string, boolean> = {}
-    for (const file of criticalFiles) {
-      fileStatuses[file] = existsSync(path.join(dataDir, file))
-    }
-
-    const allCriticalFilesExist = Object.values(fileStatuses).every(Boolean)
-    const healthy = dataDirExists && allCriticalFilesExist
+    const healthy = kvHealth.ok
 
     const response = {
       status: healthy ? "healthy" : "degraded",
@@ -36,8 +22,9 @@ export async function GET() {
         unit: "MB",
       },
       checks: {
-        dataDir: dataDirExists,
-        files: fileStatuses,
+        kv: kvHealth.ok,
+        kvLatencyMs: kvHealth.latencyMs,
+        dataKeys,
       },
       responseTime: `${Date.now() - startTime}ms`,
     }

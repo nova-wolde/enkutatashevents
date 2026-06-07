@@ -1,26 +1,5 @@
 import { NextResponse } from 'next/server'
-import { readFile } from 'fs/promises'
-import { existsSync } from 'fs'
-import path from 'path'
-
-const DATA_DIR = path.join(process.cwd(), 'data')
-const SESSIONS_FILE = path.join(DATA_DIR, 'sessions.json')
-
-interface Session {
-  token: string
-  createdAt: string
-  expiresAt: string
-}
-
-async function getSessions(): Promise<Session[]> {
-  if (!existsSync(SESSIONS_FILE)) return []
-  try {
-    const raw = await readFile(SESSIONS_FILE, 'utf-8')
-    return JSON.parse(raw)
-  } catch {
-    return []
-  }
-}
+import { getSession } from '@/lib/kv-data'
 
 export async function GET(request: Request) {
   try {
@@ -30,15 +9,10 @@ export async function GET(request: Request) {
       return NextResponse.json({ authenticated: false })
     }
 
-    const sessions = await getSessions()
-    const session = sessions.find(s => s.token === token)
+    // Look up session directly by token in KV
+    const session = await getSession(token)
 
     if (!session) {
-      return NextResponse.json({ authenticated: false })
-    }
-
-    // Check if expired
-    if (new Date(session.expiresAt) < new Date()) {
       return NextResponse.json({ authenticated: false })
     }
 

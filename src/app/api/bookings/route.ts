@@ -1,46 +1,6 @@
 import { NextResponse } from 'next/server'
-import { writeFile, readFile, mkdir } from 'fs/promises'
-import { existsSync } from 'fs'
-import path from 'path'
 import { verifyAuth } from '@/lib/auth-helpers'
-
-// ─── Booking Type ──────────────────────────────────────────────────────────
-interface Booking {
-  id: string
-  name: string
-  email: string
-  phone: string
-  eventType: string
-  eventDate: string
-  guestCount: number
-  venue: string
-  services: string[]
-  message: string
-  status: 'pending' | 'confirmed' | 'cancelled' | 'completed'
-  createdAt: string
-  read: boolean
-}
-
-// ─── Data File Path ───────────────────────────────────────────────────────────
-const DATA_DIR = path.join(process.cwd(), 'data')
-const DATA_FILE = path.join(DATA_DIR, 'bookings.json')
-
-async function getBookings(): Promise<Booking[]> {
-  if (!existsSync(DATA_FILE)) return []
-  try {
-    const raw = await readFile(DATA_FILE, 'utf-8')
-    return JSON.parse(raw)
-  } catch {
-    return []
-  }
-}
-
-async function saveBookings(bookings: Booking[]): Promise<void> {
-  if (!existsSync(DATA_DIR)) {
-    await mkdir(DATA_DIR, { recursive: true })
-  }
-  await writeFile(DATA_FILE, JSON.stringify(bookings, null, 2), 'utf-8')
-}
+import { getBookings, saveBookings, type Booking } from '@/lib/kv-data'
 
 // ─── Validation ───────────────────────────────────────────────────────────────
 function validateBody(body: Record<string, unknown>): {

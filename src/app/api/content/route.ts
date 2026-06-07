@@ -6,15 +6,19 @@ import { getSeedSiteContent } from "@/lib/seed-data"
 // ─── GET: Fetch Site Content ──────────────────────────────────────────────────
 export async function GET() {
   try {
-    let content = await getSiteContent()
+    const content = await getSiteContent()
     if (!content) {
-      // Auto-seed on first request
-      content = getSeedSiteContent()
-      await saveSiteContent(content)
+      // KV not configured or no data saved yet — return seed data
+      // Don't try to save (would fail if KV not available)
+      const seed = getSeedSiteContent()
+      return NextResponse.json({ content: seed })
     }
     return NextResponse.json({ content })
-  } catch {
-    return NextResponse.json({ content: null }, { status: 500 })
+  } catch (error) {
+    console.error("[Content GET] Error:", error)
+    // Always return seed data as fallback so the site never breaks
+    const seed = getSeedSiteContent()
+    return NextResponse.json({ content: seed })
   }
 }
 
@@ -31,7 +35,10 @@ export async function PUT(request: Request) {
     if (!content) {
       return NextResponse.json({ success: false, errors: ["Content is required"] }, { status: 400 })
     }
-    await saveSiteContent(content)
+    const saved = await saveSiteContent(content)
+    if (!saved) {
+      return NextResponse.json({ success: false, errors: ["Failed to save — KV store may not be configured. Please set up Vercel KV in your dashboard."] }, { status: 503 })
+    }
     return NextResponse.json({ success: true })
   } catch {
     return NextResponse.json({ success: false, errors: ["Failed to save content"] }, { status: 500 })
@@ -49,10 +56,13 @@ export async function PATCH(request: Request) {
     const body = await request.json()
     const current = await getSiteContent()
     if (!current) {
-      return NextResponse.json({ success: false, errors: ["No content found. Seed first."] }, { status: 404 })
+      return NextResponse.json({ success: false, errors: ["No content found. Seed first or configure KV."] }, { status: 404 })
     }
     const updated = { ...current, ...body }
-    await saveSiteContent(updated)
+    const saved = await saveSiteContent(updated)
+    if (!saved) {
+      return NextResponse.json({ success: false, errors: ["Failed to save — KV store may not be configured."] }, { status: 503 })
+    }
     return NextResponse.json({ success: true })
   } catch {
     return NextResponse.json({ success: false, errors: ["Failed to update content"] }, { status: 500 })
@@ -76,7 +86,10 @@ export async function POST(request: Request) {
     }
 
     const seed = getSeedSiteContent()
-    await saveSiteContent(seed)
+    const saved = await saveSiteContent(seed)
+    if (!saved) {
+      return NextResponse.json({ success: false, errors: ["Failed to seed — KV store may not be configured. Please set up Vercel KV in your dashboard."] }, { status: 503 })
+    }
     return NextResponse.json({ success: true, message: "Content seeded successfully" })
   } catch {
     return NextResponse.json({ success: false, errors: ["Failed to seed content"] }, { status: 500 })

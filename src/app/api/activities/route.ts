@@ -10,12 +10,11 @@ export async function GET(request: Request) {
     if (!authenticated) {
       return NextResponse.json({ activities: [] }, { status: 401 })
     }
-    let activities = await getActivities()
-    // Auto-seed if empty
-    if (activities.length === 0) {
+    const activities = await getActivities()
+    if (!activities || activities.length === 0) {
+      // KV not configured or no data — return seed data
       const seed = getSeedActivities()
-      await saveActivities(seed)
-      activities = seed
+      return NextResponse.json({ activities: seed })
     }
     return NextResponse.json({ activities })
   } catch {
@@ -32,14 +31,17 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json()
-    const activities = await getActivities()
+    const activities = (await getActivities()) || []
     const newActivity = {
       id: `act_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
       timestamp: new Date().toISOString(),
       ...body,
     }
     activities.unshift(newActivity)
-    await saveActivities(activities)
+    const saved = await saveActivities(activities)
+    if (!saved) {
+      return NextResponse.json({ success: false, errors: ["Failed to save — KV store may not be configured."] }, { status: 503 })
+    }
     return NextResponse.json({ success: true, activity: newActivity })
   } catch {
     return NextResponse.json({ success: false, errors: ["Failed to add activity"] }, { status: 500 })

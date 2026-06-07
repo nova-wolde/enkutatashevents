@@ -53,9 +53,15 @@ export async function POST(request: Request) {
     };
 
     // Save to KV
-    const submissions = await getContactSubmissions();
+    const submissions = (await getContactSubmissions()) || [];
     submissions.unshift(submission); // newest first
-    await saveContactSubmissions(submissions);
+    const saved = await saveContactSubmissions(submissions);
+    if (!saved) {
+      return NextResponse.json(
+        { success: false, errors: ["Failed to save — KV store may not be configured. Please set up Vercel KV."] },
+        { status: 503 }
+      );
+    }
 
     // Log for server-side visibility
     console.log(`[Contact Form] New submission from ${submission.name} (${submission.email})`);
@@ -81,7 +87,7 @@ export async function GET(request: Request) {
     if (!authenticated) {
       return NextResponse.json({ submissions: [] }, { status: 401 });
     }
-    const submissions = await getContactSubmissions();
+    const submissions = (await getContactSubmissions()) || [];
     return NextResponse.json({ submissions });
   } catch {
     return NextResponse.json({ submissions: [] });
@@ -99,7 +105,7 @@ export async function PATCH(request: Request) {
     const body = await request.json();
     const { id, read } = body as { id: string; read: boolean };
 
-    const submissions = await getContactSubmissions();
+    const submissions = (await getContactSubmissions()) || [];
     const index = submissions.findIndex((s) => s.id === id);
     if (index === -1) {
       return NextResponse.json(
@@ -109,8 +115,10 @@ export async function PATCH(request: Request) {
     }
 
     submissions[index].read = read;
-    await saveContactSubmissions(submissions);
-
+    const saved = await saveContactSubmissions(submissions);
+    if (!saved) {
+      return NextResponse.json({ success: false, errors: ["Failed to save — KV store may not be configured."] }, { status: 503 });
+    }
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json(
@@ -131,10 +139,12 @@ export async function DELETE(request: Request) {
     const body = await request.json();
     const { id } = body as { id: string };
 
-    const submissions = await getContactSubmissions();
+    const submissions = (await getContactSubmissions()) || [];
     const filtered = submissions.filter((s) => s.id !== id);
-    await saveContactSubmissions(filtered);
-
+    const saved = await saveContactSubmissions(filtered);
+    if (!saved) {
+      return NextResponse.json({ success: false, errors: ["Failed to save — KV store may not be configured."] }, { status: 503 });
+    }
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json(

@@ -7,7 +7,7 @@ import {
   resetLoginAttempts,
   getClientIp,
 } from '@/lib/auth-helpers'
-import { createSession, type Session } from '@/lib/kv-data'
+import { createSession } from '@/lib/kv-data'
 
 const OWNER_PASSWORD = process.env.OWNER_PASSWORD
 
@@ -50,14 +50,20 @@ export async function POST(request: Request) {
     const now = new Date()
     const expiresAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000) // 7 days
 
-    const session: Session = {
+    const session = {
       token,
       createdAt: now.toISOString(),
       expiresAt: expiresAt.toISOString(),
     }
 
     // Save session to KV with TTL (Redis auto-expires after 7 days)
-    await createSession(session)
+    const sessionCreated = await createSession(session)
+    if (!sessionCreated) {
+      return NextResponse.json(
+        { success: false, error: 'Login failed — KV store is not configured. Please set up Vercel KV in your dashboard.' },
+        { status: 503 }
+      )
+    }
 
     // Reset rate limit on successful login
     resetLoginAttempts(clientIp)

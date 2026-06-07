@@ -56,9 +56,15 @@ export async function POST(request: Request) {
       read: false,
     }
 
-    const bookings = await getBookings()
+    const bookings = (await getBookings()) || []
     bookings.unshift(booking)
-    await saveBookings(bookings)
+    const saved = await saveBookings(bookings)
+    if (!saved) {
+      return NextResponse.json(
+        { success: false, errors: ['Failed to save booking — KV store may not be configured. Please set up Vercel KV.'] },
+        { status: 503 }
+      )
+    }
 
     console.log(`[Bookings] New booking from ${booking.name} (${booking.eventType} on ${booking.eventDate})`)
 
@@ -83,7 +89,7 @@ export async function GET(request: Request) {
     if (!authenticated) {
       return NextResponse.json({ bookings: [] }, { status: 401 })
     }
-    const bookings = await getBookings()
+    const bookings = (await getBookings()) || []
     return NextResponse.json({ bookings })
   } catch {
     return NextResponse.json({ bookings: [] })
@@ -101,7 +107,7 @@ export async function PATCH(request: Request) {
     const body = await request.json()
     const { id, status, read } = body as { id: string; status?: string; read?: boolean }
 
-    const bookings = await getBookings()
+    const bookings = (await getBookings()) || []
     const index = bookings.findIndex((b) => b.id === id)
     if (index === -1) {
       return NextResponse.json(
@@ -125,7 +131,10 @@ export async function PATCH(request: Request) {
       bookings[index].read = read
     }
 
-    await saveBookings(bookings)
+    const saved = await saveBookings(bookings)
+    if (!saved) {
+      return NextResponse.json({ success: false, errors: ['Failed to save — KV store may not be configured.'] }, { status: 503 })
+    }
     return NextResponse.json({ success: true })
   } catch {
     return NextResponse.json(
@@ -146,10 +155,12 @@ export async function DELETE(request: Request) {
     const body = await request.json()
     const { id } = body as { id: string }
 
-    const bookings = await getBookings()
+    const bookings = (await getBookings()) || []
     const filtered = bookings.filter((b) => b.id !== id)
-    await saveBookings(filtered)
-
+    const saved = await saveBookings(filtered)
+    if (!saved) {
+      return NextResponse.json({ success: false, errors: ['Failed to save — KV store may not be configured.'] }, { status: 503 })
+    }
     return NextResponse.json({ success: true })
   } catch {
     return NextResponse.json(

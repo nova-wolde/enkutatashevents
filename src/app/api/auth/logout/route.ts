@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 import { deleteSession } from '@/lib/kv-data'
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const token = request.cookies.get('enkutatash_session')?.value
 
@@ -13,7 +14,8 @@ export async function POST(request: Request) {
     const response = NextResponse.json({ success: true })
     response.cookies.set('enkutatash_session', '', {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      // On Cloudflare Workers, always use secure cookies (Cloudflare enforces HTTPS)
+      secure: true,
       sameSite: 'lax',
       expires: new Date(0),
       path: '/',

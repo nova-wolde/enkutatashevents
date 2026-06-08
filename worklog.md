@@ -29,3 +29,29 @@ Stage Summary:
 - Auth verification is now O(1) lookup instead of array scan
 - Build passes successfully
 - Ready for Vercel deployment (free, no credit card needed)
+---
+Task ID: 1
+Agent: Main Agent
+Task: Migrate Enkutatash Events from Next.js/Vercel to Vinext/Cloudflare Workers
+
+Work Log:
+- Ran vinext check — 88% compatible, only __dirname issue in non-app files
+- Fixed health route: removed process.uptime()/process.memoryUsage(), replaced with performance.now()
+- Fixed proxy.ts: replaced in-memory Map rate limiting with Redis-backed (Upstash), replaced request.nextUrl with URL constructor, fixed NODE_ENV check
+- Fixed auth-helpers.ts: replaced in-memory Map rate limiting with Redis-backed (Upstash), all functions now async
+- Fixed login/logout/session routes: changed Request to NextRequest for cookie access, replaced process.env.NODE_ENV with secure: true always (Cloudflare enforces HTTPS)
+- Removed unused db.ts (Prisma), prisma/ directory, and 9 unused npm packages (630 packages removed)
+- Created wrangler.toml with env bindings for production
+- Installed @cloudflare/vite-plugin and @tailwindcss/vite
+- Updated vite.config.ts with vinext() + cloudflare() + tailwindcss() plugins
+- Updated postcss.config.mjs from string-form to import-form plugins
+- Ran vinext init — successful
+- Ran vinext build — builds in ~5 seconds, all 10 API routes + 3 pages compiled
+- Tested dev server — homepage returns 200, API routes work correctly
+- Updated package.json: dev script now runs vinext, removed prisma scripts
+
+Stage Summary:
+- Project is fully migrated to Vinext and builds successfully
+- All Cloudflare Workers compatibility issues resolved
+- Deployment pending: user needs to run `wrangler login` and then `npm run deploy`
+- Secrets to configure in Cloudflare: OWNER_PASSWORD, UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN

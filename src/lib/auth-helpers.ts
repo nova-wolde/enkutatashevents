@@ -7,6 +7,7 @@
  */
 
 import { getSession } from "@/lib/kv-data"
+import { Redis } from "@upstash/redis"
 
 // ─── Verify Auth ──────────────────────────────────────────────────────────────
 /**
@@ -70,59 +71,96 @@ export function generateToken(bytes: number = 32): string {
 }
 
 // ─── Login Rate Limiting (Upstash Redis-backed) ───────────────────────────────
-// In-memory fallback for development when Redis is not available.
-// In production on Cloudflare Workers, in-memory state doesn't persist
-// across isolates, so we rely on Redis when it's configured.
+// Uses Redis for persistent rate limiting across Cloudflare Workers isolates.
+// Falls back to permissive (no limiting) if Redis is not configured.
 
-const loginAttempts = new Map<string, { count: number; lockedUntil: number }>()
 const MAX_LOGIN_ATTEMPTS = 5
-const LOCKOUT_DURATION = 15 * 60 * 1000 // 15 minutes
+const LOCKOUT_DURATION = 15 * 60 // 15 minutes in seconds
+
+let _redis: Redis | null = null
+
+function getRedis(): Redis | null {
+  if (_redis !== null) return _redis
+  const url = process.env.UPSTASH_REDIS_REST_URL
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN
+  if (!url || !token) return null
+  _redis = new Redis({ url, token })
+  return _redis
+}
 
 /**
  * Check if the IP is currently locked out from login attempts.
+ * Uses Redis key `login_attempts:<ip>` with atomic INCR + TTL.
  * Returns { allowed: true } or { allowed: false, retryAfterMs: number }
  */
-export function checkLoginRateLimit(ip: string): { allowed: boolean; retryAfterMs?: number } {
-  const entry = loginAttempts.get(ip)
-  const now = Date.now()
-
-  if (entry && entry.lockedUntil > now) {
-    return { allowed: false, retryAfterMs: entry.lockedUntil - now }
+export async function checkLoginRateLimit(ip: string): Promise<{ allowed: boolean; retryAfterMs?: number }> {
+  const redis = getRedis()
+  if (!redis) {
+    // No Redis configured — allow all requests (development fallback)
+    return { allowed: true }
   }
 
-  // Clean expired entries periodically
-  if (Math.random() < 0.01) { // ~1% chance on each call
-    for (const [key, val] of loginAttempts.entries()) {
-      if (val.lockedUntil <= now && val.count < MAX_LOGIN_ATTEMPTS) {
-        loginAttempts.delete(key)
-      }
+  try {
+    const key = `login_attempts:${ip}`
+
+    // Check if currently locked out
+    const lockKey = `login_locked:${ip}`
+    const lockedTtl = await redis.ttl(lockKey)
+    if (lockedTtl > 0) {
+      return { allowed: false, retryAfterMs: lockedTtl * 1000 }
     }
-  }
 
-  return { allowed: true }
+    return { allowed: true }
+  } catch {
+    return { allowed: true }
+  }
 }
 
 /**
  * Record a failed login attempt for the given IP.
  * After MAX_LOGIN_ATTEMPTS failures, the IP is locked for LOCKOUT_DURATION.
+ * Uses Redis atomic operations for consistency across Workers isolates.
  */
-export function recordFailedLogin(ip: string): void {
-  const entry = loginAttempts.get(ip) || { count: 0, lockedUntil: 0 }
-  entry.count++
+export async function recordFailedLogin(ip: string): Promise<void> {
+  const redis = getRedis()
+  if (!redis) return
 
-  if (entry.count >= MAX_LOGIN_ATTEMPTS) {
-    entry.lockedUntil = Date.now() + LOCKOUT_DURATION
-    entry.count = 0 // Reset count after lockout
+  try {
+    const key = `login_attempts:${ip}`
+
+    // Atomically increment the attempt counter
+    const count = await redis.incr(key)
+
+    if (count === 1) {
+      // First attempt — set a 15-minute window TTL
+      await redis.expire(key, LOCKOUT_DURATION)
+    }
+
+    if (count >= MAX_LOGIN_ATTEMPTS) {
+      // Too many attempts — lock the IP
+      const lockKey = `login_locked:${ip}`
+      await redis.set(lockKey, "1", { ex: LOCKOUT_DURATION })
+      // Reset the attempt counter
+      await redis.del(key)
+    }
+  } catch {
+    // Silently fail — don't block login if Redis is down
   }
-
-  loginAttempts.set(ip, entry)
 }
 
 /**
  * Reset the login attempt counter for the given IP (on successful login).
  */
-export function resetLoginAttempts(ip: string): void {
-  loginAttempts.delete(ip)
+export async function resetLoginAttempts(ip: string): Promise<void> {
+  const redis = getRedis()
+  if (!redis) return
+
+  try {
+    await redis.del(`login_attempts:${ip}`)
+    await redis.del(`login_locked:${ip}`)
+  } catch {
+    // Silently fail
+  }
 }
 
 /**

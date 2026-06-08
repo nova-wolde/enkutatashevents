@@ -1,73 +1,80 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { Redis } from "@upstash/redis";
 
-// ─── Rate Limiting Store (with memory cap) ──────────────────────────────────
-const MAX_STORE_SIZE = 10_000; // Cap to prevent unbounded memory growth
-const rateLimitMap = new Map<string, { count: number; lastReset: number }>();
-const RATE_LIMIT_WINDOW = 60_000; // 1 minute
-const RATE_LIMIT_MAX = 60;        // 60 requests per minute per IP (general)
+// ─── Redis-Backed Rate Limiting (works across Cloudflare Workers isolates) ────
+// On Workers, in-memory Maps don't persist across requests.
+// We use Upstash Redis for persistent rate limiting.
+// If Redis is not configured, we fall back to a permissive approach (no rate limiting).
+
+let _redis: Redis | null = null;
+
+function getRedis(): Redis | null {
+  if (_redis !== null) return _redis;
+  const url = process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+  if (!url || !token) return null;
+  _redis = new Redis({ url, token });
+  return _redis;
+}
+
+const RATE_LIMIT_WINDOW = 60; // 60 seconds
+const RATE_LIMIT_MAX = 60; // 60 requests per minute per IP (general)
+const LOGIN_RATE_LIMIT_MAX = 10; // 10 requests per minute for login
 
 function getRateLimitKey(request: NextRequest): string {
   const forwarded = request.headers.get("x-forwarded-for");
   return forwarded?.split(",")[0]?.trim() || "unknown";
 }
 
-function isRateLimited(key: string): boolean {
-  const now = Date.now();
-  const entry = rateLimitMap.get(key);
-
-  if (!entry || now - entry.lastReset > RATE_LIMIT_WINDOW) {
-    // Evict oldest entry if store is full
-    if (rateLimitMap.size >= MAX_STORE_SIZE) {
-      const oldestKey = rateLimitMap.keys().next().value;
-      if (oldestKey) rateLimitMap.delete(oldestKey);
-    }
-    rateLimitMap.set(key, { count: 1, lastReset: now });
+/**
+ * Check rate limit using Upstash Redis INCR + EXPIRE.
+ * Returns true if the request should be blocked (rate limited).
+ */
+async function isRateLimited(
+  key: string,
+  maxRequests: number,
+  windowSeconds: number
+): Promise<boolean> {
+  const redis = getRedis();
+  if (!redis) {
+    // No Redis configured — skip rate limiting (development fallback)
     return false;
   }
 
-  entry.count++;
-  if (entry.count > RATE_LIMIT_MAX) {
-    return true;
-  }
-  return false;
-}
-
-// ─── Stricter rate limit for login endpoint ─────────────────────────────────
-const LOGIN_RATE_LIMIT_MAX = 10; // 10 requests per minute for login
-const loginRateLimitMap = new Map<string, { count: number; lastReset: number }>();
-
-function isLoginRateLimited(key: string): boolean {
-  const now = Date.now();
-  const entry = loginRateLimitMap.get(key);
-
-  if (!entry || now - entry.lastReset > RATE_LIMIT_WINDOW) {
-    if (loginRateLimitMap.size >= 1_000) {
-      const oldestKey = loginRateLimitMap.keys().next().value;
-      if (oldestKey) loginRateLimitMap.delete(oldestKey);
+  try {
+    const redisKey = `ratelimit:${key}:${maxRequests}`;
+    // Atomically increment and set expiry
+    const count = await redis.incr(redisKey);
+    if (count === 1) {
+      // First request in this window — set the TTL
+      await redis.expire(redisKey, windowSeconds);
     }
-    loginRateLimitMap.set(key, { count: 1, lastReset: now });
+    return count > maxRequests;
+  } catch {
+    // If Redis fails, don't block the request
     return false;
   }
-
-  entry.count++;
-  if (entry.count > LOGIN_RATE_LIMIT_MAX) {
-    return true;
-  }
-  return false;
 }
 
 // ── Next.js 16 proxy.ts convention (replaces middleware.ts) ────────────────────
-export function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+export async function proxy(request: NextRequest) {
+  // Use URL constructor instead of request.nextUrl for Cloudflare Workers compatibility
+  const url = new URL(request.url);
+  const pathname = url.pathname;
 
   // ── 1. HTTPS Enforcement (production only, only for direct access) ──────
-  if (process.env.NODE_ENV === "production") {
+  // On Cloudflare Workers, HTTPS is always enforced by Cloudflare itself.
+  // We keep this as a safety net for local development or other hosting.
+  const isProduction =
+    process.env.NODE_ENV === "production" ||
+    request.headers.get("x-forwarded-proto") === "https";
+  if (isProduction) {
     const forwarded = request.headers.get("x-forwarded-for");
     const proto = request.headers.get("x-forwarded-proto");
     if (!forwarded && proto === "http") {
-      const httpsUrl = request.nextUrl.clone();
-      httpsUrl.protocol = "https";
+      const httpsUrl = new URL(request.url);
+      httpsUrl.protocol = "https:";
       return NextResponse.redirect(httpsUrl, 301);
     }
   }
@@ -75,7 +82,8 @@ export function proxy(request: NextRequest) {
   // ── 2. Stricter rate limit on login endpoint ────────────────────────────
   if (pathname === "/api/auth/login") {
     const key = getRateLimitKey(request);
-    if (isLoginRateLimited(key)) {
+    const limited = await isRateLimited(key, LOGIN_RATE_LIMIT_MAX, RATE_LIMIT_WINDOW);
+    if (limited) {
       return NextResponse.json(
         { error: "Too many login attempts. Please try again later." },
         { status: 429 }
@@ -86,7 +94,8 @@ export function proxy(request: NextRequest) {
   // ── 3. General Rate Limiting on API Routes ──────────────────────────────
   if (pathname.startsWith("/api/")) {
     const key = getRateLimitKey(request);
-    if (isRateLimited(key)) {
+    const limited = await isRateLimited(key, RATE_LIMIT_MAX, RATE_LIMIT_WINDOW);
+    if (limited) {
       return NextResponse.json(
         { error: "Too many requests. Please try again later." },
         { status: 429 }

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 import {
   timingSafePasswordCompare,
   generateToken,
@@ -11,11 +12,11 @@ import { createSession } from '@/lib/kv-data'
 
 const OWNER_PASSWORD = process.env.OWNER_PASSWORD
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
-    // ── 1. Rate limiting check ──────────────────────────────────────────────
+    // ── 1. Rate limiting check (Redis-backed, works across Workers isolates) ──
     const clientIp = getClientIp(request)
-    const rateCheck = checkLoginRateLimit(clientIp)
+    const rateCheck = await checkLoginRateLimit(clientIp)
 
     if (!rateCheck.allowed) {
       const retryMinutes = Math.ceil((rateCheck.retryAfterMs || 0) / 60000)
@@ -38,7 +39,7 @@ export async function POST(request: Request) {
 
     // ── 3. Timing-safe password comparison (Web Crypto API) ─────────────────
     if (!OWNER_PASSWORD || !(await timingSafePasswordCompare(password, OWNER_PASSWORD))) {
-      recordFailedLogin(clientIp)
+      await recordFailedLogin(clientIp)
       return NextResponse.json(
         { success: false, error: 'Invalid password' },
         { status: 401 }
@@ -66,7 +67,7 @@ export async function POST(request: Request) {
     }
 
     // Reset rate limit on successful login
-    resetLoginAttempts(clientIp)
+    await resetLoginAttempts(clientIp)
 
     // ── 5. Set HTTP-only cookie ─────────────────────────────────────────────
     const response = NextResponse.json({
@@ -76,7 +77,8 @@ export async function POST(request: Request) {
 
     response.cookies.set('enkutatash_session', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      // On Cloudflare Workers, always use secure cookies (Cloudflare enforces HTTPS)
+      secure: true,
       sameSite: 'lax',
       expires: expiresAt,
       path: '/',

@@ -1,0 +1,38 @@
+#:schema node_modules/vinext/schema.wrangler.json
+
+name = "enkutatashevents"
+compatibility_date = "2025-12-01"
+compatibility_flags = ["nodejs_compat"]
+
+# ─── Vinext Configuration ─────────────────────────────────────────────────────
+# Vinext uses this to configure the Cloudflare Workers deployment.
+# The main entry point is handled automatically by Vinext's build process.
+
+# ─── Environment Variables ─────────────────────────────────────────────────────
+# Secrets (OWNER_PASSWORD, UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN)
+# should be set via `wrangler secret put` or the Cloudflare dashboard.
+# They MUST NOT be committed to source control.
+
+[vars]
+NODE_ENV = "production"
+
+# ─── Static Assets ─────────────────────────────────────────────────────────────
+# Vinext handles static assets automatically from the .vercel/output/ directory.
+# No manual configuration needed.
+
+# ─── Production Environment ────────────────────────────────────────────────────
+[env.production]
+name = "enkutatashevents"
+routes = [
+  { pattern = "enkutatashevents.com", custom_domain = true },
+]
+
+[env.production.vars]
+NODE_ENV = "production"
+
+# ─── Staging/Preview Environment ───────────────────────────────────────────────
+[env.preview]
+name = "enkutatashevents-preview"
+
+[env.preview.vars]
+NODE_ENV = "production"

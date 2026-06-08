@@ -14,13 +14,10 @@ export async function GET() {
     const response = {
       status: healthy ? "healthy" : (redisHealth.configured ? "degraded" : "no_redis"),
       timestamp: new Date().toISOString(),
-      uptime: process.uptime(),
-      memory: {
-        used: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
-        total: Math.round(process.memoryUsage().heapTotal / 1024 / 1024),
-        rss: Math.round(process.memoryUsage().rss / 1024 / 1024),
-        unit: "MB",
-      },
+      // process.uptime() and process.memoryUsage() are not available on Cloudflare Workers
+      // Use performance.now() as a cross-platform uptime alternative
+      uptime: Math.round((performance.now() / 1000) * 100) / 100,
+      runtime: "cloudflare-workers",
       checks: {
         redisConfigured: redisHealth.configured,
         redisConnected: redisHealth.ok,

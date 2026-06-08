@@ -104,7 +104,7 @@ export async function proxy(request: NextRequest) {
   }
 
   // ── 4. Block Access to Sensitive Paths ──────────────────────────────────
-  const blockedPaths = ["/.env", "/.git", "/admin", "/prisma", "/db"];
+  const blockedPaths = ["/.env", "/.git", "/prisma", "/db"];
   if (blockedPaths.some((p) => pathname.startsWith(p))) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }

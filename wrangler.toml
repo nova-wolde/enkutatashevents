@@ -12,6 +12,7 @@ main = "worker/index.ts"
 # Client assets are served from the dist/client directory after build.
 [assets]
 directory = "dist/client"
+not_found_handling = "single-page-application"
 
 # ─── Environment Variables ───────────────────────────────────────────────────
 # Secrets (OWNER_PASSWORD, UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN)

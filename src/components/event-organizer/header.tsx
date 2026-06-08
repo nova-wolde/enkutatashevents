@@ -40,6 +40,18 @@ export function Header() {
       // ignore
     }
     setAppView('landing')
+    // If on /admin, navigate to home
+    if (typeof window !== 'undefined' && window.location.pathname !== '/') {
+      window.location.href = '/'
+    }
+  }
+
+  const goToPublicPage = () => {
+    setAppView('landing')
+    // If on /admin, navigate to home
+    if (typeof window !== 'undefined' && window.location.pathname !== '/') {
+      window.location.href = '/'
+    }
   }
 
   return (
@@ -147,7 +159,7 @@ export function Header() {
               Settings
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => setAppView('landing')}>
+            <DropdownMenuItem onClick={goToPublicPage}>
               <Globe className="h-4 w-4 mr-2" />
               View Public Page
             </DropdownMenuItem>

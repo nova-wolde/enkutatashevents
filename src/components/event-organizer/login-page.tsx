@@ -164,7 +164,13 @@ export function LoginPage() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => setAppView('landing')}
+              onClick={() => {
+                setAppView('landing')
+                // If on /admin, navigate to home
+                if (typeof window !== 'undefined' && window.location.pathname !== '/') {
+                  window.location.href = '/'
+                }
+              }}
               className="text-muted-foreground hover:text-foreground gap-1.5"
             >
               <ArrowLeft className="h-3.5 w-3.5" />

@@ -3,6 +3,16 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Terms of Service",
   description: "Terms of Service for Enkutatash Event — our agreement for event planning and organization services.",
+  openGraph: {
+    title: "Terms of Service | Enkutatash Event",
+    description: "Terms of Service for Enkutatash Event — our agreement for event planning and organization services.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Terms of Service | Enkutatash Event",
+    description: "Terms of Service for Enkutatash Event — our agreement for event planning and organization services.",
+  },
 };
 
 export default function TermsPage() {

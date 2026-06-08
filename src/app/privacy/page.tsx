@@ -3,6 +3,16 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description: "Privacy Policy for Enkutatash Event — how we collect, use, and protect your personal information.",
+  openGraph: {
+    title: "Privacy Policy | Enkutatash Event",
+    description: "Privacy Policy for Enkutatash Event — how we collect, use, and protect your personal information.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Privacy Policy | Enkutatash Event",
+    description: "Privacy Policy for Enkutatash Event — how we collect, use, and protect your personal information.",
+  },
 };
 
 export default function PrivacyPage() {

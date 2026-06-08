@@ -80,6 +80,11 @@ export const metadata: Metadata = {
 
   alternates: {
     canonical: SITE_URL,
+    languages: {
+      "en": SITE_URL,
+      "am": SITE_URL,
+      "x-default": SITE_URL,
+    },
   },
 
   icons: {
@@ -160,11 +165,6 @@ function JsonLd() {
       },
     ],
     priceRange: "$$",
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.9",
-      reviewCount: "500",
-    },
     sameAs: [
       "https://www.instagram.com/enkutatashevents",
       "https://www.facebook.com/enkutatashevents",
@@ -200,6 +200,58 @@ function JsonLd() {
     ],
   };
 
+  const webSite = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${SITE_URL}/#website`,
+    name: "Enkutatash Event",
+    alternateName: "እንቁጣጣሽ ኤቨንት",
+    url: SITE_URL,
+    description: SITE_DESCRIPTION,
+    publisher: { "@id": `${SITE_URL}/#organization` },
+    inLanguage: ["en", "am"],
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${SITE_URL}/?q={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
+    },
+  };
+
+  const breadcrumb = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "@id": `${SITE_URL}/#breadcrumb`,
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: SITE_URL,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Services",
+        item: `${SITE_URL}/services`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: "Privacy Policy",
+        item: `${SITE_URL}/privacy`,
+      },
+      {
+        "@type": "ListItem",
+        position: 4,
+        name: "Terms of Service",
+        item: `${SITE_URL}/terms`,
+      },
+    ],
+  };
+
   return (
     <>
       <script
@@ -209,6 +261,14 @@ function JsonLd() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(eventOrg) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webSite) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
       />
     </>
   );

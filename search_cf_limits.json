@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developers.cloudflare.com/workers/platform/limits",
+    "name": "Limits · Cloudflare Workers docs",
+    "snippet": "Accounts on the Workers Free plan have a daily request limit of 100,000 requests, resetting at midnight UTC. When a Worker exceeds this limit, ...",
+    "host_name": "developers.cloudflare.com",
+    "rank": 0,
+    "date": "Jun 3, 2026",
+    "favicon": ""
+  },
+  {
+    "url": "https://developers.cloudflare.com/workers/platform/pricing",
+    "name": "Pricing · Cloudflare Workers docs",
+    "snippet": "The Workers Free plan includes limited usage of Workers, Pages Functions, Workers KV and Hyperdrive. Read more about the Free plan limits. The ...",
+    "host_name": "developers.cloudflare.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/CloudFlare/comments/1s4bdml/i_was_thrilled_to_use_cloudflare_pagesd1_until",
+    "name": "I was thrilled to use Cloudflare Pages+D1 until saw R2 need Credit",
+    "snippet": "The R2 free tier covers significant usage, including 10GB stored data and high request volume. You will only incur charges if you explicitly ...",
+    "host_name": "www.reddit.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.cloudflare.com/plans/developer-platform",
+    "name": "Workers & Pages Pricing | Cloudflare",
+    "snippet": "Workers Free. Experience the Workers ecosystem without commitment. $0/mo. 100,000 requests per day (Across all of your Worker scripts, UTC+0). Get started ...",
+    "host_name": "www.cloudflare.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developers.cloudflare.com/pages/platform/limits",
+    "name": "Limits · Cloudflare Pages docs",
+    "snippet": "Cloudflare Pages has a soft limit of 100 projects within your account in order to prevent abuse. If you need this limit raised, contact your Cloudflare account ...",
+    "host_name": "developers.cloudflare.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://blog.blazingcdn.com/en-us/cloudflares-pricing-for-developers-a-closer-look-at-workers-pages",
+    "name": "Is Cloudflare Worth It for Developers in 2025? - CDN Blog",
+    "snippet": "Yes, as of May 2026, all tiers — including free — include unlimited bandwidth for static assets served from Pages. There is no published fair- ...",
+    "host_name": "blog.blazingcdn.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.freetiers.com/directory/cloudflare-pages",
+    "name": "[Infographic] Cloudflare Pages Free Tier – Pricing & Limits (2025)",
+    "snippet": "Cloudflare Pages provides a free tier with unlimited bandwidth – no credit card required, never expires, commercial use allowed.",
+    "host_name": "www.freetiers.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.cloudflare.com/plans",
+    "name": "Pricing - Cloudflare",
+    "snippet": "$0.05 / million requests. Requests. Free. —. Paid. $0.05 / million requests. Workers ... Start building for free — no credit card required. Start building for ...",
+    "host_name": "www.cloudflare.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://lalatenduswain.medium.com/understanding-cloudflare-containers-a-comprehensive-pricing-guide-for-developers-9f7242a2ac20",
+    "name": "Understanding Cloudflare Containers: A Comprehensive Pricing",
+    "snippet": "This free tier is remarkably generous and ideal for side projects, learning, or small production applications. No credit card is required, and ...",
+    "host_name": "lalatenduswain.medium.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.cloudflare.com",
+    "name": "Cloudflare: Build for the agent era",
+    "snippet": "Free. No credit card needed. See more. Workers Durable Objects Workers KV. 100,000. / daily requests. 1 million. / KV daily reads. 25. / AI daily requests. 10GB.",
+    "host_name": "www.cloudflare.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

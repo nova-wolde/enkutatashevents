@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://www.youtube.com/watch?v=I2uGckR6xzw",
+    "name": "Next.js on Cloudflare Pages: Blazing Fast Deployment Tutorial",
+    "snippet": "Deploy Next.js on Cloudflare Pages FOR FREE — Faster Than Ever! Learn how to host your Next.js app on Cloudflare's global Edge Network in ...",
+    "host_name": "www.youtube.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.freetiers.com/blog/best-free-paas-services-no-credit-card-required",
+    "name": "Best Free PaaS Services (No Credit Card Required) - FreeTiers",
+    "snippet": "Discover the 7 best free paas services with no credit card required. Detailed comparison of features, limits, and use cases. Updated 2025.",
+    "host_name": "www.freetiers.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/cloudflare/workers-sdk/discussions/7030",
+    "name": "Next.js starter does not (cannot?) deploy on Cloudflare on Free Tier",
+    "snippet": "The default Next.js app starter does not deploy on Cloudflare Workers because it hits the 1MB limit on the free tier. However, this seems ridiculously low.",
+    "host_name": "github.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/CloudFlare/comments/1s4bdml/i_was_thrilled_to_use_cloudflare_pagesd1_until",
+    "name": "I was thrilled to use Cloudflare Pages+D1 until saw R2 need Credit",
+    "snippet": "The R2 free tier covers significant usage, including 10GB stored data and high request volume. You will only incur charges if you explicitly ...",
+    "host_name": "www.reddit.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.digitalapplied.com/blog/vercel-vs-netlify-vs-cloudflare-pages-comparison",
+    "name": "Vercel vs Netlify vs Cloudflare Pages: 2025 Comparison",
+    "snippet": "Platform Limitations · 25MB max file size · 20,000 files per deployment · Limited framework support · Workers have CPU time limits · Less mature ...",
+    "host_name": "www.digitalapplied.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://medium.com/@Yasirgaji/migrating-next-js-16-from-vercel-to-cloudflare-overcoming-the-25mb-limit-aa88e8396b29",
+    "name": "Migrating Next.js 16 from Vercel to Cloudflare - Medium",
+    "snippet": "Migrating Next.js 16 from Vercel to Cloudflare: Overcoming the 25MB Limit ... Pages Functions bundle size (49616348) is over the limit of 25.0 MiB.",
+    "host_name": "medium.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://blog.prateekjain.dev/i-switched-from-vercel-to-cloudflare-for-next-js-e2f5861c859f",
+    "name": "I Switched from Vercel to Cloudflare for Next.js | by Prateek Jain",
+    "snippet": "It offers a generous free tier that includes 10 GB of storage and 1 million read/write requests each month, which is more than enough for most ...",
+    "host_name": "blog.prateekjain.dev",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developers.cloudflare.com/workers/framework-guides/web-apps/nextjs",
+    "name": "Next.js · Cloudflare Workers docs",
+    "snippet": "Next.js is a React framework for building full stack applications. Next.js supports Server-side and Client-side rendering, as well as Partial Prerendering.",
+    "host_name": "developers.cloudflare.com",
+    "rank": 7,
+    "date": "Jun 6, 2026",
+    "favicon": ""
+  },
+  {
+    "url": "https://sivanesh.dev/blog/free-next-js-hosting-with-cloudflare-but-at-what-cost",
+    "name": "Free Next.js Hosting with Cloudflare – But At What Cost?",
+    "snippet": "Cloudflare allows you to host Next.js apps either as a Cloudflare Worker or as a static site using Cloudflare Pages.",
+    "host_name": "sivanesh.dev",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developers.cloudflare.com/pages/platform/limits",
+    "name": "Limits · Cloudflare Pages docs",
+    "snippet": "Cloudflare Pages sites can contain up to 20,000 files on the Free plan. Paid plans (such as Pro, Business, and Enterprise plans) can have up to ...",
+    "host_name": "developers.cloudflare.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

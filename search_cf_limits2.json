@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://community.cloudflare.com/t/cant-access-api-endpoints-created-by-next-js-on-cloudflare-pages/494813",
+    "name": "Can't access /api/* endpoints created by Next.js on Cloudflare Pages",
+    "snippet": "I found the issue. The problem wasn't about CORS. The problem was about the edge environment for API routing. the-edge-runtime has helped me.",
+    "host_name": "community.cloudflare.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/brianc/node-postgres/issues/3206",
+    "name": "Doesn't work with next.js Edge runtime · Issue #3206 - GitHub",
+    "snippet": "Next.js doesn't support all Cloudflare's APIs - in particular the required connect() . In order to use Prisma with Next.js Edge, you need to ...",
+    "host_name": "github.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://blog.cloudflare.com/next-on-pages",
+    "name": "And here's another one: the Next.js Edge Runtime becomes the",
+    "snippet": "Next.js' Edge Runtime is an experimental mode that developers can opt into which results in a different type of application being built.",
+    "host_name": "blog.cloudflare.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://stackoverflow.com/questions/78585978/issues-with-getserversideprops-and-experimental-edge-runtime-on-cloudflare-worke",
+    "name": "Issues with getServerSideProps and experimental-edge runtime on",
+    "snippet": "I am guessing some packages will cause errors on edge runtime with cloudflare. And for some reason this only happens with pages router \" ...",
+    "host_name": "stackoverflow.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://nickb.dev/blog/nextjs-on-cloudflare-a-gem-with-rough-edges",
+    "name": "Next.js on Cloudflare: a gem with rough edges | nickb.dev",
+    "snippet": "The largest caveat will be the lack of a nodejs runtime. Only routes declared with the edge runtime will run on Cloudflare's Worker platform.",
+    "host_name": "nickb.dev",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=yPjsNwe8KCY",
+    "name": "I tried to host Next.js on Cloudflare (and lived to regret it) - YouTube",
+    "snippet": "... Next JS app on Cloudflare. From complex cache invalidation issues to the bizarre limitations of the platform, learn from my mistakes and ...",
+    "host_name": "www.youtube.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/nextjs/comments/1ok063z/how_to_fix_this_error_in_nextjs_and_cloudflare",
+    "name": "how to fix this error in nextjs and cloudflare - Reddit",
+    "snippet": "Below I give a compact, practical troubleshooting checklist that fixes the most common Next.js ↔ Cloudflare problems, plus commands and config ...",
+    "host_name": "www.reddit.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.answeroverflow.com/m/1190151628532232202",
+    "name": "is there some kind of limitation on making http requests from a worker",
+    "snippet": "I put edge runtime in my layout and in all my api routes, still no luck. It happens when I send a put request to update my date and then ...",
+    "host_name": "www.answeroverflow.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/nextjs/comments/1c6ea7w/why_cloudflare_pages_may_not_be_the_best_for",
+    "name": "Why Cloudflare Pages May Not Be the Best For Next.js ‍♂️ - Reddit",
+    "snippet": "168K subscribers in the nextjs community. Next.js is a React framework for building full-stack web applications.",
+    "host_name": "www.reddit.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://oneuptime.com/blog/post/2026-01-24-fix-nextjs-edge-runtime-limitations/view",
+    "name": "How to Fix 'Edge Runtime' Limitations in Next.js - OneUptime",
+    "snippet": "Learn how to identify and work around Edge Runtime limitations in Next.js, including unsupported Node.js APIs, module compatibility issues, ...",
+    "host_name": "oneuptime.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

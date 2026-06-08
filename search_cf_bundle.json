@@ -1,0 +1,74 @@
+[
+  {
+    "url": "https://medium.com/@Yasirgaji/migrating-next-js-16-from-vercel-to-cloudflare-overcoming-the-25mb-limit-aa88e8396b29",
+    "name": "Migrating Next.js 16 from Vercel to Cloudflare - Medium",
+    "snippet": "Runtime Compatibility: You cannot assume Node.js APIs exist. · Bundle Size: The 25MB limit is real. You must actively manage your imports. · The ...",
+    "host_name": "medium.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://opennext.js.org/cloudflare",
+    "name": "Cloudflare - OpenNext",
+    "snippet": "All minor and patch versions of Next.js 16 and the latest minors of Next.js 14 and 15 are supported. Next.js 14 support will be dropped Q1 2026.",
+    "host_name": "opennext.js.org",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/nextjs/comments/1pouurb/next_15_bundle_size_with_open_next_doubled_when",
+    "name": "Next 15 bundle size with open next doubled when upgraded to Next",
+    "snippet": "The bundle size was around 8 ~ 9MB but because of the most recent react2shell bugs I had to upgrade to next 16. However my bundles are double ...",
+    "host_name": "www.reddit.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://blog.cloudflare.com/deploying-nextjs-apps-to-cloudflare-workers-with-the-opennext-adapter",
+    "name": "Deploy your Next.js app to Cloudflare Workers with the Cloudflare",
+    "snippet": "With the 1.0-beta release of the Cloudflare adapter for OpenNext, you can host your Next.js 14 and 15 applications on Cloudflare Workers.",
+    "host_name": "blog.cloudflare.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/opennextjs/opennextjs-cloudflare/issues/1157",
+    "name": "[BUG] Next.js 16.2.0 crashes on Cloudflare Workers (Error 1101",
+    "snippet": "Describe the bug After upgrading to Next.js 16.2.0, the Worker crashes on startup on Cloudflare Workers with Error 1101.",
+    "host_name": "github.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://blog.blazingcdn.com/en-us/nextjs-cloudflare-deployment-guide-pages-workers-images",
+    "name": "NextJS Cloudflare Deployment Guide: Pages, Workers and Images",
+    "snippet": "Deploy Next.js on Cloudflare with Pages, Workers, and optimized Images for blazing-fast, scalable web apps in 2026.",
+    "host_name": "blog.blazingcdn.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://opennext.js.org/cloudflare/troubleshooting",
+    "name": "Troubleshooting - OpenNext",
+    "snippet": "The Cloudflare Account you are deploying to is on the Workers Free plan, which limits the size of each Worker to 3 MiB (opens in a new tab).",
+    "host_name": "opennext.js.org",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=NcIWXm_T-eQ&vl=en",
+    "name": "Deploy NextJS apps to CF Workers With OpenNext - YouTube",
+    "snippet": "Deploying Next.js apps to Cloudflare Workers just got easier with OpenNext! In this video, we'll walk through how to use OpenNext to ...",
+    "host_name": "www.youtube.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  }
+]

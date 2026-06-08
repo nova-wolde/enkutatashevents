@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developers.cloudflare.com/workers/databases/third-party-integrations/upstash",
+    "name": "Upstash · Cloudflare Workers docs",
+    "snippet": "Upstash is a serverless database with Redis and Kafka API. Upstash also offers QStash, a task queue/scheduler designed for the serverless.",
+    "host_name": "developers.cloudflare.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://upstash.com/blog/cloudflare-workers-redis",
+    "name": "Cloudflare Workers KV vs Upstash Redis",
+    "snippet": "Upstash is compatible with Redis. So you can easily move your data to anywhere where you can run Redis including your own laptop. Workers KV is ...",
+    "host_name": "upstash.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/nextauthjs/next-auth/discussions/7930",
+    "name": "Adapter for Cloudflare KV · nextauthjs next-auth · Discussion #7930",
+    "snippet": "Here's the beginnings of a Cloudflare KV adapter based on the upstash-redis-adapter. @cloudflare/workers-types is needed as a dev dependency.",
+    "host_name": "github.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://upstash.com/blog/nextjs-ratelimiting",
+    "name": "Rate Limiting Next.js API Routes using Upstash Redis",
+    "snippet": "In this article, we will show how to rate limit your Next.js API routes using the Upstash Rate limit SDK.",
+    "host_name": "upstash.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/nextjs/comments/1flfs3z/deploying_nextjs_to_cloudflare_pages",
+    "name": "Deploying Nextjs to Cloudflare Pages - Reddit",
+    "snippet": "You use directly Cloudflare. Cons, you need to tweak your next.js app to make it compatible and not all NPM dependencies are compatible.",
+    "host_name": "www.reddit.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developers.cloudflare.com/workers/framework-guides/web-apps/nextjs",
+    "name": "Next.js · Cloudflare Workers docs",
+    "snippet": "As shown above, you must enable the nodejs_compat compatibility flag and set your compatibility date to 2024-09-23 or later for your Next.js app ...",
+    "host_name": "developers.cloudflare.com",
+    "rank": 5,
+    "date": "Jun 6, 2026",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=sIeOZ5YOYYM",
+    "name": "Deploying Next.js Apps on Cloudflare! Cloudflare Workers Tutorial!",
+    "snippet": "Hello guys! In this video, we will look at how you can host your Next.js apps on Cloudflare workers. Cloudflare recently announced that ...",
+    "host_name": "www.youtube.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://betterprogramming.pub/in-memory-database-for-cloudflare-workers-b9c61810ef37",
+    "name": "In-memory Database for Cloudflare Workers with Upstash",
+    "snippet": "In this chapter, we will go through the steps to add caching capability to an API that queries articles from MongoDB.",
+    "host_name": "betterprogramming.pub",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://medium.com/upstash/build-a-serverless-leaderboard-api-at-edge-using-cloudflare-workers-and-redis-da3780a610d",
+    "name": "Build a Serverless Leaderboard API At Edge using Cloudflare",
+    "snippet": "In this tutorial, we will use Cloudflare Workers and Upstash. You can create a free database from Upstash Console. Then create a Workers project ...",
+    "host_name": "medium.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://community.cloudflare.com/t/can-we-use-redis-with-worker-for-store-data-using-kv/196466",
+    "name": "Can we use redis with worker for store data using KV?",
+    "snippet": "No. Workers cannot create TCP connections. You should use Workers KV, which is also a key-value store but optimized for storing data at a global scale.",
+    "host_name": "community.cloudflare.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://blog.cloudflare.com/deploying-nextjs-apps-to-cloudflare-workers-with-the-opennext-adapter",
+    "name": "Deploy your Next.js app to Cloudflare Workers with the Cloudflare",
+    "snippet": "With the 1.0-beta release of the Cloudflare adapter for OpenNext, you can host your Next.js 14 and 15 applications on Cloudflare Workers.",
+    "host_name": "blog.cloudflare.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developers.cloudflare.com/workers/framework-guides/web-apps/nextjs",
+    "name": "Next.js · Cloudflare Workers docs",
+    "snippet": "You can deploy your Next.js app to Cloudflare Workers using the OpenNext adapter. Next.js supported features. Most Next.js features are ...",
+    "host_name": "developers.cloudflare.com",
+    "rank": 1,
+    "date": "Jun 6, 2026",
+    "favicon": ""
+  },
+  {
+    "url": "https://opennext.js.org/cloudflare",
+    "name": "Cloudflare - OpenNext",
+    "snippet": "The OpenNext Cloudflare adapter works by taking the Next.js build output and transforming it, so that it can run in Cloudflare Workers.",
+    "host_name": "opennext.js.org",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/nextjs/comments/1pex20t/how_are_you_guys_deploying_next16_on_cloudflare",
+    "name": "How are you guys deploying next16 on cloudflare : r/nextjs - Reddit",
+    "snippet": "I've been maintaining a Next.js 15 project deployed on Cloudflare using cloudflare/next-on-pages, and everything worked without issues.",
+    "host_name": "www.reddit.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/opennextjs/opennextjs-cloudflare",
+    "name": "Open Next.js adapter for Cloudflare · GitHub",
+    "snippet": "Deploy Next.js apps to Cloudflare. OpenNext for Cloudflare is an adapter that enables the deployment of Next.js applications to Cloudflare's developer platform.",
+    "host_name": "github.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=NcIWXm_T-eQ&vl=en",
+    "name": "Deploy NextJS apps to CF Workers With OpenNext - YouTube",
+    "snippet": "Deploying Next.js apps to Cloudflare Workers just got easier with OpenNext! In this video, we'll walk through how to use OpenNext to ...",
+    "host_name": "www.youtube.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://lewiskori.com/blog/deploying-a-next-js-monorepo-to-cloudflare-workers",
+    "name": "Deploying a Next.js Monorepo to Cloudflare Workers - Lewis Kori",
+    "snippet": "A real-world walkthrough of migrating a multi-app Next.js monorepo from Firebase Hosting to Cloudflare Workers. Why we did it, ...",
+    "host_name": "lewiskori.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://opennext.js.org",
+    "name": "OpenNext - OpenNext",
+    "snippet": "New adapters for AWS, Cloudflare, and Netlify are in active development, built on this official API. Read the full story →. As of March 2026, ...",
+    "host_name": "opennext.js.org",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://lalatenduswain.medium.com/deploying-modern-javascript-frameworks-to-cloudflare-workers-in-2026-a-complete-developer-guide-25d33e5b6d4c",
+    "name": "Deploying Modern JavaScript Frameworks to Cloudflare Workers in",
+    "snippet": "How do I deploy Next.js to Cloudflare Workers in 2026? What JavaScript frameworks does Cloudflare Pages support? How does the OpenNext ...",
+    "host_name": "lalatenduswain.medium.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://community.cloudflare.com/t/workers-for-platforms-how-to-correctly-deploy-a-nextjs-app/851920",
+    "name": "Workers for platforms - How to correctly deploy a NextJS app?",
+    "snippet": "Built the app with OpenNext Cloudflare. · Created a Workers for Platforms dispatch namespace. · Bound the namespace in the dispatcher's wrangler.",
+    "host_name": "community.cloudflare.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developers.cloudflare.com/workers/framework-guides/web-apps/nextjs",
+    "name": "Next.js · Cloudflare Workers docs",
+    "snippet": "Deploy a new Next.js project on Workers · Create a new project with the create-cloudflare CLI (C3). npm yarn pnpm · Develop locally. After ...",
+    "host_name": "developers.cloudflare.com",
+    "rank": 0,
+    "date": "Jun 6, 2026",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/cloudflare/next-on-pages",
+    "name": "GitHub - cloudflare/next-on-pages: CLI to build and develop Next.js",
+    "snippet": "The next-on-pages package is deprecated, if you want to deploy a Next.js application on Cloudflare, please use the OpenNext Cloudflare adapter ...",
+    "host_name": "github.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://medium.com/@Yasirgaji/migrating-next-js-16-from-vercel-to-cloudflare-overcoming-the-25mb-limit-aa88e8396b29",
+    "name": "Migrating Next.js 16 from Vercel to Cloudflare - Medium",
+    "snippet": "The most essential thing to understand about Cloudflare Pages is that it runs on the Edge Runtime, not a standard Node.js server. This means ...",
+    "host_name": "medium.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/nextjs/comments/1flfs3z/deploying_nextjs_to_cloudflare_pages",
+    "name": "Deploying Nextjs to Cloudflare Pages - Reddit",
+    "snippet": "I have successfully deployed Next.js Boilerplate on Cloudflare Pages. There are some tweaks but it works. The application has CRUD operations and ...",
+    "host_name": "www.reddit.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://davidgomes.com/the-experience-of-deploying-next-js-apps-on-cloudflare",
+    "name": "The Experience of Deploying Next.js Apps on Cloudflare",
+    "snippet": "Cloudflare publishes a package called next-on-pages. It builds Next.js apps in such a way that they can then be deployed on Cloudflare Pages.",
+    "host_name": "davidgomes.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://community.cloudflare.com/t/couldnt-deploy-next-js-app-on-cloudflare-pages/526251",
+    "name": "Couldn't deploy next js app on cloudflare pages",
+    "snippet": "Again as per the docs above: In your Pages project, go to Settings > Functions > Compatibility Flags. Configure a nodejs_compat flag for both ...",
+    "host_name": "community.cloudflare.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=I2uGckR6xzw",
+    "name": "Next.js on Cloudflare Pages: Blazing Fast Deployment Tutorial",
+    "snippet": "Deploy Next.js on Cloudflare Pages FOR FREE — Faster Than Ever! Learn how to host your Next.js app on Cloudflare's global Edge Network in ...",
+    "host_name": "www.youtube.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://blog.blazingcdn.com/en-us/nextjs-cloudflare-deployment-guide-pages-workers-images",
+    "name": "NextJS Cloudflare Deployment Guide: Pages, Workers and Images",
+    "snippet": "Next.js 15.2 (stable as of March 2026) ships with the App Router fully mature, Partial Prerendering (PPR) enabled by default in production mode, ...",
+    "host_name": "blog.blazingcdn.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/nextjs/comments/1c6ea7w/why_cloudflare_pages_may_not_be_the_best_for",
+    "name": "Why Cloudflare Pages May Not Be the Best For Next.js ‍♂️ - Reddit",
+    "snippet": "168K subscribers in the nextjs community. Next.js is a React framework for building full-stack web applications.",
+    "host_name": "www.reddit.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://blog.cloudflare.com/deploying-nextjs-apps-to-cloudflare-workers-with-the-opennext-adapter",
+    "name": "Deploy your Next.js app to Cloudflare Workers with the Cloudflare",
+    "snippet": "Using the Cloudflare adapter is now the preferred way to deploy Next applications to the Cloudflare platform, instead of Next on Pages.",
+    "host_name": "blog.cloudflare.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

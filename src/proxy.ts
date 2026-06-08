@@ -57,26 +57,8 @@ function isLoginRateLimited(key: string): boolean {
   return false;
 }
 
-// ── Clean up stale entries periodically ──────────────────────────────────────
-if (typeof setInterval !== "undefined") {
-  setInterval(() => {
-    const now = Date.now();
-    // General rate limit cleanup
-    for (const [key, entry] of rateLimitMap.entries()) {
-      if (now - entry.lastReset > RATE_LIMIT_WINDOW * 2) {
-        rateLimitMap.delete(key);
-      }
-    }
-    // Login rate limit cleanup
-    for (const [key, entry] of loginRateLimitMap.entries()) {
-      if (now - entry.lastReset > RATE_LIMIT_WINDOW * 2) {
-        loginRateLimitMap.delete(key);
-      }
-    }
-  }, 120_000);
-}
-
-export function middleware(request: NextRequest) {
+// ── Next.js 16 proxy.ts convention (replaces middleware.ts) ────────────────────
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // ── 1. HTTPS Enforcement (production only, only for direct access) ──────

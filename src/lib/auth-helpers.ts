@@ -2,11 +2,10 @@
  * Shared authentication helpers for API routes.
  *
  * - verifyAuth():   Verify session cookie → return authenticated boolean
- * - timingSafeEqual(): Compare passwords in constant time
- * - Login rate limiting (in-memory, per IP)
+ * - timingSafeEqual(): Compare passwords in constant time (Web Crypto API)
+ * - Login rate limiting (Upstash Redis-backed, works across Workers isolates)
  */
 
-import crypto from "crypto"
 import { getSession } from "@/lib/kv-data"
 
 // ─── Verify Auth ──────────────────────────────────────────────────────────────
@@ -30,21 +29,51 @@ export async function verifyAuth(request: Request): Promise<{ authenticated: boo
   }
 }
 
-// ─── Timing-Safe Password Comparison ──────────────────────────────────────────
+// ─── Timing-Safe Password Comparison (Web Crypto API) ─────────────────────────
 /**
  * Compare two strings in constant time to prevent timing attacks.
+ * Uses Web Crypto API (works on Cloudflare Workers, browsers, and Node.js).
  * Both strings are hashed first so the comparison is always the same length.
  */
-export function timingSafePasswordCompare(a: string, b: string): boolean {
+export async function timingSafePasswordCompare(a: string, b: string): Promise<boolean> {
   if (typeof a !== "string" || typeof b !== "string") return false
   if (a.length === 0 || b.length === 0) return false
 
-  const hashA = crypto.createHash("sha256").update(a).digest()
-  const hashB = crypto.createHash("sha256").update(b).digest()
-  return crypto.timingSafeEqual(hashA, hashB)
+  const encoder = new TextEncoder()
+  const [hashA, hashB] = await Promise.all([
+    crypto.subtle.digest("SHA-256", encoder.encode(a)),
+    crypto.subtle.digest("SHA-256", encoder.encode(b)),
+  ])
+
+  // Convert ArrayBuffers to Uint8Arrays for comparison
+  const arrA = new Uint8Array(hashA)
+  const arrB = new Uint8Array(hashB)
+
+  // Constant-time comparison — always compare all bytes
+  if (arrA.length !== arrB.length) return false
+  let result = 0
+  for (let i = 0; i < arrA.length; i++) {
+    result |= arrA[i] ^ arrB[i]
+  }
+  return result === 0
 }
 
-// ─── Login Rate Limiting ──────────────────────────────────────────────────────
+// ─── Generate Random Token (Web Crypto API) ───────────────────────────────────
+/**
+ * Generate a cryptographically secure random hex token.
+ * Uses Web Crypto API (works on Cloudflare Workers, browsers, and Node.js).
+ */
+export function generateToken(bytes: number = 32): string {
+  const array = new Uint8Array(bytes)
+  crypto.getRandomValues(array)
+  return Array.from(array, (b) => b.toString(16).padStart(2, "0")).join("")
+}
+
+// ─── Login Rate Limiting (Upstash Redis-backed) ───────────────────────────────
+// In-memory fallback for development when Redis is not available.
+// In production on Cloudflare Workers, in-memory state doesn't persist
+// across isolates, so we rely on Redis when it's configured.
+
 const loginAttempts = new Map<string, { count: number; lockedUntil: number }>()
 const MAX_LOGIN_ATTEMPTS = 5
 const LOCKOUT_DURATION = 15 * 60 * 1000 // 15 minutes

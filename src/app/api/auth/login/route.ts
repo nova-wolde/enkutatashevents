@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
-import crypto from 'crypto'
 import {
   timingSafePasswordCompare,
+  generateToken,
   checkLoginRateLimit,
   recordFailedLogin,
   resetLoginAttempts,
@@ -36,8 +36,8 @@ export async function POST(request: Request) {
       )
     }
 
-    // ── 3. Timing-safe password comparison ──────────────────────────────────
-    if (!OWNER_PASSWORD || !timingSafePasswordCompare(password, OWNER_PASSWORD)) {
+    // ── 3. Timing-safe password comparison (Web Crypto API) ─────────────────
+    if (!OWNER_PASSWORD || !(await timingSafePasswordCompare(password, OWNER_PASSWORD))) {
       recordFailedLogin(clientIp)
       return NextResponse.json(
         { success: false, error: 'Invalid password' },
@@ -45,8 +45,8 @@ export async function POST(request: Request) {
       )
     }
 
-    // ── 4. Generate session token ───────────────────────────────────────────
-    const token = crypto.randomBytes(32).toString('hex')
+    // ── 4. Generate session token (Web Crypto API) ──────────────────────────
+    const token = generateToken(32)
     const now = new Date()
     const expiresAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000) // 7 days
 

@@ -89,3 +89,4 @@ worklog.md
 .dev.vars*
 !.dev.vars.example
 .open-next/
+/dist/

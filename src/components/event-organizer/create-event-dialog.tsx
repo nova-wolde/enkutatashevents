@@ -26,6 +26,7 @@ import {
 import { cn } from '@/lib/utils'
 import { useEventStore, EventCategory, EventItem } from './store'
 import { useToast } from '@/hooks/use-toast'
+import { hardcodedVenueNames, hardcodedCategories } from './hardcoded-data'
 
 const gradients = [
   'from-emerald-400 to-teal-600',
@@ -35,12 +36,12 @@ const gradients = [
   'from-cyan-400 to-sky-600',
 ]
 
-const defaultCategories: EventCategory[] = ['Conference', 'Workshop', 'Social', 'Concert', 'Meetup']
+const defaultCategories: EventCategory[] = hardcodedCategories
 
 export function CreateEventDialog() {
   const { createDialogOpen, setCreateDialogOpen, addEvent, editingEvent, setEditingEvent, updateEvent, addActivity } = useEventStore()
   const { toast } = useToast()
-  const [venues, setVenues] = useState<string[]>([])
+  const [venues, setVenues] = useState<string[]>(hardcodedVenueNames)
   const [categories, setCategories] = useState<EventCategory[]>(defaultCategories)
   const [name, setName] = useState('')
   const [date, setDate] = useState<Date | undefined>(undefined)
@@ -52,23 +53,6 @@ export function CreateEventDialog() {
   const [ticketPrice, setTicketPrice] = useState('0')
 
   const isEditing = !!editingEvent
-
-  // Fetch venues and categories from API
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetch('/api/content')
-        const data = await res.json()
-        if (data.content) {
-          if (data.content.venues) setVenues(data.content.venues)
-          if (data.content.eventCategories) setCategories(data.content.eventCategories)
-        }
-      } catch {
-        // Use defaults
-      }
-    }
-    fetchData()
-  }, [])
 
   // Populate form when editing
   useEffect(() => {
@@ -86,7 +70,7 @@ export function CreateEventDialog() {
 
   const [submitting, setSubmitting] = useState(false)
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (!name || !date || !venue || !category) return
     setSubmitting(true)
 
@@ -103,28 +87,19 @@ export function CreateEventDialog() {
           maxAttendees: parseInt(maxAttendees) || 100,
           ticketPrice: parseFloat(ticketPrice) || 0,
         }
-        const res = await fetch('/api/events', {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(updates),
+        updateEvent(editingEvent.id, updates)
+        addActivity({
+          id: Date.now().toString(),
+          user: 'Owner',
+          avatar: 'OW',
+          action: 'updated details for',
+          target: name,
+          timestamp: new Date().toISOString(),
         })
-        const data = await res.json()
-        if (data.success) {
-          updateEvent(editingEvent.id, updates)
-          addActivity({
-            id: Date.now().toString(),
-            user: 'Owner',
-            avatar: 'OW',
-            action: 'updated details for',
-            target: name,
-            timestamp: new Date().toISOString(),
-          })
-          toast({ title: 'Event Updated', description: `${name} has been updated successfully.` })
-        } else {
-          toast({ title: 'Error', description: 'Failed to update event', variant: 'destructive' })
-        }
+        toast({ title: 'Event Updated', description: `${name} has been updated successfully.` })
       } else {
-        const newEvent = {
+        const newEvent: EventItem = {
+          id: Date.now().toString(),
           name,
           date: format(date, 'yyyy-MM-dd'),
           time,
@@ -137,29 +112,19 @@ export function CreateEventDialog() {
           ticketPrice: parseFloat(ticketPrice) || 0,
           imageGradient: gradients[Math.floor(Math.random() * gradients.length)],
         }
-        const res = await fetch('/api/events', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(newEvent),
+        addEvent(newEvent)
+        addActivity({
+          id: Date.now().toString(),
+          user: 'Owner',
+          avatar: 'OW',
+          action: 'created event',
+          target: name,
+          timestamp: new Date().toISOString(),
         })
-        const data = await res.json()
-        if (data.success) {
-          addEvent(data.event as EventItem)
-          addActivity({
-            id: Date.now().toString(),
-            user: 'Owner',
-            avatar: 'OW',
-            action: 'created event',
-            target: name,
-            timestamp: new Date().toISOString(),
-          })
-          toast({ title: 'Event Created', description: `${name} has been created successfully.` })
-        } else {
-          toast({ title: 'Error', description: 'Failed to create event', variant: 'destructive' })
-        }
+        toast({ title: 'Event Created', description: `${name} has been created successfully.` })
       }
     } catch {
-      toast({ title: 'Error', description: 'Network error. Please try again.', variant: 'destructive' })
+      toast({ title: 'Error', description: 'Failed to save event. Please try again.', variant: 'destructive' })
     } finally {
       setSubmitting(false)
     }

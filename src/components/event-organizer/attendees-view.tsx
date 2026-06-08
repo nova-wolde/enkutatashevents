@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useEffect, useCallback } from 'react'
+import { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import {
   Users,
@@ -10,7 +10,6 @@ import {
   XCircle,
   Clock,
   UserCheck,
-  Loader2,
 } from 'lucide-react'
 import {
   Table,
@@ -54,32 +53,11 @@ const statusColors: Record<string, string> = {
 }
 
 export function AttendeesView() {
-  const { events } = useEventStore()
+  const { events, bookings } = useEventStore()
   const { toast } = useToast()
   const [searchQuery, setSearchQuery] = useState('')
   const [filterEvent, setFilterEvent] = useState('all')
   const [checkedInIds, setCheckedInIds] = useState<Set<string>>(new Set())
-  const [bookings, setBookings] = useState<BookingItem[]>([])
-  const [loading, setLoading] = useState(true)
-
-  // Fetch bookings from API
-  const fetchBookings = useCallback(async () => {
-    try {
-      const response = await fetch('/api/bookings')
-      const data = await response.json()
-      if (data.bookings) {
-        setBookings(data.bookings)
-      }
-    } catch {
-      // ignore
-    } finally {
-      setLoading(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    fetchBookings()
-  }, [fetchBookings])
 
   // Convert bookings to attendees
   const attendees: Attendee[] = useMemo(() => {
@@ -161,15 +139,6 @@ export function AttendeesView() {
     const types = new Set(attendees.map((a) => a.eventType))
     return Array.from(types).filter(Boolean)
   }, [attendees])
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
-        <span className="ml-3 text-muted-foreground">Loading attendees...</span>
-      </div>
-    )
-  }
 
   return (
     <motion.div

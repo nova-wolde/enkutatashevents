@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import {
   Building2,
@@ -19,7 +19,6 @@ import {
   ChevronUp,
   ChevronDown,
   GripVertical,
-  RefreshCw,
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -45,6 +44,7 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { useToast } from '@/hooks/use-toast'
+import { hardcodedSiteContent } from './hardcoded-data'
 
 // ─── Icon mapping for services/stats/objectives ──────────────────────────────
 const iconOptions = [
@@ -83,51 +83,17 @@ interface SiteContent {
 
 export function ContentManager() {
   const { toast } = useToast()
-  const [content, setContent] = useState<SiteContent | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [content, setContent] = useState<SiteContent>(hardcodedSiteContent as SiteContent)
   const [saving, setSaving] = useState(false)
   const [activeTab, setActiveTab] = useState('business')
 
-  // Fetch content
-  const fetchContent = useCallback(async () => {
-    try {
-      const res = await fetch('/api/content')
-      const data = await res.json()
-      if (data.content) {
-        setContent(data.content)
-      }
-    } catch {
-      toast({ title: 'Error', description: 'Failed to load content', variant: 'destructive' })
-    } finally {
-      setLoading(false)
-    }
-  }, [toast])
-
-  useEffect(() => {
-    fetchContent()
-  }, [fetchContent])
-
-  // Save content
-  const saveContent = async (updated: SiteContent) => {
+  const saveContent = (updated: SiteContent) => {
     setSaving(true)
-    try {
-      const res = await fetch('/api/content', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: updated }),
-      })
-      const data = await res.json()
-      if (data.success) {
-        setContent(updated)
-        toast({ title: 'Saved!', description: 'Content updated successfully.' })
-      } else {
-        toast({ title: 'Error', description: 'Failed to save content', variant: 'destructive' })
-      }
-    } catch {
-      toast({ title: 'Error', description: 'Failed to save content', variant: 'destructive' })
-    } finally {
+    setContent(updated)
+    setTimeout(() => {
       setSaving(false)
-    }
+      toast({ title: 'Saved!', description: 'Content updated successfully.' })
+    }, 300)
   }
 
   // Update a field
@@ -166,26 +132,6 @@ export function ContentManager() {
     if (toIndex < 0 || toIndex >= arr.length) return
     ;[arr[fromIndex], arr[toIndex]] = [arr[toIndex], arr[fromIndex]]
     setContent({ ...content, [arrayKey]: arr })
-  }
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
-        <span className="ml-3 text-muted-foreground">Loading content...</span>
-      </div>
-    )
-  }
-
-  if (!content) {
-    return (
-      <div className="text-center py-20">
-        <p className="text-muted-foreground">No content found. Please seed the database first.</p>
-        <Button onClick={fetchContent} className="mt-4 bg-emerald-600 hover:bg-emerald-700 text-white">
-          <RefreshCw className="mr-2 h-4 w-4" /> Retry
-        </Button>
-      </div>
-    )
   }
 
   return (

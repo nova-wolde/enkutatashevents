@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import {
   CalendarCheck,
@@ -58,93 +58,47 @@ const statusConfig: Record<string, { label: string; color: string; bgColor: stri
 export function BookingsView() {
   const { toast } = useToast()
   const { bookings, setBookings, setPendingBookingsCount } = useEventStore()
-  const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all')
   const [selectedBooking, setSelectedBooking] = useState<BookingItem | null>(null)
   const [detailOpen, setDetailOpen] = useState(false)
 
-  const fetchBookings = useCallback(async () => {
-    try {
-      const response = await fetch('/api/bookings')
-      const data = await response.json()
-      if (data.bookings) {
-        setBookings(data.bookings)
-        const pending = data.bookings.filter((b: BookingItem) => b.status === 'pending').length
-        setPendingBookingsCount(pending)
-      }
-    } catch (error) {
-      console.error('Error fetching bookings:', error)
-    } finally {
-      setLoading(false)
-    }
-  }, [setBookings, setPendingBookingsCount])
-
-  useEffect(() => {
-    fetchBookings()
-  }, [fetchBookings])
-
-  const updateStatus = async (booking: BookingItem, newStatus: string) => {
-    try {
-      const response = await fetch('/api/bookings', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: booking.id, status: newStatus }),
-      })
-
-      if (response.ok) {
-        await fetchBookings()
-        toast({
-          title: 'Status Updated',
-          description: `Booking for ${booking.name} marked as ${newStatus}`,
-        })
-        if (selectedBooking?.id === booking.id) {
-          setSelectedBooking({ ...booking, status: newStatus as BookingItem['status'] })
-        }
-      }
-    } catch {
-      toast({ title: 'Error', description: 'Failed to update status', variant: 'destructive' })
+  const updateStatus = (booking: BookingItem, newStatus: string) => {
+    const updated = bookings.map((b) =>
+      b.id === booking.id ? { ...b, status: newStatus as BookingItem['status'] } : b
+    )
+    setBookings(updated)
+    const pending = updated.filter((b) => b.status === 'pending').length
+    setPendingBookingsCount(pending)
+    toast({
+      title: 'Status Updated',
+      description: `Booking for ${booking.name} marked as ${newStatus}`,
+    })
+    if (selectedBooking?.id === booking.id) {
+      setSelectedBooking({ ...booking, status: newStatus as BookingItem['status'] })
     }
   }
 
-  const deleteBooking = async (booking: BookingItem) => {
-    try {
-      const response = await fetch('/api/bookings', {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: booking.id }),
-      })
-
-      if (response.ok) {
-        await fetchBookings()
-        if (selectedBooking?.id === booking.id) {
-          setDetailOpen(false)
-          setSelectedBooking(null)
-        }
-        toast({
-          title: 'Booking Deleted',
-          description: `Removed booking for ${booking.name}`,
-        })
-      }
-    } catch {
-      toast({ title: 'Error', description: 'Failed to delete booking', variant: 'destructive' })
+  const deleteBooking = (booking: BookingItem) => {
+    const updated = bookings.filter((b) => b.id !== booking.id)
+    setBookings(updated)
+    const pending = updated.filter((b) => b.status === 'pending').length
+    setPendingBookingsCount(pending)
+    if (selectedBooking?.id === booking.id) {
+      setDetailOpen(false)
+      setSelectedBooking(null)
     }
+    toast({
+      title: 'Booking Deleted',
+      description: `Removed booking for ${booking.name}`,
+    })
   }
 
-  const toggleRead = async (booking: BookingItem) => {
-    try {
-      const response = await fetch('/api/bookings', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: booking.id, read: !booking.read }),
-      })
-
-      if (response.ok) {
-        await fetchBookings()
-      }
-    } catch {
-      // silent fail
-    }
+  const toggleRead = (booking: BookingItem) => {
+    const updated = bookings.map((b) =>
+      b.id === booking.id ? { ...b, read: !b.read } : b
+    )
+    setBookings(updated)
   }
 
   const openDetail = (booking: BookingItem) => {
@@ -190,30 +144,6 @@ export function BookingsView() {
     } catch {
       return dateStr
     }
-  }
-
-  if (loading) {
-    return (
-      <div className="space-y-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-          {[1, 2, 3, 4].map((i) => (
-            <Card key={i} className="rounded-xl animate-pulse">
-              <CardContent className="p-6">
-                <div className="h-4 bg-muted rounded w-24 mb-2" />
-                <div className="h-8 bg-muted rounded w-16" />
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-        {[1, 2, 3].map((i) => (
-          <Card key={i} className="rounded-xl animate-pulse">
-            <CardContent className="p-4">
-              <div className="h-16 bg-muted rounded" />
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    )
   }
 
   return (
@@ -296,9 +226,7 @@ export function BookingsView() {
               <SelectItem value="cancelled">Cancelled</SelectItem>
             </SelectContent>
           </Select>
-          <Button variant="outline" size="icon" onClick={fetchBookings} title="Refresh">
-            <RefreshCw className="h-4 w-4" />
-          </Button>
+
         </div>
       </div>
 

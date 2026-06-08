@@ -31,25 +31,9 @@ const viewTitles: Record<ViewTab, { title: string; subtitle: string; icon: React
 }
 
 function AppView() {
-  const { currentView, setEvents, setActivities } = useEventStore()
+  const { currentView } = useEventStore()
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [eventsRes, activitiesRes] = await Promise.all([
-          fetch('/api/events'),
-          fetch('/api/activities'),
-        ])
-        const eventsData = await eventsRes.json()
-        const activitiesData = await activitiesRes.json()
-        if (eventsData.events) setEvents(eventsData.events)
-        if (activitiesData.activities) setActivities(activitiesData.activities)
-      } catch {
-        // ignore
-      }
-    }
-    fetchData()
-  }, [setEvents, setActivities])
+  // Data is already initialized from hardcoded data in the store
 
   const info = viewTitles[currentView]
 

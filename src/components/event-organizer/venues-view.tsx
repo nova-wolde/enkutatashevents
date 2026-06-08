@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import {
   MapPin,
@@ -14,7 +14,6 @@ import {
   Building2,
   X,
   Trash2,
-  Loader2,
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -30,14 +29,7 @@ import {
 } from '@/components/ui/dialog'
 import { useEventStore } from './store'
 import { useToast } from '@/hooks/use-toast'
-
-interface VenueData {
-  name: string
-  address: string
-  capacity: number
-  amenities: string[]
-  status: 'Available' | 'Booked'
-}
+import { hardcodedVenues, VenueData } from './hardcoded-data'
 
 const amenityOptions = ['WiFi', 'Parking', 'AV Equipment', 'Catering', 'Green Room', 'Stage']
 const amenityIcons: Record<string, React.ElementType> = {
@@ -49,153 +41,44 @@ const amenityIcons: Record<string, React.ElementType> = {
   Stage: Building2,
 }
 
-// Default venue details (used as fallback)
-const defaultVenueDetails: Record<string, { address: string; capacity: number; amenities: string[] }> = {
-  'Sheraton Addis Grand Ballroom': { address: 'Tito St, Addis Ababa, Ethiopia', capacity: 800, amenities: ['WiFi', 'Parking', 'AV Equipment', 'Catering', 'Stage'] },
-  'Hyatt Regency Addis Ababa': { address: 'Ras Desta Damtew Ave, Addis Ababa, Ethiopia', capacity: 500, amenities: ['WiFi', 'Parking', 'AV Equipment', 'Catering', 'Green Room'] },
-  'Millennium Hall': { address: 'Addis Ababa, Ethiopia', capacity: 5000, amenities: ['WiFi', 'Parking', 'AV Equipment', 'Stage'] },
-  'African Jazz Village': { address: 'Gabon St, Addis Ababa, Ethiopia', capacity: 250, amenities: ['WiFi', 'AV Equipment', 'Catering'] },
-  'Meskel Square': { address: 'Meskel Square, Addis Ababa, Ethiopia', capacity: 10000, amenities: ['Parking', 'Stage'] },
-  'Unity Park': { address: 'National Palace, Addis Ababa, Ethiopia', capacity: 2000, amenities: ['WiFi', 'Parking', 'Catering'] },
-  'Addis Ababa University Main Hall': { address: '6 Kilo, Addis Ababa, Ethiopia', capacity: 500, amenities: ['WiFi', 'AV Equipment', 'Parking'] },
-  'ICT Park': { address: 'Lideta, Addis Ababa, Ethiopia', capacity: 300, amenities: ['WiFi', 'AV Equipment', 'Parking'] },
-  'Lemi Kuraa Sub-city Hall': { address: 'Lemi Kuraa, Addis Ababa, Ethiopia', capacity: 300, amenities: ['WiFi', 'Parking', 'AV Equipment'] },
-  'National Palace Grounds': { address: 'National Palace, Addis Ababa, Ethiopia', capacity: 5000, amenities: ['Parking', 'Security', 'Stage'] },
-  'Bole Millennium Hall': { address: 'Bole, Addis Ababa, Ethiopia', capacity: 3000, amenities: ['WiFi', 'Parking', 'AV Equipment', 'Catering', 'Stage'] },
-  'Ghion Hotel': { address: 'Ras Desta Damtew, Addis Ababa, Ethiopia', capacity: 600, amenities: ['WiFi', 'Parking', 'Catering', 'AV Equipment'] },
-  'Ras Hotel': { address: 'Churchill Rd, Addis Ababa, Ethiopia', capacity: 400, amenities: ['WiFi', 'Parking', 'Catering'] },
-  'Hilton Addis Ababa': { address: 'Menelik II Ave, Addis Ababa, Ethiopia', capacity: 700, amenities: ['WiFi', 'Parking', 'AV Equipment', 'Catering', 'Green Room'] },
-  'Capital Hotel & Spa': { address: 'Rwanda St, Addis Ababa, Ethiopia', capacity: 350, amenities: ['WiFi', 'Parking', 'Catering', 'AV Equipment'] },
-}
-
 export function VenuesView() {
   const { events } = useEventStore()
   const { toast } = useToast()
-  const [venueList, setVenueList] = useState<VenueData[]>([])
+  const [venueList, setVenueList] = useState<VenueData[]>(hardcodedVenues)
   const [addDialogOpen, setAddDialogOpen] = useState(false)
   const [newName, setNewName] = useState('')
   const [newAddress, setNewAddress] = useState('')
   const [newCapacity, setNewCapacity] = useState('')
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
-
-  // Fetch venues from API
-  const fetchVenues = useCallback(async () => {
-    try {
-      const res = await fetch('/api/content')
-      const data = await res.json()
-      if (data.content?.venues) {
-        const venueData: VenueData[] = data.content.venues.map((v: string, i: number) => {
-          const details = defaultVenueDetails[v] || {
-            address: `${100 + i} Main St, Addis Ababa, Ethiopia`,
-            capacity: 150,
-            amenities: ['WiFi', 'Parking'],
-          }
-          return {
-            name: v,
-            address: details.address,
-            capacity: details.capacity,
-            amenities: details.amenities,
-            status: i % 4 === 0 ? 'Booked' as const : 'Available' as const,
-          }
-        })
-        setVenueList(venueData)
-      }
-    } catch {
-      // Use empty list
-    } finally {
-      setLoading(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    fetchVenues()
-  }, [fetchVenues])
 
   const getUpcomingCount = (venueName: string) =>
     events.filter((e) => e.venue === venueName && (e.status === 'upcoming' || e.status === 'ongoing')).length
 
-  const handleAddVenue = async () => {
+  const handleAddVenue = () => {
     if (!newName) return
-    setSaving(true)
-    try {
-      // Fetch current content
-      const res = await fetch('/api/content')
-      const data = await res.json()
-      if (data.content) {
-        const currentVenues: string[] = data.content.venues || []
-        if (currentVenues.includes(newName)) {
-          toast({ title: 'Duplicate', description: 'This venue already exists.', variant: 'destructive' })
-          setSaving(false)
-          return
-        }
-        const updatedVenues = [...currentVenues, newName]
-        // Save to API
-        const saveRes = await fetch('/api/content', {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ content: { ...data.content, venues: updatedVenues } }),
-        })
-        const saveData = await saveRes.json()
-        if (saveData.success) {
-          // Add to local state
-          setVenueList((prev) => [
-            ...prev,
-            {
-              name: newName,
-              address: newAddress || 'Addis Ababa, Ethiopia',
-              capacity: parseInt(newCapacity) || 100,
-              amenities: ['WiFi', 'Parking'],
-              status: 'Available' as const,
-            },
-          ])
-          toast({ title: 'Venue Added', description: `${newName} has been added successfully.` })
-        } else {
-          toast({ title: 'Error', description: 'Failed to add venue', variant: 'destructive' })
-        }
-      }
-    } catch {
-      toast({ title: 'Error', description: 'Network error', variant: 'destructive' })
-    } finally {
-      setSaving(false)
+    if (venueList.some((v) => v.name === newName)) {
+      toast({ title: 'Duplicate', description: 'This venue already exists.', variant: 'destructive' })
+      return
     }
+    setVenueList((prev) => [
+      ...prev,
+      {
+        name: newName,
+        address: newAddress || 'Addis Ababa, Ethiopia',
+        capacity: parseInt(newCapacity) || 100,
+        amenities: ['WiFi', 'Parking'],
+        status: 'Available' as const,
+      },
+    ])
+    toast({ title: 'Venue Added', description: `${newName} has been added successfully.` })
     setNewName('')
     setNewAddress('')
     setNewCapacity('')
     setAddDialogOpen(false)
   }
 
-  const handleDeleteVenue = async (venueName: string) => {
-    try {
-      const res = await fetch('/api/content')
-      const data = await res.json()
-      if (data.content) {
-        const updatedVenues = (data.content.venues as string[]).filter((v) => v !== venueName)
-        const saveRes = await fetch('/api/content', {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ content: { ...data.content, venues: updatedVenues } }),
-        })
-        const saveData = await saveRes.json()
-        if (saveData.success) {
-          setVenueList((prev) => prev.filter((v) => v.name !== venueName))
-          toast({ title: 'Venue Removed', description: `${venueName} has been removed.` })
-        } else {
-          toast({ title: 'Error', description: 'Failed to remove venue', variant: 'destructive' })
-        }
-      }
-    } catch {
-      toast({ title: 'Error', description: 'Network error', variant: 'destructive' })
-    }
-  }
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
-        <span className="ml-3 text-muted-foreground">Loading venues...</span>
-      </div>
-    )
+  const handleDeleteVenue = (venueName: string) => {
+    setVenueList((prev) => prev.filter((v) => v.name !== venueName))
+    toast({ title: 'Venue Removed', description: `${venueName} has been removed.` })
   }
 
   return (
@@ -339,11 +222,11 @@ export function VenuesView() {
               </Button>
               <Button
                 onClick={handleAddVenue}
-                disabled={!newName || saving}
+                disabled={!newName}
                 className="bg-emerald-600 hover:bg-emerald-700 text-white"
               >
-                {saving ? <Loader2 className="h-4 w-4 mr-1.5 animate-spin" /> : <Plus className="h-4 w-4 mr-1.5" />}
-                {saving ? 'Adding...' : 'Add Venue'}
+                <Plus className="h-4 w-4 mr-1.5" />
+                Add Venue
               </Button>
             </div>
           </div>

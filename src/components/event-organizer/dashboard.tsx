@@ -1,12 +1,11 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Mail, CalendarCheck, ArrowRight } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { useEventStore, ContactSubmission, BookingItem } from './store'
+import { useEventStore } from './store'
 import { StatsCards } from './stats-cards'
 import { EventCards } from './event-cards'
 import { CalendarWidget } from './calendar-widget'
@@ -14,30 +13,9 @@ import { ActivityFeed } from './activity-feed'
 import { QuickActions } from './quick-actions'
 
 function RecentMessagesCard() {
-  const { messages, setCurrentView, setMessages, setUnreadCount } = useEventStore()
-  const [loading, setLoading] = useState(messages.length === 0)
+  const { messages, setCurrentView } = useEventStore()
 
-  useEffect(() => {
-    if (messages.length > 0) {
-      setLoading(false)
-      return
-    }
-    const fetchMessages = async () => {
-      try {
-        const response = await fetch('/api/contact')
-        const data = await response.json()
-        if (data.submissions) {
-          setMessages(data.submissions)
-          setUnreadCount(data.submissions.filter((m: ContactSubmission) => !m.read).length)
-        }
-      } catch {
-        // ignore
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchMessages()
-  }, [messages.length, setMessages, setUnreadCount])
+  // Data is already initialized from hardcoded data in the store
 
   const recentMessages = messages.slice(0, 3)
   const unreadCount = messages.filter((m) => !m.read).length
@@ -66,13 +44,7 @@ function RecentMessagesCard() {
         </div>
       </CardHeader>
       <CardContent className="space-y-2">
-        {loading ? (
-          <div className="space-y-2">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="h-12 bg-muted/50 rounded-lg animate-pulse" />
-            ))}
-          </div>
-        ) : recentMessages.length === 0 ? (
+        {recentMessages.length === 0 ? (
           <p className="text-xs text-muted-foreground text-center py-4">No messages yet</p>
         ) : (
           recentMessages.map((msg) => (
@@ -102,30 +74,9 @@ function RecentMessagesCard() {
 }
 
 function RecentBookingsCard() {
-  const { bookings, setCurrentView, setBookings, setPendingBookingsCount } = useEventStore()
-  const [loading, setLoading] = useState(bookings.length === 0)
+  const { bookings, setCurrentView } = useEventStore()
 
-  useEffect(() => {
-    if (bookings.length > 0) {
-      setLoading(false)
-      return
-    }
-    const fetchBookings = async () => {
-      try {
-        const response = await fetch('/api/bookings')
-        const data = await response.json()
-        if (data.bookings) {
-          setBookings(data.bookings)
-          setPendingBookingsCount(data.bookings.filter((b: BookingItem) => b.status === 'pending').length)
-        }
-      } catch {
-        // ignore
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchBookings()
-  }, [bookings.length, setBookings, setPendingBookingsCount])
+  // Data is already initialized from hardcoded data in the store
 
   const recentBookings = bookings.slice(0, 3)
   const pendingCount = bookings.filter((b) => b.status === 'pending').length
@@ -161,13 +112,7 @@ function RecentBookingsCard() {
         </div>
       </CardHeader>
       <CardContent className="space-y-2">
-        {loading ? (
-          <div className="space-y-2">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="h-12 bg-muted/50 rounded-lg animate-pulse" />
-            ))}
-          </div>
-        ) : recentBookings.length === 0 ? (
+        {recentBookings.length === 0 ? (
           <p className="text-xs text-muted-foreground text-center py-4">No bookings yet</p>
         ) : (
           recentBookings.map((bk) => (
@@ -195,27 +140,9 @@ function RecentBookingsCard() {
 }
 
 export function Dashboard() {
-  const { events, setEvents, setActivities } = useEventStore()
+  const { events } = useEventStore()
 
-  // Fetch events and activities from API on mount
-  useEffect(() => {
-    const fetchData = async () => {
-      if (events.length > 0) return // Already loaded
-      try {
-        const [eventsRes, activitiesRes] = await Promise.all([
-          fetch('/api/events'),
-          fetch('/api/activities'),
-        ])
-        const eventsData = await eventsRes.json()
-        const activitiesData = await activitiesRes.json()
-        if (eventsData.events) setEvents(eventsData.events)
-        if (activitiesData.activities) setActivities(activitiesData.activities)
-      } catch {
-        // ignore
-      }
-    }
-    fetchData()
-  }, [events.length, setEvents, setActivities])
+  // Data is already initialized from hardcoded data in the store
 
   return (
     <div className="space-y-6">

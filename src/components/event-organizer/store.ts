@@ -1,6 +1,7 @@
 'use client'
 
 import { create } from 'zustand'
+import { hardcodedEvents, hardcodedActivities, hardcodedMessages, hardcodedBookings } from './hardcoded-data'
 
 export type EventStatus = 'upcoming' | 'ongoing' | 'completed' | 'cancelled'
 export type EventCategory = 'Conference' | 'Workshop' | 'Social' | 'Concert' | 'Meetup' | 'Wedding' | 'Corporate' | 'Cultural' | 'Symposium' | 'Government'
@@ -100,8 +101,8 @@ interface EventStore {
 }
 
 export const useEventStore = create<EventStore>((set) => ({
-  events: [],
-  activities: [],
+  events: hardcodedEvents,
+  activities: hardcodedActivities,
   currentView: 'dashboard',
   appView: 'landing',
   sidebarCollapsed: false,
@@ -111,10 +112,10 @@ export const useEventStore = create<EventStore>((set) => ({
   filterStatus: 'all',
   selectedEvent: null,
   editingEvent: null,
-  messages: [],
-  bookings: [],
-  unreadCount: 0,
-  pendingBookingsCount: 0,
+  messages: hardcodedMessages,
+  bookings: hardcodedBookings,
+  unreadCount: hardcodedMessages.filter(m => !m.read).length,
+  pendingBookingsCount: hardcodedBookings.filter(b => b.status === 'pending').length,
   bookingDialogOpen: false,
 
   setEvents: (events) => set({ events }),

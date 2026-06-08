@@ -1,6 +1,5 @@
 'use client'
 
-import { useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Calendar, Users, MapPin, BarChart3, Settings, CalendarDays, Mail, CalendarCheck, FileEdit } from 'lucide-react'
 import { useEventStore, ViewTab } from '@/components/event-organizer/store'
@@ -32,26 +31,7 @@ const viewTitles: Record<ViewTab, { title: string; subtitle: string; icon: React
 }
 
 function AppView() {
-  const { currentView, setEvents, setActivities } = useEventStore()
-
-  // Fetch events and activities from API
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [eventsRes, activitiesRes] = await Promise.all([
-          fetch('/api/events'),
-          fetch('/api/activities'),
-        ])
-        const eventsData = await eventsRes.json()
-        const activitiesData = await activitiesRes.json()
-        if (eventsData.events) setEvents(eventsData.events)
-        if (activitiesData.activities) setActivities(activitiesData.activities)
-      } catch {
-        // ignore - data will be empty
-      }
-    }
-    fetchData()
-  }, [setEvents, setActivities])
+  const { currentView } = useEventStore()
 
   const info = viewTitles[currentView]
 
@@ -133,22 +113,7 @@ function AppView() {
 }
 
 export default function Home() {
-  const { appView, setAppView } = useEventStore()
-
-  // Check auth on mount
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const response = await fetch('/api/auth/session')
-        const data = await response.json()
-        // If already authenticated and trying to access app, allow it
-        // But we don't auto-redirect - user explicitly navigates
-      } catch {
-        // ignore
-      }
-    }
-    checkAuth()
-  }, [])
+  const { appView } = useEventStore()
 
   return (
     <AnimatePresence mode="wait">

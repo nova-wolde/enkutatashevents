@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Mail,
@@ -13,12 +13,9 @@ import {
   MailX,
   Phone,
   CalendarDays,
-  RefreshCw,
-  ChevronDown,
-  ChevronUp,
   MessageSquare,
 } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -50,77 +47,37 @@ type FilterType = 'all' | 'unread' | 'read'
 export function MessagesView() {
   const { toast } = useToast()
   const { messages, setMessages, setUnreadCount } = useEventStore()
-  const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [filter, setFilter] = useState<FilterType>('all')
   const [selectedMessage, setSelectedMessage] = useState<ContactSubmission | null>(null)
   const [detailOpen, setDetailOpen] = useState(false)
-  const [expandedRow, setExpandedRow] = useState<string | null>(null)
 
-  const fetchMessages = useCallback(async () => {
-    try {
-      const response = await fetch('/api/contact')
-      const data = await response.json()
-      if (data.submissions) {
-        setMessages(data.submissions)
-        const unread = data.submissions.filter((m: ContactSubmission) => !m.read).length
-        setUnreadCount(unread)
-      }
-    } catch (error) {
-      console.error('Error fetching messages:', error)
-    } finally {
-      setLoading(false)
-    }
-  }, [setMessages, setUnreadCount])
-
-  useEffect(() => {
-    fetchMessages()
-    const interval = setInterval(fetchMessages, 30000)
-    return () => clearInterval(interval)
-  }, [fetchMessages])
-
-  const toggleRead = async (message: ContactSubmission) => {
-    try {
-      const response = await fetch('/api/contact', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: message.id, read: !message.read }),
-      })
-
-      if (response.ok) {
-        await fetchMessages()
-        toast({
-          title: message.read ? 'Marked as unread' : 'Marked as read',
-          description: `Message from ${message.name}`,
-        })
-      }
-    } catch {
-      toast({ title: 'Error', description: 'Failed to update message', variant: 'destructive' })
-    }
+  const toggleRead = (message: ContactSubmission) => {
+    const updated = messages.map((m) =>
+      m.id === message.id ? { ...m, read: !m.read } : m
+    )
+    setMessages(updated)
+    const unread = updated.filter((m) => !m.read).length
+    setUnreadCount(unread)
+    toast({
+      title: message.read ? 'Marked as unread' : 'Marked as read',
+      description: `Message from ${message.name}`,
+    })
   }
 
-  const deleteMessage = async (message: ContactSubmission) => {
-    try {
-      const response = await fetch('/api/contact', {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: message.id }),
-      })
-
-      if (response.ok) {
-        await fetchMessages()
-        if (selectedMessage?.id === message.id) {
-          setDetailOpen(false)
-          setSelectedMessage(null)
-        }
-        toast({
-          title: 'Message deleted',
-          description: `Removed message from ${message.name}`,
-        })
-      }
-    } catch {
-      toast({ title: 'Error', description: 'Failed to delete message', variant: 'destructive' })
+  const deleteMessage = (message: ContactSubmission) => {
+    const updated = messages.filter((m) => m.id !== message.id)
+    setMessages(updated)
+    const unread = updated.filter((m) => !m.read).length
+    setUnreadCount(unread)
+    if (selectedMessage?.id === message.id) {
+      setDetailOpen(false)
+      setSelectedMessage(null)
     }
+    toast({
+      title: 'Message deleted',
+      description: `Removed message from ${message.name}`,
+    })
   }
 
   const openDetail = (message: ContactSubmission) => {
@@ -161,36 +118,6 @@ export function MessagesView() {
     } catch {
       return dateStr
     }
-  }
-
-  if (loading) {
-    return (
-      <div className="space-y-4">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {[1, 2, 3].map((i) => (
-            <Card key={i} className="rounded-xl animate-pulse">
-              <CardContent className="p-6">
-                <div className="h-4 bg-muted rounded w-24 mb-2" />
-                <div className="h-8 bg-muted rounded w-16" />
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-        {[1, 2, 3, 4].map((i) => (
-          <Card key={i} className="rounded-xl animate-pulse">
-            <CardContent className="p-4">
-              <div className="flex gap-4">
-                <div className="h-10 w-10 bg-muted rounded-full" />
-                <div className="flex-1 space-y-2">
-                  <div className="h-4 bg-muted rounded w-48" />
-                  <div className="h-3 bg-muted rounded w-32" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    )
   }
 
   return (
@@ -260,9 +187,7 @@ export function MessagesView() {
               <SelectItem value="read">Read</SelectItem>
             </SelectContent>
           </Select>
-          <Button variant="outline" size="icon" onClick={fetchMessages} title="Refresh">
-            <RefreshCw className="h-4 w-4" />
-          </Button>
+
         </div>
       </div>
 

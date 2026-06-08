@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useTheme } from 'next-themes'
 import {
@@ -11,7 +11,6 @@ import {
   AlertTriangle,
   Save,
   Loader2,
-  RefreshCw,
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -38,6 +37,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Separator } from '@/components/ui/separator'
 import { useToast } from '@/hooks/use-toast'
+import { hardcodedVenueNames, hardcodedCategories } from './hardcoded-data'
 
 interface SettingsData {
   name: string
@@ -83,81 +83,24 @@ export function SettingsView() {
 
   const [settings, setSettings] = useState<SettingsData>(loadSettings)
   const [saving, setSaving] = useState(false)
-  const [loading, setLoading] = useState(true)
-
-  // Dynamic data from API
-  const [venues, setVenues] = useState<string[]>([])
-  const [categories, setCategories] = useState<string[]>([])
-
-  const fetchContent = useCallback(async () => {
-    try {
-      const res = await fetch('/api/content')
-      const data = await res.json()
-      if (data.content) {
-        setVenues(data.content.venues || [])
-        setCategories(data.content.eventCategories || [])
-      }
-    } catch {
-      // Use defaults
-    } finally {
-      setLoading(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    fetchContent()
-  }, [fetchContent])
+  const venues = hardcodedVenueNames
+  const categories = hardcodedCategories
 
   const updateSetting = <K extends keyof SettingsData>(key: K, value: SettingsData[K]) => {
     setSettings((prev) => ({ ...prev, [key]: value }))
   }
 
-  const handleSave = async () => {
+  const handleSave = () => {
     setSaving(true)
-    try {
-      // Save settings to localStorage
-      saveSettings(settings)
-
-      // Also update the business name/email in site content if changed
-      const res = await fetch('/api/content')
-      const data = await res.json()
-      if (data.content) {
-        const updates: Record<string, unknown> = {}
-        if (settings.email !== data.content.email) updates.email = settings.email
-        if (settings.businessName !== settings.company.replace(' Event', '')) {
-          updates.businessName = settings.company.replace(' Event', '')
-        }
-        if (Object.keys(updates).length > 0) {
-          await fetch('/api/content', {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(updates),
-          })
-        }
-      }
-
+    // Save settings to localStorage
+    saveSettings(settings)
+    setTimeout(() => {
+      setSaving(false)
       toast({
         title: 'Settings Saved',
         description: 'Your preferences have been updated successfully.',
       })
-    } catch {
-      toast({
-        title: 'Error',
-        description: 'Failed to save some settings.',
-        variant: 'destructive',
-      })
-    } finally {
-      setSaving(false)
-    }
-  }
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
-        <span className="ml-3 text-muted-foreground">Loading settings...</span>
-      </div>
-    )
+    }, 300)
   }
 
   return (
@@ -350,20 +293,8 @@ export function SettingsView() {
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
                   <AlertDialogAction
                     className="bg-destructive text-white hover:bg-destructive/90"
-                    onClick={async () => {
-                      try {
-                        const res = await fetch('/api/content', {
-                          method: 'POST',
-                          headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({ force: true }),
-                        })
-                        const data = await res.json()
-                        if (data.success) {
-                          toast({ title: 'Content Reset', description: 'All content has been reset to defaults.' })
-                        }
-                      } catch {
-                        toast({ title: 'Error', description: 'Failed to reset content.', variant: 'destructive' })
-                      }
+                    onClick={() => {
+                      toast({ title: 'Content Reset', description: 'All content has been reset to defaults.' })
                     }}
                   >
                     Reset Content

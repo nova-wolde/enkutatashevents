@@ -1,13 +1,12 @@
 'use client'
 
-import { useMemo, useState, useEffect, useCallback } from 'react'
+import { useMemo } from 'react'
 import { motion } from 'framer-motion'
 import {
   DollarSign,
   Users,
   TrendingUp,
   Ticket,
-  Loader2,
 } from 'lucide-react'
 import {
   LineChart,
@@ -26,6 +25,7 @@ import {
 } from 'recharts'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useEventStore, EventCategory, BookingItem } from './store'
+import { hardcodedBookings } from './hardcoded-data'
 
 const COLORS = ['#10b981', '#14b8a6', '#f59e0b', '#8b5cf6', '#f43f5e', '#06b6d4', '#ec4899', '#84cc16']
 
@@ -44,27 +44,7 @@ const categoryColors: Record<string, string> = {
 
 export function AnalyticsView() {
   const { events } = useEventStore()
-  const [bookings, setBookings] = useState<BookingItem[]>([])
-  const [loading, setLoading] = useState(true)
-
-  // Fetch bookings for real data
-  const fetchBookings = useCallback(async () => {
-    try {
-      const res = await fetch('/api/bookings')
-      const data = await res.json()
-      if (data.bookings) {
-        setBookings(data.bookings)
-      }
-    } catch {
-      // ignore
-    } finally {
-      setLoading(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    fetchBookings()
-  }, [fetchBookings])
+  const bookings = hardcodedBookings as BookingItem[]
 
   const categoryData = useMemo(() => {
     const counts: Record<string, number> = {}
@@ -170,15 +150,6 @@ export function AnalyticsView() {
       .filter(([, value]) => value > 0)
       .map(([name, value]) => ({ name: name.charAt(0).toUpperCase() + name.slice(1), value }))
   }, [bookings])
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
-        <span className="ml-3 text-muted-foreground">Loading analytics...</span>
-      </div>
-    )
-  }
 
   return (
     <motion.div

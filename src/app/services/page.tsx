@@ -257,9 +257,9 @@ export default function ServicesPage() {
                 Book Your Event <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </a>
-            <a href="tel:+251915895757">
+            <a href="tel:+251910977371">
               <Button size="lg" variant="outline">
-                <Phone className="mr-2 h-5 w-5" /> Call +251 915 895 757
+                <Phone className="mr-2 h-5 w-5" /> Call +251 910 977 371
               </Button>
             </a>
             <a href="mailto:enkutatashevents@gmail.com">

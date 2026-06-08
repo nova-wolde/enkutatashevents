@@ -105,8 +105,8 @@ export default function TermsPage() {
                 enkutatashevents@gmail.com
               </a><br />
               Phone:{" "}
-              <a href="tel:+251915895757" className="text-emerald-600 hover:underline">
-                +251 915 895 757
+              <a href="tel:+251910977371" className="text-emerald-600 hover:underline">
+                +251 910 977 371
               </a>
             </p>
           </section>

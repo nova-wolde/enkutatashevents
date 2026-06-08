@@ -534,8 +534,8 @@ export const hardcodedSiteContent: Record<string, unknown> = {
   descriptionAmharic: 'ከ2022 ዓ.ም ጀምሮ ያልተረሳ ትዝታዎችን እያደራጅን',
   foundedYear: '2022',
   email: 'enkutatashevents@gmail.com',
-  phones: ['+251 915 895 757', '+251 915 843 131', '+251 910 977 371'],
-  phoneLinks: ['+251915895757', '+251915843131', '+251910977371'],
+  phones: ['+251 910 977 371', '+251 915 895 757', '+251 915 843 131'],
+  phoneLinks: ['+251910977371', '+251915895757', '+251915843131'],
   address: 'Ayat, Addis Ababa',
   addressAmharic: 'አያት፣ አዲስ አበባ',
   workingHours: [

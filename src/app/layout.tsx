@@ -136,7 +136,7 @@ function JsonLd() {
     url: SITE_URL,
     logo: `${SITE_URL}/enkutatash-logo.png`,
     image: `${SITE_URL}/og-image.png`,
-    telephone: ["+251915895757", "+251915843131", "+251910977371"],
+    telephone: ["+251910977371", "+251915895757", "+251915843131"],
     email: "enkutatashevents@gmail.com",
     address: {
       "@type": "PostalAddress",
@@ -181,7 +181,7 @@ function JsonLd() {
     url: SITE_URL,
     logo: `${SITE_URL}/enkutatash-logo.png`,
     description: SITE_DESCRIPTION,
-    telephone: "+251915895757",
+    telephone: "+251910977371",
     email: "enkutatashevents@gmail.com",
     address: {
       "@type": "PostalAddress",

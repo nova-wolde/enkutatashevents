@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://github.com/cloudflare/vinext",
+    "name": "GitHub - cloudflare/vinext: Vite plugin that reimplements the Next.js",
+    "snippet": "Run vinext check first to scan for known compatibility issues, or use vinext init to automate the full migration. CLI reference. Command ...",
+    "host_name": "github.com",
+    "rank": 0,
+    "date": "Jun 5, 2026",
+    "favicon": ""
+  },
+  {
+    "url": "https://blog.cloudflare.com/vinext",
+    "name": "How we rebuilt Next.js with AI in one week - The Cloudflare Blog",
+    "snippet": "One engineer used AI to rebuild Next.js on Vite in a week. vinext builds up to 4x faster, produces 57% smaller bundles, and deploys to ...",
+    "host_name": "blog.cloudflare.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://mcpservers.org/de/agent-skills/cloudflare/migrate-to-vinext",
+    "name": "migrate-to-vinext | Agent Skills Bibliothek - Awesome MCP Servers",
+    "snippet": "Automated migration from Next.js to vinext, a Vite-based Next.js reimplementation ... Run vinext check (install vinext first if needed via npx vinext check ).",
+    "host_name": "mcpservers.org",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://vinext.io",
+    "name": "vinext — The Next.js API surface, reimplemented on Vite",
+    "snippet": "Migrate in one command. Run npx vinext check to scan for compatibility issues, then npx vinext init to migrate. Non-destructive — your existing Next ...",
+    "host_name": "vinext.io",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/nextjs/comments/1tz5w2q/who_dropped_nextjs_for_cloudflares_vinext_and_how",
+    "name": "Who dropped Next.js for Cloudflare's Vinext and how is it going so far?",
+    "snippet": "Vinext is a Vite plugin that re-implements the Next.js API from scratch https://vinext.dev.",
+    "host_name": "www.reddit.com",
+    "rank": 4,
+    "date": "Jun 7, 2026",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.infoq.com/news/2026/03/cloudflare-vinext-experimental",
+    "name": "Cloudflare Releases Experimental Next.js Alternative Built with AI",
+    "snippet": "Cloudflare released vinext, an experimental Next.js reimplementation built on Vite by one engineer, with AI guidance over one week, ...",
+    "host_name": "www.infoq.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://cloudflare-vinext.mintlify.app/introduction",
+    "name": "vinext - vinext",
+    "snippet": "vinext init, Migrate a Next.js project to run under vinext. vinext check, Scan your Next.js app for compatibility issues before migrating. vinext lint, Delegate ...",
+    "host_name": "cloudflare-vinext.mintlify.app",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://claudemarketplaces.com/skills/cloudflare/vinext/migrate-to-vinext",
+    "name": "Migrate To Vinext | Claude Code Skills",
+    "snippet": "The skill walks through `vinext init` for automatic migration or manual steps if you want control. It covers both Pages Router and App Router, handles ...",
+    "host_name": "claudemarketplaces.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://blog.logrocket.com/vinext-cloudflares-vite-based-next-js-replacement",
+    "name": "vinext explained: Cloudflare's Vite-based Next.js replacement",
+    "snippet": "Learn what vinext is, how Cloudflare rebuilt Next.js on Vite, and whether this experimental framework is worth watching.",
+    "host_name": "blog.logrocket.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://imrankhani.medium.com/how-to-install-and-use-vinext-the-complete-developer-guide-f4e83236e6fd",
+    "name": "How to Install and Use Vinext: The Complete Developer Guide",
+    "snippet": "Ensure Node.js is installed. A Cloudflare Workers account and CLI (wrangler) if deploying. An existing Next.js project you want to migrate.",
+    "host_name": "imrankhani.medium.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

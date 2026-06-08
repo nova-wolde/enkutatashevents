@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://github.com/cloudflare/vinext",
+    "name": "GitHub - cloudflare/vinext: Vite plugin that reimplements the Next.js",
+    "snippet": "For Cloudflare Workers, the native integration ( vinext deploy ) gives you the smoothest experience. Native adapters for more platforms are ...",
+    "host_name": "github.com",
+    "rank": 0,
+    "date": "Jun 5, 2026",
+    "favicon": ""
+  },
+  {
+    "url": "https://blog.cloudflare.com/vinext",
+    "name": "How we rebuilt Next.js with AI in one week - The Cloudflare Blog",
+    "snippet": "One engineer used AI to rebuild Next.js on Vite in a week. vinext builds up to 4x faster, produces 57% smaller bundles, and deploys to ...",
+    "host_name": "blog.cloudflare.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://cloudflare-vinext.mintlify.app/introduction",
+    "name": "vinext - vinext",
+    "snippet": "Run Next.js apps on Vite. Drop-in replacement for the next CLI with Cloudflare Workers deployment.",
+    "host_name": "cloudflare-vinext.mintlify.app",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://blog.logrocket.com/vinext-cloudflares-vite-based-next-js-replacement",
+    "name": "vinext explained: Cloudflare's Vite-based Next.js replacement",
+    "snippet": "Learn what vinext is, how Cloudflare rebuilt Next.js on Vite, and whether this experimental framework is worth watching.",
+    "host_name": "blog.logrocket.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://armujahid.me/blog/vinext-cloudflare-workers-migration-failure",
+    "name": "What Went Wrong: My Vinext Migration to Cloudflare Workers",
+    "snippet": "I tried migrating from Contentlayer to Velite, then to Vinext, and deploying to Cloudflare Workers. After 10+ fix attempts, I gave up.",
+    "host_name": "armujahid.me",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/CloudFlare/comments/1cge2ja/worker_exceed_limits_nextjs_api_routes",
+    "name": "Worker exceed limits - NextJS API routes r/CloudFlare - Reddit",
+    "snippet": "I have workers exceed limits, and I'm trying to work out why, where are the logs? My only thought is the CPU time is above 10ms, which is the free limit.",
+    "host_name": "www.reddit.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://yceffort.kr/en/2026/03/why-cloudflare-rebuilt-nextjs",
+    "name": "Why Cloudflare Rebuilt Next.js - yceffort",
+    "snippet": "The core of vinext is not \"AI built it in a week.\" The core is that Cloudflare declared a strategic shift — instead of continuing to rely on ...",
+    "host_name": "yceffort.kr",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.hacktron.ai/blog/hacking-cloudflare-vinext",
+    "name": "vinext: Vibe-Hacking Cloudflare's Vibe-Coded Next.js Replacement",
+    "snippet": "Cloudflare built a Next.js replacement in a week with AI for $1100. We pointed Hacktron at it to find what the tests missed.",
+    "host_name": "www.hacktron.ai",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.mmtech.it.com/blog/032026/deploy-nextjs-cloudflare-workers-vinext",
+    "name": "How to Deploy Your Next.js App on Cloudflare Workers using Vinext",
+    "snippet": "A complete guide to deploying your App Router Next.js 16 projects on Cloudflare Workers using Vinext, enabling high-performance global edge ...",
+    "host_name": "www.mmtech.it.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://replicate.com/docs/guides/run/vinext",
+    "name": "Build a website with vinext - Replicate",
+    "snippet": "This runs vinext deploy , which builds the app and deploys it to Cloudflare Workers in a single step. After deploying, set your Replicate API token as a secret ...",
+    "host_name": "replicate.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

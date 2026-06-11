@@ -57,6 +57,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { useEventStore } from './store'
 import { BookingDialog } from './booking-dialog'
+import { hardcodedSiteContent } from './hardcoded-data'
 
 // ─── Icon Lookup ──────────────────────────────────────────────────────────────
 const iconLookup: Record<string, React.ElementType> = {
@@ -1058,8 +1059,12 @@ export function LandingPage() {
       .then((r) => r.json())
       .then((data) => {
         if (data.content) setContent(data.content as SiteContent)
+        else setContent(hardcodedSiteContent as unknown as SiteContent)
       })
-      .catch(() => {})
+      .catch(() => {
+        // API failed (rate limited, Redis down, etc.) — use hardcoded data as fallback
+        setContent(hardcodedSiteContent as unknown as SiteContent)
+      })
       .finally(() => setLoading(false))
   }, [])
 
@@ -1075,14 +1080,7 @@ export function LandingPage() {
   }
 
   if (!content) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-xl font-semibold mb-2">Site Not Configured</p>
-          <p className="text-muted-foreground">Please set up the site content from the admin dashboard.</p>
-        </div>
-      </div>
-    )
+    return null
   }
 
   return (

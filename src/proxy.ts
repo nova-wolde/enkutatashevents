@@ -18,13 +18,47 @@ function getRedis(): Redis | null {
   return _redis;
 }
 
-const RATE_LIMIT_WINDOW = 60; // 60 seconds
-const RATE_LIMIT_MAX = 60; // 60 requests per minute per IP (general)
-const LOGIN_RATE_LIMIT_MAX = 10; // 10 requests per minute for login
+/**
+ * Get the real visitor IP.
+ * On Cloudflare Workers, the real IP is in `cf-connecting-ip`.
+ * Falls back to `x-forwarded-for` for other hosting.
+ */
+function getClientIP(request: NextRequest): string {
+  // Cloudflare-specific header — always contains the real visitor IP
+  const cfIP = request.headers.get("cf-connecting-ip");
+  if (cfIP) return cfIP;
 
-function getRateLimitKey(request: NextRequest): string {
+  // Fallback for other hosting
   const forwarded = request.headers.get("x-forwarded-for");
-  return forwarded?.split(",")[0]?.trim() || "unknown";
+  if (forwarded) return forwarded.split(",")[0].trim();
+
+  return "unknown";
+}
+
+// ─── Rate Limit Configuration ────────────────────────────────────────────────
+// Different endpoints have different tolerance for traffic.
+// Read-only endpoints (content, events, health) are safe at high limits.
+// Write endpoints (login, contact, bookings) need stricter protection.
+
+const RATE_LIMITS: Record<string, { max: number; window: number }> = {
+  // Sensitive writes — strict limits
+  login:    { max: 10,  window: 60 },   // 10 login attempts per minute per IP
+  contact:  { max: 5,   window: 60 },   // 5 contact form submissions per minute
+  booking:  { max: 10,  window: 60 },   // 10 booking submissions per minute
+
+  // General reads — generous limits
+  api_read: { max: 300, window: 60 },   // 300 API reads per minute per IP
+};
+
+/**
+ * Determine which rate limit bucket a request falls into.
+ */
+function getRateLimitBucket(pathname: string): string {
+  if (pathname === "/api/auth/login") return "login";
+  if (pathname === "/api/contact") return "contact";
+  if (pathname === "/api/bookings" || pathname === "/api/events") return "booking";
+  if (pathname.startsWith("/api/")) return "api_read";
+  return "api_read"; // default for non-API routes
 }
 
 /**
@@ -32,7 +66,8 @@ function getRateLimitKey(request: NextRequest): string {
  * Returns true if the request should be blocked (rate limited).
  */
 async function isRateLimited(
-  key: string,
+  ip: string,
+  bucket: string,
   maxRequests: number,
   windowSeconds: number
 ): Promise<boolean> {
@@ -43,7 +78,7 @@ async function isRateLimited(
   }
 
   try {
-    const redisKey = `ratelimit:${key}:${maxRequests}`;
+    const redisKey = `ratelimit:${bucket}:${ip}`;
     // Atomically increment and set expiry
     const count = await redis.incr(redisKey);
     if (count === 1) {
@@ -59,13 +94,10 @@ async function isRateLimited(
 
 // ── Next.js 16 proxy.ts convention (replaces middleware.ts) ────────────────────
 export async function proxy(request: NextRequest) {
-  // Use URL constructor instead of request.nextUrl for Cloudflare Workers compatibility
   const url = new URL(request.url);
   const pathname = url.pathname;
 
-  // ── 1. HTTPS Enforcement (production only, only for direct access) ──────
-  // On Cloudflare Workers, HTTPS is always enforced by Cloudflare itself.
-  // We keep this as a safety net for local development or other hosting.
+  // ── 1. HTTPS Enforcement (production only) ──────────────────────────────
   const isProduction =
     process.env.NODE_ENV === "production" ||
     request.headers.get("x-forwarded-proto") === "https";
@@ -79,31 +111,26 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  // ── 2. Stricter rate limit on login endpoint ────────────────────────────
-  if (pathname === "/api/auth/login") {
-    const key = getRateLimitKey(request);
-    const limited = await isRateLimited(key, LOGIN_RATE_LIMIT_MAX, RATE_LIMIT_WINDOW);
-    if (limited) {
-      return NextResponse.json(
-        { error: "Too many login attempts. Please try again later." },
-        { status: 429 }
-      );
-    }
-  }
-
-  // ── 3. General Rate Limiting on API Routes ──────────────────────────────
+  // ── 2. Rate Limiting on API Routes ──────────────────────────────────────
   if (pathname.startsWith("/api/")) {
-    const key = getRateLimitKey(request);
-    const limited = await isRateLimited(key, RATE_LIMIT_MAX, RATE_LIMIT_WINDOW);
+    const ip = getClientIP(request);
+    const bucket = getRateLimitBucket(pathname);
+    const limits = RATE_LIMITS[bucket];
+    const limited = await isRateLimited(ip, bucket, limits.max, limits.window);
     if (limited) {
+      const isLogin = pathname === "/api/auth/login";
       return NextResponse.json(
-        { error: "Too many requests. Please try again later." },
+        {
+          error: isLogin
+            ? "Too many login attempts. Please try again later."
+            : "Too many requests. Please try again later.",
+        },
         { status: 429 }
       );
     }
   }
 
-  // ── 4. Block Access to Sensitive Paths ──────────────────────────────────
+  // ── 3. Block Access to Sensitive Paths ──────────────────────────────────
   const blockedPaths = ["/.env", "/.git", "/prisma", "/db"];
   if (blockedPaths.some((p) => pathname.startsWith(p))) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });

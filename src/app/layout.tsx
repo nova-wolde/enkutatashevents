@@ -167,7 +167,10 @@ function JsonLd() {
     priceRange: "$$",
     sameAs: [
       "https://www.instagram.com/enkutatashevents",
-      "https://www.facebook.com/enkutatashevents",
+      "https://web.facebook.com/profile.php?id=61590503624575",
+      "https://www.youtube.com/@Enkutatashevents",
+      "https://t.me/httpenkutatashevent",
+      "https://whatsapp.com/channel/0029VbDBLNS6WaKf4RGzel3r",
     ],
     foundingDate: "2022",
   };

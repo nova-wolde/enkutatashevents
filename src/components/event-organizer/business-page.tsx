@@ -19,8 +19,10 @@ import {
   Clock,
   ChevronRight,
   Instagram,
-  Twitter,
-  Linkedin,
+  Facebook,
+  Youtube,
+  Send,
+  MessageCircle,
   ArrowLeft,
   MessageSquare,
   Award,
@@ -580,13 +582,22 @@ export function BusinessPage() {
                     </div>
                     <Separator />
                     <div className="flex items-center justify-center gap-3">
-                      {[Instagram, Twitter, Linkedin].map((Icon, i) => (
-                        <button
+                      {[
+                        { icon: Instagram, url: 'https://www.instagram.com/enkutatashevents/' },
+                        { icon: Facebook, url: 'https://web.facebook.com/profile.php?id=61590503624575' },
+                        { icon: Youtube, url: 'https://www.youtube.com/@Enkutatashevents' },
+                        { icon: Send, url: 'https://t.me/httpenkutatashevent' },
+                        { icon: MessageCircle, url: 'https://whatsapp.com/channel/0029VbDBLNS6WaKf4RGzel3r' },
+                      ].map(({ icon: Icon, url }, i) => (
+                        <a
                           key={i}
+                          href={url}
+                          target="_blank"
+                          rel="noopener noreferrer"
                           className="h-9 w-9 rounded-lg bg-muted/50 hover:bg-emerald-500/10 hover:text-emerald-600 dark:hover:text-emerald-400 flex items-center justify-center transition-colors"
                         >
                           <Icon className="h-4 w-4" />
-                        </button>
+                        </a>
                       ))}
                     </div>
                   </CardContent>

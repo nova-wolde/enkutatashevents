@@ -543,9 +543,11 @@ export const hardcodedSiteContent: Record<string, unknown> = {
     { day: 'Sat', hours: '9:00 AM - 2:00 PM' },
   ],
   socialLinks: [
-    { platform: 'Instagram', url: '' },
-    { platform: 'Facebook', url: '' },
-    { platform: 'Twitter', url: '' },
+    { platform: 'Instagram', url: 'https://www.instagram.com/enkutatashevents/' },
+    { platform: 'Facebook', url: 'https://web.facebook.com/profile.php?id=61590503624575' },
+    { platform: 'YouTube', url: 'https://www.youtube.com/@Enkutatashevents' },
+    { platform: 'Telegram', url: 'https://t.me/httpenkutatashevent' },
+    { platform: 'WhatsApp', url: 'https://whatsapp.com/channel/0029VbDBLNS6WaKf4RGzel3r' },
   ],
 
   // Hero Section

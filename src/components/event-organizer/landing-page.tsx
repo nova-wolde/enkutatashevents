@@ -19,12 +19,13 @@ import {
   Mail,
   Instagram,
   Facebook,
-  Twitter,
+  Youtube,
+  Send,
+  MessageCircle,
   Clock,
   Award,
   CheckCircle2,
   Quote,
-  Send,
   Megaphone,
   PartyPopper,
   Palette,
@@ -941,7 +942,7 @@ function ContactSection({ content }: { content: SiteContent }) {
 
             <div className="mt-6 sm:mt-8 flex gap-2 sm:gap-3">
               {(content.socialLinks || []).filter(s => s.url).map((social) => {
-                const iconMap: Record<string, React.ElementType> = { Instagram, Facebook, Twitter, TikTok: Music }
+                const iconMap: Record<string, React.ElementType> = { Instagram, Facebook, Youtube, Telegram: Send, WhatsApp: MessageCircle, TikTok: Music }
                 const Icon = iconMap[social.platform] || Instagram
                 return (
                   <a key={social.platform} href={social.url} target="_blank" rel="noopener noreferrer">
@@ -1010,7 +1011,7 @@ function Footer({ content }: { content: SiteContent }) {
             <p className="text-[11px] sm:text-sm text-muted-foreground max-w-xs">{content.description}</p>
             <div className="mt-3 sm:mt-4 flex gap-1.5 sm:gap-2">
               {(content.socialLinks || []).filter(s => s.url).map((social, i) => {
-                const iconMap: Record<string, React.ElementType> = { Instagram, Facebook, Twitter, TikTok: Music }
+                const iconMap: Record<string, React.ElementType> = { Instagram, Facebook, Youtube, Telegram: Send, WhatsApp: MessageCircle, TikTok: Music }
                 const Icon = iconMap[social.platform] || Instagram
                 return <a key={i} href={social.url} target="_blank" rel="noopener noreferrer"><Button variant="ghost" size="icon" className="h-10 w-10 sm:h-8 sm:w-8 min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0"><Icon className="h-4 w-4" /></Button></a>
               })}

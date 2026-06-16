@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Calendar, Users, MapPin, BarChart3, Settings, CalendarDays, Mail, CalendarCheck, FileEdit } from 'lucide-react'
 import { useEventStore, ViewTab } from '@/components/event-organizer/store'
@@ -113,7 +114,18 @@ function AppView() {
 }
 
 export default function Home() {
-  const { appView } = useEventStore()
+  const { appView, setAppView } = useEventStore()
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.shiftKey && (e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'l') {
+        e.preventDefault()
+        setAppView('login')
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [setAppView])
 
   return (
     <AnimatePresence mode="wait">

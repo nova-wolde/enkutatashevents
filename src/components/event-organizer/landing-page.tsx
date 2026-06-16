@@ -160,7 +160,7 @@ const staggerItem = {
 }
 
 function LandingNavbar({ content }: { content: SiteContent }) {
-  const { setAppView, setBookingDialogOpen } = useEventStore()
+  const { setBookingDialogOpen } = useEventStore()
   const { setTheme, theme } = useTheme()
   const { language, setLanguage, t } = useLanguage()
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -210,7 +210,6 @@ function LandingNavbar({ content }: { content: SiteContent }) {
               <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
               <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
             </Button>
-            <Button variant="ghost" onClick={() => setAppView('login')} className="text-sm">{t('Owner Login', 'ባለቤት መግቢያ')}</Button>
             <Button onClick={() => setBookingDialogOpen(true)} className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20">
               {t('Book an Event', 'ዝግጅት ያስይዙ')} <ArrowRight className="ml-1.5 h-4 w-4" />
             </Button>
@@ -247,7 +246,6 @@ function LandingNavbar({ content }: { content: SiteContent }) {
                 </a>
               ))}
               <div className="pt-2 flex flex-col gap-2">
-                <Button variant="outline" onClick={() => { setAppView('login'); setMobileOpen(false) }} className="w-full min-h-[44px]">{t('Owner Login', 'ባለቤት መግቢያ')}</Button>
                 <Button onClick={() => { setMobileOpen(false); setBookingDialogOpen(true) }} className="w-full bg-emerald-600 hover:bg-emerald-700 text-white min-h-[44px]">
                   {t('Book an Event', 'ዝግጅት ያስይዙ')} <ArrowRight className="ml-1.5 h-4 w-4" />
                 </Button>

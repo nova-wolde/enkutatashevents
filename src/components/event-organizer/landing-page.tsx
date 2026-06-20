@@ -142,6 +142,9 @@ interface SiteContent {
   phones: string[]
   phoneLinks: string[]
   address: string
+  addressAmharic: string
+  foundedYear: string
+  descriptionAmharic: string
   workingHours: { day: string; hours: string }[]
   socialLinks: { platform: string; url: string }[]
   venues: string[]
@@ -921,7 +924,7 @@ function ContactSection({ content }: { content: SiteContent }) {
                 </div>
                 <div>
                   <p className="font-medium text-sm sm:text-base">{t('Visit Us', 'ይጠብቁን')}</p>
-                  <p className="text-xs sm:text-sm text-muted-foreground">{content.address}</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">{language === 'am' ? (content.addressAmharic || content.address) : content.address}</p>
                   <p className="text-xs sm:text-sm text-muted-foreground">Ethiopia</p>
                 </div>
               </div>
@@ -1006,7 +1009,7 @@ function Footer({ content }: { content: SiteContent }) {
                 <span className="text-[8px] sm:text-[10px] text-muted-foreground">{content.businessNameAmharic}</span>
               </div>
             </div>
-            <p className="text-[11px] sm:text-sm text-muted-foreground max-w-xs">{content.description}</p>
+            <p className="text-[11px] sm:text-sm text-muted-foreground max-w-xs">{language === 'am' ? (content.descriptionAmharic || content.description) : content.description}</p>
             <div className="mt-3 sm:mt-4 flex gap-1.5 sm:gap-2">
               {(content.socialLinks || []).filter(s => s.url).map((social, i) => {
                 const iconMap: Record<string, React.ElementType> = { Instagram, Facebook, Youtube, Telegram: Send, WhatsApp: MessageCircle, TikTok: Music }
@@ -1026,7 +1029,7 @@ function Footer({ content }: { content: SiteContent }) {
             <ul className="space-y-1 sm:space-y-2">
               {(content.phones || []).slice(0, 2).map((phone, i) => (<li key={i} className="text-[10px] sm:text-sm text-muted-foreground">{phone}</li>))}
               <li className="text-[10px] sm:text-sm text-muted-foreground break-all">{content.email}</li>
-              <li className="text-[10px] sm:text-sm text-muted-foreground">{content.address}</li>
+              <li className="text-[10px] sm:text-sm text-muted-foreground">{language === 'am' ? (content.addressAmharic || content.address) : content.address}</li>
             </ul>
           </div>
         </div>

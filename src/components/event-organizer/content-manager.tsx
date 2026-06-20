@@ -249,6 +249,7 @@ export function ContentManager() {
                 <div><Label>Tagline (Amharic)</Label><Input value={content.taglineAmharic as string || ''} onChange={(e) => updateField('taglineAmharic', e.target.value)} /></div>
               </div>
               <div><Label>Description</Label><Textarea value={content.description as string || ''} onChange={(e) => updateField('description', e.target.value)} rows={2} /></div>
+              <div><Label>Description (Amharic)</Label><Textarea value={content.descriptionAmharic as string || ''} onChange={(e) => updateField('descriptionAmharic', e.target.value)} rows={2} /></div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div><Label>Email</Label><Input value={content.email as string || ''} onChange={(e) => updateField('email', e.target.value)} /></div>
                 <div><Label>Founded Year</Label><Input value={content.foundedYear as string || ''} onChange={(e) => updateField('foundedYear', e.target.value)} /></div>
@@ -318,6 +319,30 @@ export function ContentManager() {
                   </div>
                 ))}
               </div>
+
+              {/* Event Categories */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <Label>Event Categories</Label>
+                  <Button size="sm" variant="outline" onClick={() => {
+                    const cats = [...(content.eventCategories as string[] || []), '']
+                    setContent({ ...content, eventCategories: cats })
+                  }}><Plus className="h-3 w-3 mr-1" />Add</Button>
+                </div>
+                {(content.eventCategories as string[] || []).map((cat, i) => (
+                  <div key={i} className="flex gap-2 mb-2">
+                    <Input value={cat} placeholder="Category name" onChange={(e) => {
+                      const cats = [...(content.eventCategories as string[])]
+                      cats[i] = e.target.value
+                      setContent({ ...content, eventCategories: cats })
+                    }} />
+                    <Button size="icon" variant="ghost" onClick={() => {
+                      const cats = (content.eventCategories as string[]).filter((_, j) => j !== i)
+                      setContent({ ...content, eventCategories: cats })
+                    }}><Trash2 className="h-3 w-3 text-red-500" /></Button>
+                  </div>
+                ))}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -332,6 +357,7 @@ export function ContentManager() {
                 <div><Label>Hero Title (Amharic) — shown above heading</Label><Input value={content.heroTitleAmharic as string || ''} onChange={(e) => updateField('heroTitleAmharic', e.target.value)} /></div>
                 <div><Label>Hero Title</Label><Input value={content.heroTitle as string || ''} onChange={(e) => updateField('heroTitle', e.target.value)} /></div>
                 <div><Label>Hero Subtitle</Label><Textarea value={content.heroSubtitle as string || ''} onChange={(e) => updateField('heroSubtitle', e.target.value)} rows={3} /></div>
+                <div><Label>Hero Subtitle (Amharic)</Label><Textarea value={content.heroSubtitleAmharic as string || ''} onChange={(e) => updateField('heroSubtitleAmharic', e.target.value)} rows={3} /></div>
               </CardContent>
             </Card>
 

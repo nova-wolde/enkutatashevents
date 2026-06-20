@@ -1,11 +1,6 @@
 import { NextResponse } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
-import { existsSync } from "fs";
-import path from "path";
-import os from "os";
+import { env } from "cloudflare:workers";
 import { verifyAuth } from "@/lib/auth-helpers";
-
-const UPLOAD_DIR = path.join(os.tmpdir(), "enkutatash-uploads");
 
 export async function POST(request: Request) {
   try {
@@ -22,17 +17,15 @@ export async function POST(request: Request) {
     }
 
     const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
+    const base64 = Buffer.from(bytes).toString("base64");
 
-    if (!existsSync(UPLOAD_DIR)) {
-      await mkdir(UPLOAD_DIR, { recursive: true });
+    const origExt = file.name.split(".").pop() || "jpg";
+    const uniqueFilename = `img_${Date.now()}_${Math.random().toString(36).slice(2, 8)}.${origExt}`;
+
+    if (!env.IMAGES) {
+      return NextResponse.json({ success: false, error: "Storage not configured" }, { status: 500 });
     }
-
-    const origExt = path.extname(file.name) || ".jpg";
-    const uniqueFilename = `img_${Date.now()}_${Math.random().toString(36).slice(2, 8)}${origExt}`;
-    const filePath = path.join(UPLOAD_DIR, uniqueFilename);
-
-    await writeFile(filePath, buffer);
+    await env.IMAGES.put(uniqueFilename, base64);
 
     return NextResponse.json({
       success: true,

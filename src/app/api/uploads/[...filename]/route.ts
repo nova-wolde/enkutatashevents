@@ -1,40 +1,37 @@
 import { NextResponse } from "next/server";
-import { readFile } from "fs/promises";
-import { existsSync } from "fs";
-import path from "path";
-import os from "os";
+import { env } from "cloudflare:workers";
 
-const UPLOAD_DIR = path.join(os.tmpdir(), "enkutatash-uploads");
+const MIME: Record<string, string> = {
+  jpg: "image/jpeg",
+  jpeg: "image/jpeg",
+  png: "image/png",
+  gif: "image/gif",
+  webp: "image/webp",
+  svg: "image/svg+xml",
+};
 
 export async function GET(
   _request: Request,
   { params }: { params: Promise<{ filename: string[] }> }
 ) {
   const { filename } = await params;
-  const filePath = path.join(UPLOAD_DIR, ...filename);
+  const key = filename.join("/");
 
-  if (!filePath.startsWith(UPLOAD_DIR)) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  if (!env.IMAGES) {
+    return NextResponse.json({ error: "Storage not configured" }, { status: 500 });
   }
-
-  if (!existsSync(filePath)) {
+  const base64 = await env.IMAGES.get(key);
+  if (!base64) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  const ext = path.extname(filePath).toLowerCase();
-  const mime: Record<string, string> = {
-    ".jpg": "image/jpeg",
-    ".jpeg": "image/jpeg",
-    ".png": "image/png",
-    ".gif": "image/gif",
-    ".webp": "image/webp",
-    ".svg": "image/svg+xml",
-  };
+  const ext = key.split(".").pop()?.toLowerCase() || "";
+  const mimeType = MIME[ext] || "application/octet-stream";
 
-  const buffer = await readFile(filePath);
+  const buffer = Buffer.from(base64, "base64");
   return new NextResponse(buffer, {
     headers: {
-      "Content-Type": mime[ext] || "application/octet-stream",
+      "Content-Type": mimeType,
       "Cache-Control": "public, max-age=31536000, immutable",
     },
   });

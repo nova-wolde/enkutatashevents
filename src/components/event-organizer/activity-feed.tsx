@@ -33,8 +33,8 @@ export function ActivityFeed() {
         <CardHeader className="pb-3">
           <CardTitle className="text-base font-semibold">Recent Activity</CardTitle>
         </CardHeader>
-        <CardContent className="pb-4">
-          <ScrollArea className="max-h-96">
+          <CardContent className="pb-4">
+            <ScrollArea className="max-h-80">
             <motion.div
               className="space-y-0"
               variants={containerVariants}
@@ -59,7 +59,7 @@ export function ActivityFeed() {
                   </Avatar>
 
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm leading-snug">
+                    <p className="text-sm leading-snug break-words">
                       <span className="font-medium">{activity.user}</span>{' '}
                       <span className="text-muted-foreground">{activity.action}</span>{' '}
                       <span className="font-medium">{activity.target}</span>

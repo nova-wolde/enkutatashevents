@@ -1,4 +1,4 @@
-import { useEventStore, Language } from './store'
+import { useEventStore } from './store'
 import { translations } from './translations'
 
 export function useTranslation() {

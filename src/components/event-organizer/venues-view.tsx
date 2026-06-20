@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import {
   MapPin,
@@ -27,9 +27,8 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog'
-import { useEventStore } from './store'
+import { useEventStore, VenueData } from './store'
 import { useToast } from '@/hooks/use-toast'
-import { hardcodedVenues, VenueData } from './hardcoded-data'
 
 const amenityOptions = ['WiFi', 'Parking', 'AV Equipment', 'Catering', 'Green Room', 'Stage']
 const amenityIcons: Record<string, React.ElementType> = {
@@ -44,11 +43,32 @@ const amenityIcons: Record<string, React.ElementType> = {
 export function VenuesView() {
   const { events } = useEventStore()
   const { toast } = useToast()
-  const [venueList, setVenueList] = useState<VenueData[]>(hardcodedVenues)
+  const [venueList, setVenueList] = useState<VenueData[]>([])
   const [addDialogOpen, setAddDialogOpen] = useState(false)
   const [newName, setNewName] = useState('')
   const [newAddress, setNewAddress] = useState('')
   const [newCapacity, setNewCapacity] = useState('')
+
+  // Load venues from API on mount
+  useEffect(() => {
+    fetch('/api/venues', { credentials: 'include' })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.venues && Array.isArray(data.venues)) setVenueList(data.venues)
+      })
+      .catch(() => {})
+  }, [])
+
+  const persistVenues = useCallback(async (list: VenueData[]) => {
+    try {
+      await fetch('/api/venues', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ venues: list }),
+      })
+    } catch {}
+  }, [])
 
   const getUpcomingCount = (venueName: string) =>
     events.filter((e) => e.venue === venueName && (e.status === 'upcoming' || e.status === 'ongoing')).length
@@ -59,8 +79,8 @@ export function VenuesView() {
       toast({ title: 'Duplicate', description: 'This venue already exists.', variant: 'destructive' })
       return
     }
-    setVenueList((prev) => [
-      ...prev,
+    const newList = [
+      ...venueList,
       {
         name: newName,
         address: newAddress || 'Addis Ababa, Ethiopia',
@@ -68,7 +88,9 @@ export function VenuesView() {
         amenities: ['WiFi', 'Parking'],
         status: 'Available' as const,
       },
-    ])
+    ]
+    setVenueList(newList)
+    persistVenues(newList)
     toast({ title: 'Venue Added', description: `${newName} has been added successfully.` })
     setNewName('')
     setNewAddress('')
@@ -77,7 +99,9 @@ export function VenuesView() {
   }
 
   const handleDeleteVenue = (venueName: string) => {
-    setVenueList((prev) => prev.filter((v) => v.name !== venueName))
+    const newList = venueList.filter((v) => v.name !== venueName)
+    setVenueList(newList)
+    persistVenues(newList)
     toast({ title: 'Venue Removed', description: `${venueName} has been removed.` })
   }
 

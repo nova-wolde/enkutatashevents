@@ -15,8 +15,6 @@ import { QuickActions } from './quick-actions'
 function RecentMessagesCard() {
   const { messages, setCurrentView } = useEventStore()
 
-  // Data is already initialized from hardcoded data in the store
-
   const recentMessages = messages.slice(0, 3)
   const unreadCount = messages.filter((m) => !m.read).length
 
@@ -75,8 +73,6 @@ function RecentMessagesCard() {
 
 function RecentBookingsCard() {
   const { bookings, setCurrentView } = useEventStore()
-
-  // Data is already initialized from hardcoded data in the store
 
   const recentBookings = bookings.slice(0, 3)
   const pendingCount = bookings.filter((b) => b.status === 'pending').length
@@ -141,8 +137,6 @@ function RecentBookingsCard() {
 
 export function Dashboard() {
   const { events } = useEventStore()
-
-  // Data is already initialized from hardcoded data in the store
 
   return (
     <div className="space-y-6">

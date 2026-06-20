@@ -1,7 +1,6 @@
 'use client'
 
 import { create } from 'zustand'
-import { hardcodedEvents, hardcodedActivities, hardcodedMessages, hardcodedBookings } from './hardcoded-data'
 
 export type EventStatus = 'upcoming' | 'ongoing' | 'completed' | 'cancelled'
 export type EventCategory = 'Conference' | 'Workshop' | 'Social' | 'Concert' | 'Meetup' | 'Wedding' | 'Corporate' | 'Cultural' | 'Symposium' | 'Government'
@@ -55,7 +54,18 @@ export interface BookingItem {
   status: 'pending' | 'confirmed' | 'cancelled' | 'completed'
   createdAt: string
   read: boolean
+  checkedIn?: boolean
 }
+
+export interface VenueData {
+  name: string
+  address: string
+  capacity: number
+  amenities: string[]
+  status: 'Available' | 'Booked'
+}
+
+export type Language = 'en' | 'am'
 
 export type ViewTab = 'dashboard' | 'events' | 'attendees' | 'venues' | 'analytics' | 'settings' | 'messages' | 'bookings' | 'content'
 export type AppView = 'landing' | 'app' | 'login'
@@ -77,6 +87,8 @@ interface EventStore {
   unreadCount: number
   pendingBookingsCount: number
   bookingDialogOpen: boolean
+  loading: boolean
+  language: Language
 
   setEvents: (events: EventItem[]) => void
   addEvent: (event: EventItem) => void
@@ -95,14 +107,17 @@ interface EventStore {
   setEditingEvent: (event: EventItem | null) => void
   setMessages: (messages: ContactSubmission[]) => void
   setBookings: (bookings: BookingItem[]) => void
+  updateBooking: (id: string, updates: Partial<BookingItem>) => void
   setUnreadCount: (count: number) => void
   setPendingBookingsCount: (count: number) => void
   setBookingDialogOpen: (open: boolean) => void
+  setLoading: (loading: boolean) => void
+  setLanguage: (language: Language) => void
 }
 
 export const useEventStore = create<EventStore>((set) => ({
-  events: hardcodedEvents,
-  activities: hardcodedActivities,
+  events: [],
+  activities: [],
   currentView: 'dashboard',
   appView: 'landing',
   sidebarCollapsed: false,
@@ -112,11 +127,13 @@ export const useEventStore = create<EventStore>((set) => ({
   filterStatus: 'all',
   selectedEvent: null,
   editingEvent: null,
-  messages: hardcodedMessages,
-  bookings: hardcodedBookings,
-  unreadCount: hardcodedMessages.filter(m => !m.read).length,
-  pendingBookingsCount: hardcodedBookings.filter(b => b.status === 'pending').length,
+  messages: [],
+  bookings: [],
+  unreadCount: 0,
+  pendingBookingsCount: 0,
   bookingDialogOpen: false,
+  loading: false,
+  language: 'en',
 
   setEvents: (events) => set({ events }),
   addEvent: (event) => set((state) => ({ events: [event, ...state.events] })),
@@ -144,7 +161,13 @@ export const useEventStore = create<EventStore>((set) => ({
   setEditingEvent: (editingEvent) => set({ editingEvent }),
   setMessages: (messages) => set({ messages }),
   setBookings: (bookings) => set({ bookings }),
+  updateBooking: (id, updates) =>
+    set((state) => ({
+      bookings: state.bookings.map((b) => (b.id === id ? { ...b, ...updates } : b)),
+    })),
   setUnreadCount: (unreadCount) => set({ unreadCount }),
   setPendingBookingsCount: (pendingBookingsCount) => set({ pendingBookingsCount }),
   setBookingDialogOpen: (bookingDialogOpen) => set({ bookingDialogOpen }),
+  setLoading: (loading) => set({ loading }),
+  setLanguage: (language) => set({ language }),
 }))

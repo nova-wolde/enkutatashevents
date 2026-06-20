@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import {
   Building2,
@@ -19,6 +19,7 @@ import {
   ChevronUp,
   ChevronDown,
   GripVertical,
+  Upload,
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -44,7 +45,6 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { useToast } from '@/hooks/use-toast'
-import { hardcodedSiteContent } from './hardcoded-data'
 
 // ─── Icon mapping for services/stats/objectives ──────────────────────────────
 const iconOptions = [
@@ -83,17 +83,84 @@ interface SiteContent {
 
 export function ContentManager() {
   const { toast } = useToast()
-  const [content, setContent] = useState<SiteContent>(hardcodedSiteContent as SiteContent)
+  const [content, setContent] = useState<SiteContent>({})
   const [saving, setSaving] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('business')
+  const [uploadingIndex, setUploadingIndex] = useState<number | null>(null)
 
-  const saveContent = (updated: SiteContent) => {
+  const handleImageUpload = async (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setUploadingIndex(index)
+    const formData = new FormData()
+    formData.append("file", file)
+
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      })
+      const data = await res.json()
+      if (res.ok && data.success) {
+        updateArrayItem('portfolioEvents', index, { image: data.url })
+        toast({ title: "Image Uploaded", description: "The image has been uploaded successfully." })
+      } else {
+        toast({ title: "Upload Failed", description: data.error || "Something went wrong.", variant: "destructive" })
+      }
+    } catch {
+      toast({ title: "Upload Error", description: "Failed to upload image to server.", variant: "destructive" })
+    } finally {
+      setUploadingIndex(null)
+    }
+  }
+
+  useEffect(() => {
+    const fetchContent = async () => {
+      try {
+        const res = await fetch('/api/content')
+        const data = await res.json()
+        if (data.content) {
+          setContent(data.content)
+        }
+      } catch (err) {
+        console.error("Failed to fetch content", err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchContent()
+  }, [])
+
+  const saveContent = async (updated: SiteContent) => {
     setSaving(true)
-    setContent(updated)
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/content', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: updated }),
+      })
+      const resData = await response.json()
+      if (response.ok && resData.success) {
+        setContent(updated)
+        toast({ title: 'Saved!', description: 'Content updated successfully.' })
+      } else {
+        toast({
+          title: 'Error saving content',
+          description: resData.errors?.[0] || 'Failed to save — KV store may not be configured.',
+          variant: 'destructive',
+        })
+      }
+    } catch {
+      toast({
+        title: 'Error saving content',
+        description: 'Failed to communicate with the server.',
+        variant: 'destructive',
+      })
+    } finally {
       setSaving(false)
-      toast({ title: 'Saved!', description: 'Content updated successfully.' })
-    }, 300)
+    }
   }
 
   // Update a field
@@ -132,6 +199,15 @@ export function ContentManager() {
     if (toIndex < 0 || toIndex >= arr.length) return
     ;[arr[fromIndex], arr[toIndex]] = [arr[toIndex], arr[fromIndex]]
     setContent({ ...content, [arrayKey]: arr })
+  }
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center p-12 bg-card rounded-xl border border-border/50 shadow-sm min-h-[300px]">
+        <Loader2 className="h-8 w-8 animate-spin text-emerald-600 mb-4" />
+        <p className="text-sm text-muted-foreground">Loading site content...</p>
+      </div>
+    )
   }
 
   return (
@@ -473,20 +549,72 @@ export function ContentManager() {
                       <Button size="icon" variant="ghost" onClick={() => removeArrayItem('portfolioEvents', i)}><Trash2 className="h-4 w-4 text-red-500" /></Button>
                     </div>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <div><Label className="text-xs">Title</Label><Input value={evt.title} onChange={(e) => updateArrayItem('portfolioEvents', i, { title: e.target.value })} /></div>
-                    <div><Label className="text-xs">Title (Amharic)</Label><Input value={evt.titleAmharic} onChange={(e) => updateArrayItem('portfolioEvents', i, { titleAmharic: e.target.value })} /></div>
-                    <div><Label className="text-xs">Category</Label><Input value={evt.category} onChange={(e) => updateArrayItem('portfolioEvents', i, { category: e.target.value })} /></div>
-                  </div>
-                  <div><Label className="text-xs">Description</Label><Textarea value={evt.description} onChange={(e) => updateArrayItem('portfolioEvents', i, { description: e.target.value })} rows={2} /></div>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <div><Label className="text-xs">Image Path</Label><Input value={evt.image} onChange={(e) => updateArrayItem('portfolioEvents', i, { image: e.target.value })} /></div>
-                    <div><Label className="text-xs">Attendees</Label><Input value={evt.attendees} onChange={(e) => updateArrayItem('portfolioEvents', i, { attendees: e.target.value })} /></div>
-                    <div><Label className="text-xs">Gradient</Label>
-                      <Select value={evt.gradient} onValueChange={(v) => updateArrayItem('portfolioEvents', i, { gradient: v })}>
-                        <SelectTrigger><SelectValue /></SelectTrigger>
-                        <SelectContent>{gradientOptions.map((g) => <SelectItem key={g} value={g}><span className="text-xs">{g}</span></SelectItem>)}</SelectContent>
-                      </Select>
+
+                  <div className="flex flex-col md:flex-row gap-4">
+                    {evt.image && (
+                      <div className="relative w-full md:w-32 h-28 rounded-lg overflow-hidden border bg-muted flex items-center justify-center shrink-0">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={evt.image}
+                          alt={evt.title || "Portfolio preview"}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                          }}
+                        />
+                      </div>
+                    )}
+                    <div className="flex-1 space-y-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div><Label className="text-xs">Title</Label><Input value={evt.title} onChange={(e) => updateArrayItem('portfolioEvents', i, { title: e.target.value })} /></div>
+                        <div><Label className="text-xs">Title (Amharic)</Label><Input value={evt.titleAmharic} onChange={(e) => updateArrayItem('portfolioEvents', i, { titleAmharic: e.target.value })} /></div>
+                        <div><Label className="text-xs">Category</Label><Input value={evt.category} onChange={(e) => updateArrayItem('portfolioEvents', i, { category: e.target.value })} /></div>
+                      </div>
+                      <div><Label className="text-xs">Description</Label><Textarea value={evt.description} onChange={(e) => updateArrayItem('portfolioEvents', i, { description: e.target.value })} rows={2} /></div>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div>
+                          <Label className="text-xs">Image Path</Label>
+                          <div className="flex gap-2">
+                            <Input
+                              value={evt.image}
+                              onChange={(e) => updateArrayItem('portfolioEvents', i, { image: e.target.value })}
+                            />
+                            <div className="relative shrink-0">
+                              <input
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                id={`portfolio-upload-${i}`}
+                                onChange={(e) => handleImageUpload(i, e)}
+                                disabled={uploadingIndex === i}
+                              />
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="icon"
+                                asChild
+                                className="cursor-pointer"
+                                disabled={uploadingIndex === i}
+                              >
+                                <label htmlFor={`portfolio-upload-${i}`}>
+                                  {uploadingIndex === i ? (
+                                    <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                                  ) : (
+                                    <Upload className="h-4 w-4 text-muted-foreground" />
+                                  )}
+                                </label>
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                        <div><Label className="text-xs">Attendees</Label><Input value={evt.attendees} onChange={(e) => updateArrayItem('portfolioEvents', i, { attendees: e.target.value })} /></div>
+                        <div><Label className="text-xs">Gradient</Label>
+                          <Select value={evt.gradient} onValueChange={(v) => updateArrayItem('portfolioEvents', i, { gradient: v })}>
+                            <SelectTrigger><SelectValue /></SelectTrigger>
+                            <SelectContent>{gradientOptions.map((g) => <SelectItem key={g} value={g}><span className="text-xs">{g}</span></SelectItem>)}</SelectContent>
+                          </Select>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>

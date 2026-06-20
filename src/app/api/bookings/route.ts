@@ -105,7 +105,7 @@ export async function PATCH(request: Request) {
     }
 
     const body = await request.json()
-    const { id, status, read } = body as { id: string; status?: string; read?: boolean }
+    const { id, status, read, checkedIn } = body as { id: string; status?: string; read?: boolean; checkedIn?: boolean }
 
     const bookings = (await getBookings()) || []
     const index = bookings.findIndex((b) => b.id === id)
@@ -129,6 +129,10 @@ export async function PATCH(request: Request) {
 
     if (read !== undefined) {
       bookings[index].read = read
+    }
+
+    if (checkedIn !== undefined) {
+      bookings[index].checkedIn = checkedIn
     }
 
     const saved = await saveBookings(bookings)

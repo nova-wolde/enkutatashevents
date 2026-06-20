@@ -1,4 +1,4 @@
-import { Language } from './store'
+import type { Language } from './store'
 
 interface TranslationSet {
   brand: {

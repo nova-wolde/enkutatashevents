@@ -63,23 +63,49 @@ export function BookingsView() {
   const [selectedBooking, setSelectedBooking] = useState<BookingItem | null>(null)
   const [detailOpen, setDetailOpen] = useState(false)
 
-  const updateStatus = (booking: BookingItem, newStatus: string) => {
+  const updateStatus = async (booking: BookingItem, newStatus: string) => {
     const updated = bookings.map((b) =>
       b.id === booking.id ? { ...b, status: newStatus as BookingItem['status'] } : b
     )
     setBookings(updated)
     const pending = updated.filter((b) => b.status === 'pending').length
     setPendingBookingsCount(pending)
-    toast({
-      title: 'Status Updated',
-      description: `Booking for ${booking.name} marked as ${newStatus}`,
-    })
     if (selectedBooking?.id === booking.id) {
       setSelectedBooking({ ...booking, status: newStatus as BookingItem['status'] })
     }
+
+    try {
+      const response = await fetch('/api/bookings', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: booking.id, status: newStatus }),
+      })
+      if (!response.ok) {
+        throw new Error('Failed to update status on server')
+      }
+      toast({
+        title: 'Status Updated',
+        description: `Booking for ${booking.name} marked as ${newStatus}`,
+      })
+    } catch {
+      const reverted = bookings.map((b) =>
+        b.id === booking.id ? { ...b, status: booking.status } : b
+      )
+      setBookings(reverted)
+      const revertedPending = reverted.filter((b) => b.status === 'pending').length
+      setPendingBookingsCount(revertedPending)
+      if (selectedBooking?.id === booking.id) {
+        setSelectedBooking(booking)
+      }
+      toast({
+        title: 'Error updating booking status',
+        description: 'Failed to save changes to server.',
+        variant: 'destructive',
+      })
+    }
   }
 
-  const deleteBooking = (booking: BookingItem) => {
+  const deleteBooking = async (booking: BookingItem) => {
     const updated = bookings.filter((b) => b.id !== booking.id)
     setBookings(updated)
     const pending = updated.filter((b) => b.status === 'pending').length
@@ -88,17 +114,59 @@ export function BookingsView() {
       setDetailOpen(false)
       setSelectedBooking(null)
     }
-    toast({
-      title: 'Booking Deleted',
-      description: `Removed booking for ${booking.name}`,
-    })
+
+    try {
+      const response = await fetch('/api/bookings', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: booking.id }),
+      })
+      if (!response.ok) {
+        throw new Error('Failed to delete booking on server')
+      }
+      toast({
+        title: 'Booking Deleted',
+        description: `Removed booking for ${booking.name}`,
+      })
+    } catch {
+      setBookings(bookings)
+      const revertedPending = bookings.filter((b) => b.status === 'pending').length
+      setPendingBookingsCount(revertedPending)
+      toast({
+        title: 'Error deleting booking',
+        description: 'Failed to delete booking from server.',
+        variant: 'destructive',
+      })
+    }
   }
 
-  const toggleRead = (booking: BookingItem) => {
+  const toggleRead = async (booking: BookingItem) => {
+    const nextRead = !booking.read
     const updated = bookings.map((b) =>
-      b.id === booking.id ? { ...b, read: !b.read } : b
+      b.id === booking.id ? { ...b, read: nextRead } : b
     )
     setBookings(updated)
+
+    try {
+      const response = await fetch('/api/bookings', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: booking.id, read: nextRead }),
+      })
+      if (!response.ok) {
+        throw new Error('Failed to update read status on server')
+      }
+    } catch {
+      const reverted = bookings.map((b) =>
+        b.id === booking.id ? { ...b, read: booking.read } : b
+      )
+      setBookings(reverted)
+      toast({
+        title: 'Error updating status',
+        description: 'Failed to save read status on server.',
+        variant: 'destructive',
+      })
+    }
   }
 
   const openDetail = (booking: BookingItem) => {

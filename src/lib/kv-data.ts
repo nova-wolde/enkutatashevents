@@ -72,6 +72,8 @@ const KEYS = {
   siteContent: "data:site-content",
   activities: "data:activities",
   sessionPrefix: "session:",
+  adminSettings: "data:admin-settings",
+  venues: "data:venues",
 } as const
 
 // ─── Generic Helpers ───────────────────────────────────────────────────────────
@@ -131,6 +133,7 @@ export interface Booking {
   status: "pending" | "confirmed" | "cancelled" | "completed"
   createdAt: string
   read: boolean
+  checkedIn?: boolean
 }
 
 export async function getBookings(): Promise<Booking[] | null> {
@@ -180,6 +183,47 @@ export async function getActivities(): Promise<Record<string, unknown>[] | null>
 
 export async function saveActivities(activities: Record<string, unknown>[]): Promise<boolean> {
   return await setRedisValue(KEYS.activities, activities)
+}
+
+// ─── Admin Settings ────────────────────────────────────────────────────────────
+
+export interface AdminSettings {
+  name: string
+  email: string
+  company: string
+  emailNotif: boolean
+  pushNotif: boolean
+  eventReminders: boolean
+  weeklyDigest: boolean
+  defaultVenue: string
+  defaultCategory: string
+  defaultMaxAttendees: string
+}
+
+export async function getAdminSettings(): Promise<AdminSettings | null> {
+  return await getRedisValue<AdminSettings>(KEYS.adminSettings)
+}
+
+export async function saveAdminSettings(settings: AdminSettings): Promise<boolean> {
+  return await setRedisValue(KEYS.adminSettings, settings)
+}
+
+// ─── Venues ────────────────────────────────────────────────────────────────────
+
+export interface VenueRecord {
+  name: string
+  address: string
+  capacity: number
+  amenities: string[]
+  status: 'Available' | 'Booked'
+}
+
+export async function getVenues(): Promise<VenueRecord[] | null> {
+  return await getRedisValue<VenueRecord[]>(KEYS.venues)
+}
+
+export async function saveVenues(venues: VenueRecord[]): Promise<boolean> {
+  return await setRedisValue(KEYS.venues, venues)
 }
 
 // ─── Sessions (with native Redis TTL) ─────────────────────────────────────────

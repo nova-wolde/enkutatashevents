@@ -56,9 +56,8 @@ import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { useEventStore } from './store'
+import { useEventStore, Language } from './store'
 import { BookingDialog } from './booking-dialog'
-import { hardcodedSiteContent } from './hardcoded-data'
 
 // ─── Icon Lookup ──────────────────────────────────────────────────────────────
 const iconLookup: Record<string, React.ElementType> = {
@@ -73,7 +72,6 @@ function getIcon(name: string): React.ElementType {
 }
 
 // ─── Language Context ────────────────────────────────────────────────────────
-type Language = 'en' | 'am'
 
 interface LanguageContextType {
   language: Language
@@ -119,6 +117,8 @@ interface SiteContent {
   businessName: string
   businessNameAmharic: string
   tagline: string
+  taglineAmharic: string
+  description: string
   heroTitle: string
   heroTitleAmharic: string
   heroSubtitle: string
@@ -1058,12 +1058,8 @@ export function LandingPage() {
       .then((r) => r.json())
       .then((data) => {
         if (data.content) setContent(data.content as SiteContent)
-        else setContent(hardcodedSiteContent as unknown as SiteContent)
       })
-      .catch(() => {
-        // API failed (rate limited, Redis down, etc.) — use hardcoded data as fallback
-        setContent(hardcodedSiteContent as unknown as SiteContent)
-      })
+      .catch(() => {})
       .finally(() => setLoading(false))
   }, [])
 

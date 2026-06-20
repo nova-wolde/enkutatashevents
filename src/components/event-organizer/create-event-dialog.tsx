@@ -26,7 +26,7 @@ import {
 import { cn } from '@/lib/utils'
 import { useEventStore, EventCategory, EventItem } from './store'
 import { useToast } from '@/hooks/use-toast'
-import { hardcodedVenueNames, hardcodedCategories } from './hardcoded-data'
+import { VENUE_NAMES, EVENT_CATEGORIES } from '@/lib/constants'
 
 const gradients = [
   'from-emerald-400 to-teal-600',
@@ -36,12 +36,12 @@ const gradients = [
   'from-cyan-400 to-sky-600',
 ]
 
-const defaultCategories: EventCategory[] = hardcodedCategories
+const defaultCategories: EventCategory[] = [...EVENT_CATEGORIES]
 
 export function CreateEventDialog() {
   const { createDialogOpen, setCreateDialogOpen, addEvent, editingEvent, setEditingEvent, updateEvent, addActivity } = useEventStore()
   const { toast } = useToast()
-  const [venues, setVenues] = useState<string[]>(hardcodedVenueNames)
+  const [venues, setVenues] = useState<string[]>([...VENUE_NAMES])
   const [categories, setCategories] = useState<EventCategory[]>(defaultCategories)
   const [name, setName] = useState('')
   const [date, setDate] = useState<Date | undefined>(undefined)
@@ -70,14 +70,13 @@ export function CreateEventDialog() {
 
   const [submitting, setSubmitting] = useState(false)
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!name || !date || !venue || !category) return
     setSubmitting(true)
 
     try {
       if (isEditing && editingEvent) {
         const updates = {
-          id: editingEvent.id,
           name,
           date: format(date, 'yyyy-MM-dd'),
           time,
@@ -87,19 +86,41 @@ export function CreateEventDialog() {
           maxAttendees: parseInt(maxAttendees) || 100,
           ticketPrice: parseFloat(ticketPrice) || 0,
         }
-        updateEvent(editingEvent.id, updates)
-        addActivity({
-          id: Date.now().toString(),
-          user: 'Owner',
-          avatar: 'OW',
-          action: 'updated details for',
-          target: name,
-          timestamp: new Date().toISOString(),
+
+        const response = await fetch('/api/events', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: editingEvent.id, ...updates }),
         })
+        const resData = await response.json()
+        if (!response.ok || !resData.success) {
+          throw new Error(resData.errors?.[0] || 'Failed to update event')
+        }
+
+        updateEvent(editingEvent.id, updates)
+        
+        try {
+          const actResponse = await fetch('/api/activities', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              user: 'Owner',
+              avatar: 'OW',
+              action: 'updated details for',
+              target: name,
+            })
+          })
+          const actData = await actResponse.json()
+          if (actResponse.ok && actData.success) {
+            addActivity(actData.activity)
+          }
+        } catch (e) {
+          console.error("Failed to log activity", e)
+        }
+
         toast({ title: 'Event Updated', description: `${name} has been updated successfully.` })
       } else {
-        const newEvent: EventItem = {
-          id: Date.now().toString(),
+        const newEventData = {
           name,
           date: format(date, 'yyyy-MM-dd'),
           time,
@@ -112,24 +133,46 @@ export function CreateEventDialog() {
           ticketPrice: parseFloat(ticketPrice) || 0,
           imageGradient: gradients[Math.floor(Math.random() * gradients.length)],
         }
-        addEvent(newEvent)
-        addActivity({
-          id: Date.now().toString(),
-          user: 'Owner',
-          avatar: 'OW',
-          action: 'created event',
-          target: name,
-          timestamp: new Date().toISOString(),
+
+        const response = await fetch('/api/events', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newEventData),
         })
+        const resData = await response.json()
+        if (!response.ok || !resData.success) {
+          throw new Error(resData.errors?.[0] || 'Failed to create event')
+        }
+
+        addEvent(resData.event)
+
+        try {
+          const actResponse = await fetch('/api/activities', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              user: 'Owner',
+              avatar: 'OW',
+              action: 'created event',
+              target: name,
+            })
+          })
+          const actData = await actResponse.json()
+          if (actResponse.ok && actData.success) {
+            addActivity(actData.activity)
+          }
+        } catch (e) {
+          console.error("Failed to log activity", e)
+        }
+
         toast({ title: 'Event Created', description: `${name} has been created successfully.` })
       }
-    } catch {
-      toast({ title: 'Error', description: 'Failed to save event. Please try again.', variant: 'destructive' })
+      handleClose()
+    } catch (err: any) {
+      toast({ title: 'Error', description: err.message || 'Failed to save event. Please try again.', variant: 'destructive' })
     } finally {
       setSubmitting(false)
     }
-
-    handleClose()
   }
 
   const handleClose = () => {

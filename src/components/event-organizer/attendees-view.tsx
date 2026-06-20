@@ -53,11 +53,10 @@ const statusColors: Record<string, string> = {
 }
 
 export function AttendeesView() {
-  const { events, bookings } = useEventStore()
+  const { events, bookings, updateBooking } = useEventStore()
   const { toast } = useToast()
   const [searchQuery, setSearchQuery] = useState('')
   const [filterEvent, setFilterEvent] = useState('all')
-  const [checkedInIds, setCheckedInIds] = useState<Set<string>>(new Set())
 
   // Convert bookings to attendees
   const attendees: Attendee[] = useMemo(() => {
@@ -68,12 +67,12 @@ export function AttendeesView() {
       phone: b.phone,
       eventType: b.eventType,
       status: b.status === 'confirmed' ? 'Confirmed' : b.status === 'cancelled' ? 'Cancelled' : 'Pending',
-      checkedIn: checkedInIds.has(b.id),
+      checkedIn: b.checkedIn ?? false,
       guestCount: b.guestCount,
       eventDate: b.eventDate,
       venue: b.venue,
     }))
-  }, [bookings, checkedInIds])
+  }, [bookings])
 
   const filteredAttendees = useMemo(() => {
     let result = [...attendees]
@@ -100,18 +99,29 @@ export function AttendeesView() {
   const checkedInCount = attendees.filter((a) => a.checkedIn).length
   const confirmedCount = attendees.filter((a) => a.status === 'Confirmed').length
 
-  const handleCheckIn = (attendeeId: string) => {
-    setCheckedInIds((prev) => {
-      const next = new Set(prev)
-      if (next.has(attendeeId)) {
-        next.delete(attendeeId)
-        toast({ title: 'Check-in Reverted', description: 'Attendee has been unchecked.' })
-      } else {
-        next.add(attendeeId)
-        toast({ title: 'Checked In', description: 'Attendee has been checked in.' })
-      }
-      return next
-    })
+  const handleCheckIn = async (attendeeId: string) => {
+    const booking = bookings.find((b) => b.id === attendeeId)
+    if (!booking) return
+    const newCheckedIn = !booking.checkedIn
+    // Optimistic update in store
+    updateBooking(attendeeId, { checkedIn: newCheckedIn })
+    // Persist to API
+    try {
+      await fetch('/api/bookings', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ id: attendeeId, checkedIn: newCheckedIn }),
+      })
+    } catch {
+      // Revert on failure
+      updateBooking(attendeeId, { checkedIn: !newCheckedIn })
+    }
+    if (newCheckedIn) {
+      toast({ title: 'Checked In', description: 'Attendee has been checked in.' })
+    } else {
+      toast({ title: 'Check-in Reverted', description: 'Attendee has been unchecked.' })
+    }
   }
 
   const handleExport = () => {

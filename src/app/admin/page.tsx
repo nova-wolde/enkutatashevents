@@ -33,8 +33,6 @@ const viewTitles: Record<ViewTab, { title: string; subtitle: string; icon: React
 function AppView() {
   const { currentView } = useEventStore()
 
-  // Data is already initialized from hardcoded data in the store
-
   const info = viewTitles[currentView]
 
   return (
@@ -113,8 +111,18 @@ function AppView() {
 }
 
 export default function AdminPage() {
-  const { appView, setAppView } = useEventStore()
+  const {
+    appView,
+    setAppView,
+    setEvents,
+    setBookings,
+    setPendingBookingsCount,
+    setMessages,
+    setUnreadCount,
+    setActivities
+  } = useEventStore()
   const [checked, setChecked] = useState(false)
+  const [loadingData, setLoadingData] = useState(false)
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -134,7 +142,42 @@ export default function AdminPage() {
     checkAuth()
   }, [setAppView])
 
-  if (!checked) {
+  useEffect(() => {
+    if (appView !== 'app') return
+
+    const loadData = async () => {
+      setLoadingData(true)
+      try {
+        const [eventsRes, bookingsRes, contactRes, activitiesRes] = await Promise.all([
+          fetch('/api/events').then(res => res.json()),
+          fetch('/api/bookings').then(res => res.json()),
+          fetch('/api/contact').then(res => res.json()),
+          fetch('/api/activities').then(res => res.json()),
+        ])
+
+        if (eventsRes.events) setEvents(eventsRes.events)
+        if (bookingsRes.bookings) {
+          setBookings(bookingsRes.bookings)
+          setPendingBookingsCount(bookingsRes.bookings.filter((b: any) => b.status === 'pending').length)
+        }
+        if (contactRes.submissions) {
+          setMessages(contactRes.submissions)
+          setUnreadCount(contactRes.submissions.filter((s: any) => !s.read).length)
+        }
+        if (activitiesRes.activities) {
+          setActivities(activitiesRes.activities)
+        }
+      } catch (err) {
+        console.error("Failed to load admin data", err)
+      } finally {
+        setLoadingData(false)
+      }
+    }
+
+    loadData()
+  }, [appView, setEvents, setBookings, setPendingBookingsCount, setMessages, setUnreadCount, setActivities])
+
+  if (!checked || (appView === 'app' && loadingData)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">

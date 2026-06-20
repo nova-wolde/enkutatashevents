@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useTheme } from 'next-themes'
 import {
@@ -37,7 +37,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Separator } from '@/components/ui/separator'
 import { useToast } from '@/hooks/use-toast'
-import { hardcodedVenueNames, hardcodedCategories } from './hardcoded-data'
+import { VENUE_NAMES, EVENT_CATEGORIES } from '@/lib/constants'
 
 interface SettingsData {
   name: string
@@ -52,55 +52,88 @@ interface SettingsData {
   defaultMaxAttendees: string
 }
 
-const SETTINGS_KEY = 'enkutatash_settings'
-
-function loadSettings(): SettingsData {
-  try {
-    const stored = localStorage.getItem(SETTINGS_KEY)
-    if (stored) return JSON.parse(stored)
-  } catch {}
-  return {
-    name: 'Enkutatash Owner',
-    email: 'enkutatashevents@gmail.com',
-    company: 'Enkutatash Event',
-    emailNotif: true,
-    pushNotif: true,
-    eventReminders: true,
-    weeklyDigest: false,
-    defaultVenue: '',
-    defaultCategory: '',
-    defaultMaxAttendees: '100',
-  }
-}
-
-function saveSettings(settings: SettingsData) {
-  localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings))
+const DEFAULT_SETTINGS: SettingsData = {
+  name: 'Enkutatash Owner',
+  email: 'enkutatashevents@gmail.com',
+  company: 'Enkutatash Event',
+  emailNotif: true,
+  pushNotif: true,
+  eventReminders: true,
+  weeklyDigest: false,
+  defaultVenue: '',
+  defaultCategory: '',
+  defaultMaxAttendees: '100',
 }
 
 export function SettingsView() {
   const { theme, setTheme } = useTheme()
   const { toast } = useToast()
 
-  const [settings, setSettings] = useState<SettingsData>(loadSettings)
+  const [settings, setSettings] = useState<SettingsData>(DEFAULT_SETTINGS)
   const [saving, setSaving] = useState(false)
-  const venues = hardcodedVenueNames
-  const categories = hardcodedCategories
+  const [resetting, setResetting] = useState(false)
+  const venues = VENUE_NAMES
+  const categories = [...EVENT_CATEGORIES]
+
+  // Load settings from API on mount
+  useEffect(() => {
+    fetch('/api/admin-settings', { credentials: 'include' })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.settings) setSettings(data.settings)
+      })
+      .catch(() => {})
+  }, [])
 
   const updateSetting = <K extends keyof SettingsData>(key: K, value: SettingsData[K]) => {
     setSettings((prev) => ({ ...prev, [key]: value }))
   }
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setSaving(true)
-    // Save settings to localStorage
-    saveSettings(settings)
-    setTimeout(() => {
-      setSaving(false)
+    try {
+      const res = await fetch('/api/admin-settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ settings }),
+      })
+      if (!res.ok) throw new Error('save failed')
       toast({
         title: 'Settings Saved',
         description: 'Your preferences have been updated successfully.',
       })
-    }, 300)
+    } catch {
+      toast({
+        title: 'Save Failed',
+        description: 'Could not save settings. Changes saved locally.',
+        variant: 'destructive',
+      })
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleReset = async () => {
+    setResetting(true)
+    try {
+      const res = await fetch('/api/content', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ force: true }),
+      })
+      if (!res.ok) throw new Error('reset failed')
+      toast({ title: 'Content Reset', description: 'All content has been reset to defaults.' })
+    } catch {
+      toast({
+        title: 'Reset Failed',
+        description: 'Could not reset content. Please try again.',
+        variant: 'destructive',
+      })
+    } finally {
+      setResetting(false)
+    }
   }
 
   return (
@@ -293,11 +326,10 @@ export function SettingsView() {
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
                   <AlertDialogAction
                     className="bg-destructive text-white hover:bg-destructive/90"
-                    onClick={() => {
-                      toast({ title: 'Content Reset', description: 'All content has been reset to defaults.' })
-                    }}
+                    onClick={handleReset}
+                    disabled={resetting}
                   >
-                    Reset Content
+                    {resetting ? 'Resetting...' : 'Reset Content'}
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>

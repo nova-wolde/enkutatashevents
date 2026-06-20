@@ -52,20 +52,44 @@ export function MessagesView() {
   const [selectedMessage, setSelectedMessage] = useState<ContactSubmission | null>(null)
   const [detailOpen, setDetailOpen] = useState(false)
 
-  const toggleRead = (message: ContactSubmission) => {
+  const toggleRead = async (message: ContactSubmission) => {
+    const nextRead = !message.read
     const updated = messages.map((m) =>
-      m.id === message.id ? { ...m, read: !m.read } : m
+      m.id === message.id ? { ...m, read: nextRead } : m
     )
     setMessages(updated)
     const unread = updated.filter((m) => !m.read).length
     setUnreadCount(unread)
-    toast({
-      title: message.read ? 'Marked as unread' : 'Marked as read',
-      description: `Message from ${message.name}`,
-    })
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: message.id, read: nextRead }),
+      })
+      if (!response.ok) {
+        throw new Error('Failed to update status on server')
+      }
+      toast({
+        title: nextRead ? 'Marked as read' : 'Marked as unread',
+        description: `Message from ${message.name}`,
+      })
+    } catch {
+      const reverted = messages.map((m) =>
+        m.id === message.id ? { ...m, read: message.read } : m
+      )
+      setMessages(reverted)
+      const revertedUnread = reverted.filter((m) => !m.read).length
+      setUnreadCount(revertedUnread)
+      toast({
+        title: 'Error updating message status',
+        description: 'Changes could not be saved to server.',
+        variant: 'destructive',
+      })
+    }
   }
 
-  const deleteMessage = (message: ContactSubmission) => {
+  const deleteMessage = async (message: ContactSubmission) => {
     const updated = messages.filter((m) => m.id !== message.id)
     setMessages(updated)
     const unread = updated.filter((m) => !m.read).length
@@ -74,10 +98,30 @@ export function MessagesView() {
       setDetailOpen(false)
       setSelectedMessage(null)
     }
-    toast({
-      title: 'Message deleted',
-      description: `Removed message from ${message.name}`,
-    })
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: message.id }),
+      })
+      if (!response.ok) {
+        throw new Error('Failed to delete message on server')
+      }
+      toast({
+        title: 'Message deleted',
+        description: `Removed message from ${message.name}`,
+      })
+    } catch {
+      setMessages(messages)
+      const revertedUnread = messages.filter((m) => !m.read).length
+      setUnreadCount(revertedUnread)
+      toast({
+        title: 'Error deleting message',
+        description: 'Failed to delete message from server.',
+        variant: 'destructive',
+      })
+    }
   }
 
   const openDetail = (message: ContactSubmission) => {

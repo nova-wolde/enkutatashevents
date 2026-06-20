@@ -8,7 +8,11 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useEventStore } from './store'
 
-export function LoginPage() {
+interface LoginPageProps {
+  onSuccess?: () => void
+}
+
+export function LoginPage({ onSuccess }: LoginPageProps) {
   const { setAppView } = useEventStore()
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -35,6 +39,7 @@ export function LoginPage() {
       }
 
       setAppView('app')
+      onSuccess?.()
     } catch {
       setError('Network error. Please check your connection.')
     } finally {

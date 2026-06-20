@@ -24,8 +24,7 @@ import {
   Legend,
 } from 'recharts'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { useEventStore, EventCategory, BookingItem } from './store'
-import { hardcodedBookings } from './hardcoded-data'
+import { useEventStore, EventCategory } from './store'
 
 const COLORS = ['#10b981', '#14b8a6', '#f59e0b', '#8b5cf6', '#f43f5e', '#06b6d4', '#ec4899', '#84cc16']
 
@@ -43,8 +42,7 @@ const categoryColors: Record<string, string> = {
 }
 
 export function AnalyticsView() {
-  const { events } = useEventStore()
-  const bookings = hardcodedBookings as BookingItem[]
+  const { events, bookings } = useEventStore()
 
   const categoryData = useMemo(() => {
     const counts: Record<string, number> = {}

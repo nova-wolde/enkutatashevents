@@ -36,13 +36,11 @@ const gradients = [
   'from-cyan-400 to-sky-600',
 ]
 
-const defaultCategories: EventCategory[] = [...EVENT_CATEGORIES]
-
 export function CreateEventDialog() {
   const { createDialogOpen, setCreateDialogOpen, addEvent, editingEvent, setEditingEvent, updateEvent, addActivity } = useEventStore()
   const { toast } = useToast()
   const [venues, setVenues] = useState<string[]>([...VENUE_NAMES])
-  const [categories, setCategories] = useState<EventCategory[]>(defaultCategories)
+  const [categories, setCategories] = useState([...EVENT_CATEGORIES])
   const [name, setName] = useState('')
   const [date, setDate] = useState<Date | undefined>(undefined)
   const [time, setTime] = useState('09:00')
@@ -50,7 +48,11 @@ export function CreateEventDialog() {
   const [category, setCategory] = useState('')
   const [description, setDescription] = useState('')
   const [maxAttendees, setMaxAttendees] = useState('100')
-  const [ticketPrice, setTicketPrice] = useState('0')
+  const [ticketPrice, setTicketPrice] = useState('')
+  const [showCustomVenue, setShowCustomVenue] = useState(false)
+  const [customVenueValue, setCustomVenueValue] = useState('')
+  const [showCustomCategory, setShowCustomCategory] = useState(false)
+  const [customCategoryValue, setCustomCategoryValue] = useState('')
 
   const isEditing = !!editingEvent
 
@@ -69,6 +71,24 @@ export function CreateEventDialog() {
   }, [editingEvent])
 
   const [submitting, setSubmitting] = useState(false)
+
+  const handleAddCustomVenue = () => {
+    if (customVenueValue.trim()) {
+      setVenues(prev => [...prev, customVenueValue.trim()])
+      setVenue(customVenueValue.trim())
+      setShowCustomVenue(false)
+      setCustomVenueValue('')
+    }
+  }
+
+  const handleAddCustomCategory = () => {
+    if (customCategoryValue.trim()) {
+      setCategories(prev => [...prev, customCategoryValue.trim()])
+      setCategory(customCategoryValue.trim())
+      setShowCustomCategory(false)
+      setCustomCategoryValue('')
+    }
+  }
 
   const handleSubmit = async () => {
     if (!name || !date || !venue || !category) return
@@ -185,7 +205,11 @@ export function CreateEventDialog() {
     setCategory('')
     setDescription('')
     setMaxAttendees('100')
-    setTicketPrice('0')
+    setTicketPrice('')
+    setShowCustomVenue(false)
+    setCustomVenueValue('')
+    setShowCustomCategory(false)
+    setCustomCategoryValue('')
   }
 
   return (
@@ -262,7 +286,9 @@ export function CreateEventDialog() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Venue</Label>
-              <Select value={venue || undefined} onValueChange={setVenue}>
+              <Select value={venue || undefined} onValueChange={(v) => {
+                if (v === '__custom__') { setShowCustomVenue(true) } else { setVenue(v); setShowCustomVenue(false) }
+              }}>
                 <SelectTrigger className="h-10">
                   <SelectValue placeholder="Select venue" />
                 </SelectTrigger>
@@ -272,12 +298,29 @@ export function CreateEventDialog() {
                       {v}
                     </SelectItem>
                   ))}
+                  <SelectItem value="__custom__">+ Custom venue</SelectItem>
                 </SelectContent>
               </Select>
+              {showCustomVenue && (
+                <div className="flex gap-2 pt-1">
+                  <Input
+                    placeholder="Enter new venue name"
+                    value={customVenueValue}
+                    onChange={(e) => setCustomVenueValue(e.target.value)}
+                    className="h-9 text-sm"
+                    onKeyDown={(e) => e.key === 'Enter' && handleAddCustomVenue()}
+                  />
+                  <Button type="button" size="sm" className="h-9 text-xs shrink-0" onClick={handleAddCustomVenue}>
+                    Add
+                  </Button>
+                </div>
+              )}
             </div>
             <div className="space-y-2">
               <Label>Category</Label>
-              <Select value={category || undefined} onValueChange={(v) => setCategory(v)}>
+              <Select value={category || undefined} onValueChange={(v) => {
+                if (v === '__custom__') { setShowCustomCategory(true) } else { setCategory(v); setShowCustomCategory(false) }
+              }}>
                 <SelectTrigger className="h-10">
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
@@ -287,8 +330,23 @@ export function CreateEventDialog() {
                       {c}
                     </SelectItem>
                   ))}
+                  <SelectItem value="__custom__">+ Custom category</SelectItem>
                 </SelectContent>
               </Select>
+              {showCustomCategory && (
+                <div className="flex gap-2 pt-1">
+                  <Input
+                    placeholder="Enter new category"
+                    value={customCategoryValue}
+                    onChange={(e) => setCustomCategoryValue(e.target.value)}
+                    className="h-9 text-sm"
+                    onKeyDown={(e) => e.key === 'Enter' && handleAddCustomCategory()}
+                  />
+                  <Button type="button" size="sm" className="h-9 text-xs shrink-0" onClick={handleAddCustomCategory}>
+                    Add
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
 
@@ -318,7 +376,7 @@ export function CreateEventDialog() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="ticket-price">Ticket Price ($)</Label>
+              <Label htmlFor="ticket-price">Ticket Price ($) (optional)</Label>
               <Input
                 id="ticket-price"
                 type="number"

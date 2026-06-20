@@ -17,6 +17,7 @@ import { SettingsView } from '@/components/event-organizer/settings-view'
 import { MessagesView } from '@/components/event-organizer/messages-view'
 import { BookingsView } from '@/components/event-organizer/bookings-view'
 import { ContentManager } from '@/components/event-organizer/content-manager'
+import { BookingDialog } from '@/components/event-organizer/booking-dialog'
 
 const viewTitles: Record<ViewTab, { title: string; subtitle: string; icon: React.ElementType }> = {
   dashboard: { title: 'Dashboard', subtitle: 'Welcome back! Here\'s what\'s happening.', icon: CalendarDays },
@@ -106,6 +107,7 @@ function AppView() {
       </div>
 
       <CreateEventDialog />
+      <BookingDialog />
     </div>
   )
 }

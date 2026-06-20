@@ -52,7 +52,7 @@ const itemVariants = {
 }
 
 export function QuickActions() {
-  const { setCreateDialogOpen, setCurrentView } = useEventStore()
+  const { setCreateDialogOpen, setCurrentView, setBookingDialogOpen } = useEventStore()
 
   const handleAction = (action: string) => {
     if (action === 'create') {
@@ -60,7 +60,7 @@ export function QuickActions() {
     } else if (action === 'venue') {
       setCurrentView('venues')
     } else if (action === 'invite') {
-      setCurrentView('bookings')
+      setBookingDialogOpen(true)
     } else if (action === 'export') {
       setCurrentView('analytics')
     }

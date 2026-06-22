@@ -27,6 +27,7 @@ import {
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
@@ -157,6 +158,11 @@ export function BookingDialog() {
             <Sparkles className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
             {submitted ? 'Booking Submitted!' : 'Book an Event — ዝግጅት ያስይዙ'}
           </DialogTitle>
+          <DialogDescription>
+            {submitted
+              ? 'Thank you for your booking request. Our team will reach out shortly.'
+              : 'Fill in the details below and our team will get back to you with a tailored plan.'}
+          </DialogDescription>
         </DialogHeader>
 
         {submitted ? (

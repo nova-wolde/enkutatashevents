@@ -39,11 +39,11 @@ const nextConfig: NextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://static.cloudflareinsights.com",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: blob: https://enkutatashevents.com",
-              "connect-src 'self' https://www.google-analytics.com",
+              "connect-src 'self' https://www.google-analytics.com https://cloudflareinsights.com",
               "frame-ancestors 'none'",
               "base-uri 'self'",
               "form-action 'self'",

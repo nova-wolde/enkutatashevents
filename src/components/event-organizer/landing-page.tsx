@@ -858,7 +858,7 @@ function TestimonialsSection({ content }: { content: SiteContent }) {
 
 function ContactSection({ content }: { content: SiteContent }) {
   const { setBookingDialogOpen } = useEventStore()
-  const { t } = useLanguage()
+  const { language, t } = useLanguage()
   const [formState, setFormState] = useState({ name: '', email: '', phone: '', eventType: '', message: '' })
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
@@ -1051,19 +1051,132 @@ function Footer({ content }: { content: SiteContent }) {
   )
 }
 
+const fallbackContent: SiteContent = {
+  businessName: "Enkutatash",
+  businessNameAmharic: "እንቁጣጣሽ ኤቨንት",
+  tagline: "Premium Event Organizers in Addis Ababa",
+  taglineAmharic: "በአዲስ አበባ ፕሪሚየም ዝግጅት አደራጆች",
+  description: "Addis Ababa's premier event organizer. Crafting legendary experiences since 2022.",
+  descriptionAmharic: "ከ2022 ዓ.ም ጀምሮ ያልተረሳ ትዝታዎችን እያደራጅን",
+  foundedYear: "2022",
+  email: "enkutatashevents@gmail.com",
+  phones: ["+251 915 895 757", "+251 915 843 131", "+251 910 977 371"],
+  phoneLinks: ["+251915895757", "+251915843131", "+251910977371"],
+  address: "Ayat, Addis Ababa",
+  addressAmharic: "አያት፣ አዲስ አበባ",
+  workingHours: [{ day: "Mon - Fri", hours: "8:00 AM - 6:00 PM" }, { day: "Sat", hours: "9:00 AM - 2:00 PM" }],
+  socialLinks: [
+    { platform: "Instagram", url: "https://www.instagram.com/enkutatashevents/" },
+    { platform: "Facebook", url: "https://web.facebook.com/profile.php?id=61590503624575" },
+    { platform: "YouTube", url: "https://www.youtube.com/@Enkutatashevents" },
+    { platform: "Telegram", url: "https://t.me/httpenkutatashevent" },
+    { platform: "WhatsApp", url: "https://whatsapp.com/channel/0029VbDBLNS6WaKf4RGzel3r" },
+  ],
+  heroTitle: "Where Every Event Becomes Legendary",
+  heroTitleAmharic: "እንቁጣጣሽ ኤቨንት",
+  heroSubtitle: "Enkutatash is Addis Ababa's premier event organizer. From breathtaking weddings to large-scale corporate events and cultural celebrations — we bring your vision to life with elegance, precision, and a touch of creativity.",
+  heroSubtitleAmharic: "",
+  heroBadge: "Premium Event Organizers in Addis Ababa",
+  aboutTitle: "Crafting Unforgettable Moments Since 2022",
+  aboutSubtitle: "ከ2022 ዓ.ም ጀምሮ ያልተረሳ ትዝታዎችን እያደራጅን",
+  aboutDescription: "Named after the Ethiopian New Year, Enkutatash was founded with a simple belief: every event deserves to be extraordinary. Based in Addis Ababa, we transform ordinary occasions into legendary experiences with cultural understanding and world-class standards.",
+  aboutHighlights: ["End-to-end event planning", "Award-winning design team", "Strong vendor network", "Dedicated project manager", "Full sound & light supply", "Catering & decoration"],
+  vision: "To be the leading events management service provider for corporate events, delivering exceptional experiences and exceeding client expectations across Ethiopia.",
+  visionAmharic: "ራዕያችን",
+  mission: "To create memorable and impactful corporate events that engage and inspire attendees, transforming gatherings into powerful experiences through innovative design and meticulous planning.",
+  missionAmharic: "ተልዕኳችን",
+  goals: [
+    { icon: "Heart", title: "Client Satisfaction", titleAmharic: "የደንበኛ እርካታ", gradient: "from-rose-500 to-pink-600" },
+    { icon: "Sparkles", title: "Exceptional Experiences", titleAmharic: "ልዩ ልምዶች", gradient: "from-amber-500 to-orange-600" },
+    { icon: "Shield", title: "Professionalism & Reliability", titleAmharic: "ሙያዊነትና አስተማማኝነት", gradient: "from-blue-500 to-indigo-600" },
+    { icon: "TrendingUp", title: "Growth & Expansion", titleAmharic: "እድገትና ስፋት", gradient: "from-emerald-500 to-teal-600" },
+    { icon: "Award", title: "Industry Leadership", titleAmharic: "የኢንዱስትሪ መሪነት", gradient: "from-violet-500 to-purple-600" },
+  ],
+  objectives: [
+    { icon: "Target", title: "Tailored Planning", description: "Comprehensive planning tailored to corporate client needs" },
+    { icon: "CheckCircle2", title: "Meticulous Detail", description: "Attention to detail in venue, logistics, catering & AV" },
+    { icon: "Handshake", title: "Brand Alignment", description: "Events aligned with your brand identity and objectives" },
+    { icon: "Megaphone", title: "Strategic Promotion", description: "Marketing strategies to attract your target audience" },
+    { icon: "Lightbulb", title: "Technology-Driven", description: "Modern tools for streamlined, efficient delivery" },
+    { icon: "Users", title: "Vendor Excellence", description: "Strong vendor relationships for reliable services" },
+    { icon: "Rocket", title: "Innovation First", description: "Latest industry trends incorporated into every event" },
+    { icon: "BarChart3", title: "Continuous Improvement", description: "Feedback-driven improvement for future events" },
+  ],
+  stats: [
+    { value: "500+", label: "Events Organized", labelAmharic: "", icon: "CalendarDays" },
+    { value: "50K+", label: "Happy Guests", labelAmharic: "", icon: "Users" },
+    { value: "4+", label: "Years of Excellence", labelAmharic: "", icon: "Award" },
+    { value: "4.9", label: "Average Rating", labelAmharic: "", icon: "Star" },
+  ],
+  services: [
+    { id: "s1", title: "Advert & Promotion", titleAmharic: "", description: "Strategic advertising and promotional campaigns to maximize your event's reach.", descriptionAmharic: "", icon: "Megaphone", gradient: "from-amber-500 to-orange-600", bgGlow: "bg-amber-500/10" },
+    { id: "s2", title: "Event Organization", titleAmharic: "", description: "Full-service event planning and management from concept to completion.", descriptionAmharic: "", icon: "PartyPopper", gradient: "from-emerald-500 to-teal-600", bgGlow: "bg-emerald-500/10" },
+    { id: "s3", title: "Decoration", titleAmharic: "", description: "Stunning decorative designs tailored to your theme and vision.", descriptionAmharic: "", icon: "Palette", gradient: "from-rose-500 to-pink-600", bgGlow: "bg-rose-500/10" },
+    { id: "s4", title: "Stage & Tent Rent", titleAmharic: "", description: "Professional stage setups and tent rentals for events of any scale.", descriptionAmharic: "", icon: "Tent", gradient: "from-violet-500 to-purple-600", bgGlow: "bg-violet-500/10" },
+    { id: "s5", title: "Sound & Light Supply", titleAmharic: "", description: "State-of-the-art sound systems and professional lighting setups.", descriptionAmharic: "", icon: "Speaker", gradient: "from-cyan-500 to-sky-600", bgGlow: "bg-cyan-500/10" },
+    { id: "s6", title: "Chair & Table Supply", titleAmharic: "", description: "A wide selection of chairs, tables, and furniture rentals.", descriptionAmharic: "", icon: "Armchair", gradient: "from-indigo-500 to-blue-600", bgGlow: "bg-indigo-500/10" },
+    { id: "s7", title: "Catering Supply", titleAmharic: "", description: "Delicious catering services featuring the best of Ethiopian and international cuisine.", descriptionAmharic: "", icon: "UtensilsCrossed", gradient: "from-orange-500 to-red-600", bgGlow: "bg-orange-500/10" },
+    { id: "s8", title: "Kids Game Material Supply", titleAmharic: "", description: "Fun and safe entertainment options for children at your event.", descriptionAmharic: "", icon: "Gamepad2", gradient: "from-lime-500 to-green-600", bgGlow: "bg-lime-500/10" },
+  ],
+  testimonials: [
+    { id: "t1", name: "Dr. Dereje", nameAmharic: "ዶ/ር ደረጄ", role: "Director General, Addis Ababa Science & Technology University", roleAmharic: "", avatar: "ደ", quote: "Enkutatash delivered an outstanding experience for our university event.", quoteAmharic: "", rating: 5, event: "University Event" },
+    { id: "t2", name: "W/o Tsige Jimma", nameAmharic: "ወ/ሮ ፅጌ ጂማ", role: "Deputy Chief Executive, Lemi Kuraa Sub-city", roleAmharic: "", avatar: "ፅ", quote: "We partnered with Enkutatash for our sub-city official events and the results were remarkable.", quoteAmharic: "", rating: 5, event: "Government Event" },
+    { id: "t3", name: "Ato Midiksa Kebede", nameAmharic: "አቶ ሚዴቅሳ ከበደ", role: "Deputy Bureau Head, Addis Ababa Peace & Security Administration", roleAmharic: "", avatar: "ሚ", quote: "Enkutatash handled our bureau's official ceremony with exceptional professionalism.", quoteAmharic: "", rating: 5, event: "Official Ceremony" },
+  ],
+  portfolioEvents: [
+    { id: "p1", title: "Cultural Festival", titleAmharic: "የባህል ፌስቲቫል", category: "Cultural", attendees: "1,000+", image: "/events/event-5.jpg", description: "A vibrant outdoor cultural celebration.", descriptionAmharic: "", gradient: "from-emerald-400 via-teal-500 to-cyan-600" },
+    { id: "p2", title: "Wedding Reception", titleAmharic: "የሰርግ ስብሰባ", category: "Wedding", attendees: "350+", image: "/events/event-2.jpg", description: "An elegant wedding reception.", descriptionAmharic: "", gradient: "from-rose-400 via-pink-500 to-fuchsia-600" },
+    { id: "p3", title: "Live Concert", titleAmharic: "ቀጥታ ሙዚቃ", category: "Concert", attendees: "5,000+", image: "/events/event-4.jpg", description: "A spectacular live concert.", descriptionAmharic: "", gradient: "from-violet-400 via-purple-500 to-indigo-600" },
+    { id: "p4", title: "Corporate Event", titleAmharic: "የኮርፖሬት ዝግጅት", category: "Corporate", attendees: "500+", image: "/events/event-6.jpg", description: "A premium corporate gathering.", descriptionAmharic: "", gradient: "from-amber-400 via-orange-500 to-red-500" },
+    { id: "p5", title: "VIP Lounge Setup", titleAmharic: "ቪአይፒ ሎውንጅ", category: "Corporate", attendees: "200+", image: "/events/event-7.jpg", description: "Luxury VIP lounge setup.", descriptionAmharic: "", gradient: "from-cyan-400 via-blue-500 to-indigo-600" },
+    { id: "p6", title: "Grand Wedding", titleAmharic: "ታላቅ ሰርግ", category: "Wedding", attendees: "800+", image: "/events/event-8.jpg", description: "A grand wedding ceremony.", descriptionAmharic: "", gradient: "from-rose-400 via-pink-500 to-fuchsia-600" },
+    { id: "p7", title: "Formal Ceremony", titleAmharic: "ሥርዓተ ሰርግ", category: "Ceremony", attendees: "600+", image: "/events/event-9.jpg", description: "A formal ceremony in an elegant auditorium.", descriptionAmharic: "", gradient: "from-lime-400 via-green-500 to-emerald-600" },
+    { id: "p8", title: "Musical Performance", titleAmharic: "ሙዚቃዊ ትንታኔ", category: "Concert", attendees: "3,000+", image: "/events/event-3.jpg", description: "A captivating musical performance.", descriptionAmharic: "", gradient: "from-violet-400 via-purple-500 to-indigo-600" },
+    { id: "p9", title: "Event Decoration", titleAmharic: "የዝግጅት ጌጣጌጥ", category: "Decoration", attendees: "Various", image: "/events/event-1.jpg", description: "Premium decorative lighting and fixtures.", descriptionAmharic: "", gradient: "from-amber-400 via-yellow-500 to-orange-500" },
+    { id: "p10", title: "Ceremony Hall Setup", titleAmharic: "የሥርዓት አዳራሽ ዝጌጣጌጥ", category: "Ceremony", attendees: "600+", image: "/events/event-10.jpg", description: "A grand ceremony hall setup.", descriptionAmharic: "", gradient: "from-blue-400 via-indigo-500 to-violet-600" },
+    { id: "p11", title: "Conference Hall Setup", titleAmharic: "የስብሰባ አዳራሽ ዝጌጣጌጥ", category: "Corporate", attendees: "800+", image: "/events/event-11.jpg", description: "A spacious conference hall.", descriptionAmharic: "", gradient: "from-slate-400 via-gray-500 to-zinc-600" },
+    { id: "p12", title: "Elegant Celebration", titleAmharic: "ምሩር ስብሰባ", category: "Celebration", attendees: "300+", image: "/events/event-12.jpg", description: "An elegant celebration.", descriptionAmharic: "", gradient: "from-emerald-400 via-green-500 to-teal-600" },
+  ],
+  venues: ["Sheraton Addis Grand Ballroom", "Hyatt Regency Addis Ababa", "Millennium Hall"],
+  teamMembers: [
+    { id: "tm1", name: "Kidane Tadesse", role: "Founder & CEO", avatar: "KT", gradient: "from-emerald-500 to-teal-600", bio: "Visionary leader." },
+    { id: "tm2", name: "Meron Bekele", role: "Creative Director", avatar: "MB", gradient: "from-violet-500 to-purple-600", bio: "Award-winning designer." },
+    { id: "tm3", name: "Yohannes Alemu", role: "Operations Manager", avatar: "YA", gradient: "from-amber-500 to-orange-600", bio: "Logistics expert." },
+    { id: "tm4", name: "Sara Girma", role: "Catering Director", avatar: "SG", gradient: "from-rose-500 to-pink-600", bio: "Culinary specialist." },
+  ],
+  eventCategories: ["Wedding", "Corporate", "Cultural", "Concert", "Conference", "Symposium", "Government", "Social"],
+}
+
 // ─── Main Landing Page Component ──────────────────────────────────────────────
 export function LandingPage() {
-  const [content, setContent] = useState<SiteContent | null>(null)
+  const [content, setContent] = useState<SiteContent>(fallbackContent)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch('/api/content')
-      .then((r) => r.json())
+    let cancelled = false
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 8000)
+
+    fetch('/api/content', { signal: controller.signal })
+      .then((r) => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`)
+        return r.json()
+      })
       .then((data) => {
-        if (data.content) setContent(data.content as SiteContent)
+        if (!cancelled && data.content) {
+          setContent(data.content as SiteContent)
+        }
       })
       .catch(() => {})
-      .finally(() => setLoading(false))
+      .finally(() => {
+        clearTimeout(timeoutId)
+        if (!cancelled) setLoading(false)
+      })
+
+    return () => {
+      cancelled = true
+      controller.abort()
+    }
   }, [])
 
   if (loading) {
@@ -1075,10 +1188,6 @@ export function LandingPage() {
         </div>
       </div>
     )
-  }
-
-  if (!content) {
-    return null
   }
 
   return (

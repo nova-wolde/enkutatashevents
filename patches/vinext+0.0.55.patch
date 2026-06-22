@@ -1,0 +1,21 @@
+diff --git a/node_modules/vinext/dist/plugins/fonts.js b/node_modules/vinext/dist/plugins/fonts.js
+index 9374ac4..c764441 100644
+--- a/node_modules/vinext/dist/plugins/fonts.js
++++ b/node_modules/vinext/dist/plugins/fonts.js
+@@ -89,9 +89,14 @@ function formatGoogleFontsErrorBody(body) {
+ * filesystems.
+ */
+ function _rewriteCachedFontCssToServedUrls(css, cacheDir, assetsDir = DEFAULT_ASSETS_DIR) {
+-	if (!cacheDir || !css.includes(cacheDir)) return css;
++	if (!cacheDir) return css;
+ 	const prefix = assetsDir || DEFAULT_ASSETS_DIR;
+-	return css.split(cacheDir).join(`/${prefix}/${VINEXT_FONT_URL_NAMESPACE}`);
++	const replacement = `/${prefix}/${VINEXT_FONT_URL_NAMESPACE}`;
++	const posix = cacheDir.split("\\").join("/");
++	let out = css;
++	if (out.includes(cacheDir)) out = out.split(cacheDir).join(replacement);
++	if (posix !== cacheDir && out.includes(posix)) out = out.split(posix).join(replacement);
++	return out;
+ }
+ /**
+ * Default `build.assetsDir` — matches vinext's resolved default in

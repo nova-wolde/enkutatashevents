@@ -8,9 +8,11 @@
 import { handleImageOptimization, DEFAULT_DEVICE_SIZES, DEFAULT_IMAGE_SIZES, isImageOptimizationPath } from "vinext/server/image-optimization";
 import type { ImageConfig } from "vinext/server/image-optimization";
 import handler from "vinext/server/app-router-entry";
+import { setMeowdisFetch } from "@/lib/meowdis-client";
 
 interface Env {
   ASSETS: Fetcher;
+  MEOWDIS: Fetcher;
   IMAGES: {
     input(stream: ReadableStream): {
       transform(options: Record<string, unknown>): {
@@ -43,10 +45,15 @@ export default {
       return handleImageOptimization(request, {
         fetchAsset: (path) => env.ASSETS.fetch(new Request(new URL(path, request.url))),
         transformImage: async (body, { width, format, quality }) => {
-          const result = await env.IMAGES.input(body).transform(width > 0 ? { width } : {}).output({ format, quality });
+          const result = await env.IMAGES.input(body).transform(width > 0 ? { width : undefined } : {}).output({ format, quality });
           return result.response();
         },
       }, allowedWidths);
+    }
+
+    // Make Meowdis service binding available to Next.js routes via meowdis-client.
+    if (env.MEOWDIS) {
+      setMeowdisFetch((req) => env.MEOWDIS.fetch(req));
     }
 
     // Delegate everything else to vinext, forwarding ctx so that

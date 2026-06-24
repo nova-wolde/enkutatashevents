@@ -1,11 +1,13 @@
 import type { MetadataRoute } from "next";
+import { services } from "@/lib/services-data";
+import { ethiopianCities } from "@/lib/seo-data";
+import { blogPosts } from "@/lib/blog-data";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://enkutatashevents.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
-  // Static pages
   const staticPages: MetadataRoute.Sitemap = [
     {
       url: SITE_URL,
@@ -15,9 +17,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${SITE_URL}/services`,
-      lastModified: new Date("2026-06-01"),
-      changeFrequency: "monthly",
+      lastModified: now,
+      changeFrequency: "weekly",
       priority: 0.9,
+    },
+    {
+      url: `${SITE_URL}/locations`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
+      url: `${SITE_URL}/blog`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.7,
     },
     {
       url: `${SITE_URL}/privacy`,
@@ -33,57 +47,26 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  // Service-specific pages for better SEO crawlability
-  const servicePages: MetadataRoute.Sitemap = [
-    {
-      url: `${SITE_URL}/services/wedding`,
-      lastModified: new Date("2026-06-01"),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${SITE_URL}/services/corporate`,
-      lastModified: new Date("2026-06-01"),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${SITE_URL}/services/concert`,
-      lastModified: new Date("2026-06-01"),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${SITE_URL}/services/cultural`,
-      lastModified: new Date("2026-06-01"),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${SITE_URL}/services/decoration`,
-      lastModified: new Date("2026-06-01"),
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${SITE_URL}/services/stage-tent-rental`,
-      lastModified: new Date("2026-06-01"),
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${SITE_URL}/services/sound-lighting`,
-      lastModified: new Date("2026-06-01"),
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${SITE_URL}/services/catering`,
-      lastModified: new Date("2026-06-01"),
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-  ];
+  const servicePages: MetadataRoute.Sitemap = services.map((s) => ({
+    url: `${SITE_URL}/${s.slug}`,
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  }));
 
-  return [...staticPages, ...servicePages];
+  const cityPages: MetadataRoute.Sitemap = ethiopianCities.map((c) => ({
+    url: `${SITE_URL}/locations/${c.slug}`,
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
+
+  const blogPages: MetadataRoute.Sitemap = blogPosts.map((p) => ({
+    url: `${SITE_URL}/blog/${p.slug}`,
+    lastModified: new Date(p.date),
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }));
+
+  return [...staticPages, ...servicePages, ...cityPages, ...blogPages];
 }

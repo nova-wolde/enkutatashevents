@@ -1,22 +1,10 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { Redis } from "@upstash/redis";
+import { meowdis } from "@/lib/meowdis-client";
 
 // ─── Redis-Backed Rate Limiting (works across Cloudflare Workers isolates) ────
-// On Workers, in-memory Maps don't persist across requests.
-// We use Upstash Redis for persistent rate limiting.
+// Uses Meowdis (Redis via Durable Objects) for persistent rate limiting.
 // If Redis is not configured, we fall back to a permissive approach (no rate limiting).
-
-let _redis: Redis | null = null;
-
-function getRedis(): Redis | null {
-  if (_redis !== null) return _redis;
-  const url = process.env.UPSTASH_REDIS_REST_URL;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
-  if (!url || !token) return null;
-  _redis = new Redis({ url, token });
-  return _redis;
-}
 
 /**
  * Get the real visitor IP.
@@ -41,24 +29,23 @@ function getClientIP(request: NextRequest): string {
 // Write endpoints (login, contact, bookings) need stricter protection.
 
 const RATE_LIMITS: Record<string, { max: number; window: number }> = {
-  // Sensitive writes — strict limits
+  // Sensitive writes — strict limits, Redis-backed
   login:    { max: 10,  window: 60 },   // 10 login attempts per minute per IP
   contact:  { max: 5,   window: 60 },   // 5 contact form submissions per minute
   booking:  { max: 10,  window: 60 },   // 10 booking submissions per minute
-
-  // General reads — generous limits
-  api_read: { max: 300, window: 60 },   // 300 API reads per minute per IP
 };
 
 /**
- * Determine which rate limit bucket a request falls into.
+ * Rate limiting strategy:
+ *   - Write endpoints (login, contact, bookings) → Redis-backed rate limit
+ *   - Read-only endpoints (content, health, events GET, etc.) → skipped entirely
+ *     (they already have seed-data fallback and don't need Redis calls)
  */
 function getRateLimitBucket(pathname: string): string {
   if (pathname === "/api/auth/login") return "login";
   if (pathname === "/api/contact") return "contact";
   if (pathname === "/api/bookings" || pathname === "/api/events") return "booking";
-  if (pathname.startsWith("/api/")) return "api_read";
-  return "api_read"; // default for non-API routes
+  return ""; // read-only API routes → no rate limiting
 }
 
 /**
@@ -71,23 +58,18 @@ async function isRateLimited(
   maxRequests: number,
   windowSeconds: number
 ): Promise<boolean> {
-  const redis = getRedis();
-  if (!redis) {
-    // No Redis configured — skip rate limiting (development fallback)
+  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
     return false;
   }
 
   try {
     const redisKey = `ratelimit:${bucket}:${ip}`;
-    // Atomically increment and set expiry
-    const count = await redis.incr(redisKey);
+    const count = (await meowdis.incr(redisKey)) as number;
     if (count === 1) {
-      // First request in this window — set the TTL
-      await redis.expire(redisKey, windowSeconds);
+      await meowdis.expire(redisKey, windowSeconds);
     }
     return count > maxRequests;
   } catch {
-    // If Redis fails, don't block the request
     return false;
   }
 }
@@ -111,22 +93,26 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  // ── 2. Rate Limiting on API Routes ──────────────────────────────────────
+  // ── 2. Rate Limiting on Write API Routes ─────────────────────────────────
+  // Read-only endpoints (content, health, events GET, etc.) are skipped —
+  // they have seed-data fallback and don't need Redis-backed rate limiting.
   if (pathname.startsWith("/api/")) {
-    const ip = getClientIP(request);
     const bucket = getRateLimitBucket(pathname);
-    const limits = RATE_LIMITS[bucket];
-    const limited = await isRateLimited(ip, bucket, limits.max, limits.window);
-    if (limited) {
-      const isLogin = pathname === "/api/auth/login";
-      return NextResponse.json(
-        {
-          error: isLogin
-            ? "Too many login attempts. Please try again later."
-            : "Too many requests. Please try again later.",
-        },
-        { status: 429 }
-      );
+    if (bucket && RATE_LIMITS[bucket]) {
+      const ip = getClientIP(request);
+      const limits = RATE_LIMITS[bucket];
+      const limited = await isRateLimited(ip, bucket, limits.max, limits.window);
+      if (limited) {
+        const isLogin = pathname === "/api/auth/login";
+        return NextResponse.json(
+          {
+            error: isLogin
+              ? "Too many login attempts. Please try again later."
+              : "Too many requests. Please try again later.",
+          },
+          { status: 429 }
+        );
+      }
     }
   }
 

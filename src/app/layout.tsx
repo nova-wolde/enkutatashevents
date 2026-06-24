@@ -23,10 +23,10 @@ const geistMono = Geist_Mono({
 
 // ─── Site Constants ───────────────────────────────────────────────────────────
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://enkutatashevents.com";
-const SITE_NAME = "Enkutatash Event";
-const SITE_TITLE = "Enkutatash — Premium Event Organizers | Addis Ababa, Ethiopia";
+const SITE_NAME = "Enkutatash Events";
+const SITE_TITLE = "Enkutatash Events — Premium Event Organizers | Addis Ababa, Ethiopia";
 const SITE_DESCRIPTION =
-  "Addis Ababa's premier event organizer. Weddings, corporate events, concerts, cultural celebrations, stage & tent rental, sound & lighting, catering, and decoration — we bring your vision to life with elegance and precision.";
+  "Enkutatash Events — Addis Ababa's premier event organizer and wedding planner in Ethiopia. Weddings, corporate events, concerts, cultural celebrations, stage & tent rental, sound & lighting, catering, decoration, and kids party entertainment. Free quotes available.";
 const SITE_OG_IMAGE = `${SITE_URL}/og-image.png`;
 
 // ─── Viewport ─────────────────────────────────────────────────────────────────
@@ -59,9 +59,28 @@ export const metadata: Metadata = {
     "sound and lighting Ethiopia",
     "catering Addis Ababa",
     "decoration Ethiopia",
-    "Enkutatash Event",
+    "Enkutatashevents",
     "event planning Africa",
     "stage setup Addis",
+    "enkutatashevents",
+    "events in Ethiopia",
+    "events in Addis Ababa",
+    "event management company Ethiopia",
+    "wedding event planner Addis Ababa",
+    "wedding organizer Ethiopia",
+    "kids party entertainment Addis",
+    "party planner Addis Ababa",
+    "birthday party organizer Ethiopia",
+    "concert production Ethiopia",
+    "stage rental Addis Ababa",
+    "chair rental for events Addis",
+    "catering service in Addis Ababa",
+    "Ethiopian coffee ceremony catering",
+    "bouncy castle rental Ethiopia",
+    "event decorator Addis Ababa",
+    "corporate event management Ethiopia",
+    "best event organizer in Addis Ababa",
+    "affordable event planner Ethiopia",
   ],
   authors: [{ name: "Enkutatash Event", url: SITE_URL }],
   creator: "Enkutatash Event",
@@ -130,8 +149,8 @@ function JsonLd() {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     "@id": `${SITE_URL}/#business`,
-    name: "Enkutatash Event",
-    alternateName: ["እንቁጣጣሽ ኤቨንት", "Enkutatash Event Organizer"],
+    name: "Enkutatash Events",
+    alternateName: ["እንቁጣጣሽ ኤቨንት", "Enkutatash Event Organizer", "enkutatashevents.com"],
     description: SITE_DESCRIPTION,
     url: SITE_URL,
     logo: `${SITE_URL}/enkutatash-logo.png`,
@@ -179,7 +198,7 @@ function JsonLd() {
     "@context": "https://schema.org",
     "@type": "Organization",
     "@id": `${SITE_URL}/#organization`,
-    name: "Enkutatash Event",
+    name: "Enkutatash Events",
     alternateName: "እንቁጣጣሽ ኤቨንት",
     url: SITE_URL,
     logo: `${SITE_URL}/enkutatash-logo.png`,
@@ -207,7 +226,7 @@ function JsonLd() {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "@id": `${SITE_URL}/#website`,
-    name: "Enkutatash Event",
+    name: "Enkutatash Events",
     alternateName: "እንቁጣጣሽ ኤቨንት",
     url: SITE_URL,
     description: SITE_DESCRIPTION,

@@ -199,7 +199,9 @@ function LandingNavbar({ content }: { content: SiteContent }) {
           <div className="hidden lg:flex items-center gap-6 xl:gap-8">
             <a href="#about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">{t('About', 'ስለ እኛ')}</a>
             <a href="#vision" className="text-sm text-muted-foreground hover:text-foreground transition-colors">{t('Vision', 'ራዕይ')}</a>
-            <a href="#services" className="text-sm text-muted-foreground hover:text-foreground transition-colors">{t('Services', 'አገልግሎቶች')}</a>
+            <a href="/services" className="text-sm text-muted-foreground hover:text-foreground transition-colors">{t('Services', 'አገልግሎቶች')}</a>
+            <a href="/locations" className="text-sm text-muted-foreground hover:text-foreground transition-colors">{t('Locations', 'አካባቢዎች')}</a>
+            <a href="/blog" className="text-sm text-muted-foreground hover:text-foreground transition-colors">{t('Blog', 'ብሎግ')}</a>
             <a href="#portfolio" className="text-sm text-muted-foreground hover:text-foreground transition-colors">{t('Portfolio', 'ስራዎቻችን')}</a>
             <a href="#contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors">{t('Contact', 'ያግኙን')}</a>
           </div>
@@ -243,8 +245,8 @@ function LandingNavbar({ content }: { content: SiteContent }) {
             className="lg:hidden border-t border-border/50 bg-background/95 backdrop-blur-xl"
           >
             <div className="px-4 py-4 space-y-3">
-              {[{ en: 'About', am: 'ስለ እኛ', href: 'about' }, { en: 'Vision', am: 'ራዕይ', href: 'vision' }, { en: 'Services', am: 'አገልግሎቶች', href: 'services' }, { en: 'Portfolio', am: 'ስራዎቻችን', href: 'portfolio' }, { en: 'Contact', am: 'ያግኙን', href: 'contact' }].map((item) => (
-                <a key={item.en} href={`#${item.href}`} className="block text-sm text-muted-foreground hover:text-foreground py-2.5 min-h-[44px] flex items-center" onClick={() => setMobileOpen(false)}>
+              {[{ en: 'About', am: 'ስለ እኛ', href: 'about', external: false }, { en: 'Vision', am: 'ራዕይ', href: 'vision', external: false }, { en: 'Services', am: 'አገልግሎቶች', href: '/services', external: true }, { en: 'Locations', am: 'አካባቢዎች', href: '/locations', external: true }, { en: 'Blog', am: 'ብሎግ', href: '/blog', external: true }, { en: 'Portfolio', am: 'ስራዎቻችን', href: 'portfolio', external: false }, { en: 'Contact', am: 'ያግኙን', href: 'contact', external: false }].map((item) => (
+                <a key={item.en} href={item.external ? item.href : `#${item.href}`} className="block text-sm text-muted-foreground hover:text-foreground py-2.5 min-h-[44px] flex items-center" onClick={() => setMobileOpen(false)}>
                   {t(item.en, item.am)}
                 </a>
               ))}
@@ -585,20 +587,29 @@ function ServicesSection({ content }: { content: SiteContent }) {
             const Icon = getIcon(service.icon)
             return (
               <motion.div key={service.id} variants={staggerItem} whileHover={{ y: -4 }} className="group">
-                <Card className="h-full rounded-xl sm:rounded-2xl border-border/50 shadow-sm hover:shadow-lg transition-all duration-300 hover:border-emerald-500/20">
-                  <CardContent className="p-4 sm:p-6">
-                    <div className={`inline-flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-xl sm:rounded-2xl ${service.bgGlow} mb-3 sm:mb-4`}>
-                      <div className={`h-7 w-7 sm:h-8 sm:w-8 rounded-lg sm:rounded-xl bg-gradient-to-br ${service.gradient} flex items-center justify-center`}>
-                        <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white" />
+                <a href={`/services/${service.id}`} className="block h-full">
+                  <Card className="h-full rounded-xl sm:rounded-2xl border-border/50 shadow-sm hover:shadow-lg transition-all duration-300 hover:border-emerald-500/20 cursor-pointer">
+                    <CardContent className="p-4 sm:p-6">
+                      <div className={`inline-flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-xl sm:rounded-2xl ${service.bgGlow} mb-3 sm:mb-4`}>
+                        <div className={`h-7 w-7 sm:h-8 sm:w-8 rounded-lg sm:rounded-xl bg-gradient-to-br ${service.gradient} flex items-center justify-center`}>
+                          <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white" />
+                        </div>
                       </div>
-                    </div>
-                    <h3 className="text-base sm:text-lg font-semibold mb-1.5 sm:mb-2 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">{language === 'am' && service.titleAmharic ? service.titleAmharic : service.title}</h3>
-                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{language === 'am' && service.descriptionAmharic ? service.descriptionAmharic : service.description}</p>
-                  </CardContent>
-                </Card>
+                      <h3 className="text-base sm:text-lg font-semibold mb-1.5 sm:mb-2 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">{language === 'am' && service.titleAmharic ? service.titleAmharic : service.title}</h3>
+                      <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{language === 'am' && service.descriptionAmharic ? service.descriptionAmharic : service.description}</p>
+                    </CardContent>
+                  </Card>
+                </a>
               </motion.div>
             )
           })}
+        </motion.div>
+        <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-center mt-8 sm:mt-12">
+          <a href="/services">
+            <Button variant="outline" className="group">
+              {t('View All Services', 'ሁሉንም አገልግሎቶች ይመልከቱ')} <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </a>
         </motion.div>
       </div>
     </section>
@@ -1035,7 +1046,13 @@ function Footer({ content }: { content: SiteContent }) {
         </div>
         <div className="pt-6 sm:pt-8 border-t border-border/50 flex flex-col items-center justify-center gap-2">
           <p className="text-[10px] sm:text-sm text-muted-foreground">&copy; 2026 {content.businessName} Event / {content.businessNameAmharic}. All rights reserved.</p>
-          <div className="flex items-center gap-3 text-[10px] sm:text-xs text-muted-foreground">
+          <div className="flex items-center gap-3 text-[10px] sm:text-xs text-muted-foreground flex-wrap justify-center">
+            <a href="/services" className="hover:text-foreground transition-colors">Services</a>
+            <span className="text-border">|</span>
+            <a href="/locations" className="hover:text-foreground transition-colors">Locations</a>
+            <span className="text-border">|</span>
+            <a href="/blog" className="hover:text-foreground transition-colors">Blog</a>
+            <span className="text-border">|</span>
             <a href="/privacy" className="hover:text-foreground transition-colors">{t('Privacy Policy', 'የግላዊነት ፖሊሲ')}</a>
             <span className="text-border">|</span>
             <button
@@ -1052,7 +1069,7 @@ function Footer({ content }: { content: SiteContent }) {
 }
 
 const fallbackContent: SiteContent = {
-  businessName: "Enkutatash",
+  businessName: "Enkutatash Events",
   businessNameAmharic: "እንቁጣጣሽ ኤቨንት",
   tagline: "Premium Event Organizers in Addis Ababa",
   taglineAmharic: "በአዲስ አበባ ፕሪሚየም ዝግጅት አደራጆች",
@@ -1072,9 +1089,9 @@ const fallbackContent: SiteContent = {
     { platform: "Telegram", url: "https://t.me/httpenkutatashevent" },
     { platform: "WhatsApp", url: "https://whatsapp.com/channel/0029VbDBLNS6WaKf4RGzel3r" },
   ],
-  heroTitle: "Where Every Event Becomes Legendary",
+  heroTitle: "Enkutatash Events — Premium Event Organizer in Addis Ababa, Ethiopia",
   heroTitleAmharic: "እንቁጣጣሽ ኤቨንት",
-  heroSubtitle: "Enkutatash is Addis Ababa's premier event organizer. From breathtaking weddings to large-scale corporate events and cultural celebrations — we bring your vision to life with elegance, precision, and a touch of creativity.",
+  heroSubtitle: "Enkutatash Events is Addis Ababa's premier event organizer. From breathtaking weddings to large-scale corporate events and cultural celebrations — we bring your vision to life with elegance, precision, and a touch of creativity.",
   heroSubtitleAmharic: "",
   heroBadge: "Premium Event Organizers in Addis Ababa",
   aboutTitle: "Crafting Unforgettable Moments Since 2022",
@@ -1109,14 +1126,14 @@ const fallbackContent: SiteContent = {
     { value: "4.9", label: "Average Rating", labelAmharic: "", icon: "Star" },
   ],
   services: [
-    { id: "s1", title: "Advert & Promotion", titleAmharic: "", description: "Strategic advertising and promotional campaigns to maximize your event's reach.", descriptionAmharic: "", icon: "Megaphone", gradient: "from-amber-500 to-orange-600", bgGlow: "bg-amber-500/10" },
-    { id: "s2", title: "Event Organization", titleAmharic: "", description: "Full-service event planning and management from concept to completion.", descriptionAmharic: "", icon: "PartyPopper", gradient: "from-emerald-500 to-teal-600", bgGlow: "bg-emerald-500/10" },
-    { id: "s3", title: "Decoration", titleAmharic: "", description: "Stunning decorative designs tailored to your theme and vision.", descriptionAmharic: "", icon: "Palette", gradient: "from-rose-500 to-pink-600", bgGlow: "bg-rose-500/10" },
-    { id: "s4", title: "Stage & Tent Rent", titleAmharic: "", description: "Professional stage setups and tent rentals for events of any scale.", descriptionAmharic: "", icon: "Tent", gradient: "from-violet-500 to-purple-600", bgGlow: "bg-violet-500/10" },
-    { id: "s5", title: "Sound & Light Supply", titleAmharic: "", description: "State-of-the-art sound systems and professional lighting setups.", descriptionAmharic: "", icon: "Speaker", gradient: "from-cyan-500 to-sky-600", bgGlow: "bg-cyan-500/10" },
-    { id: "s6", title: "Chair & Table Supply", titleAmharic: "", description: "A wide selection of chairs, tables, and furniture rentals.", descriptionAmharic: "", icon: "Armchair", gradient: "from-indigo-500 to-blue-600", bgGlow: "bg-indigo-500/10" },
-    { id: "s7", title: "Catering Supply", titleAmharic: "", description: "Delicious catering services featuring the best of Ethiopian and international cuisine.", descriptionAmharic: "", icon: "UtensilsCrossed", gradient: "from-orange-500 to-red-600", bgGlow: "bg-orange-500/10" },
-    { id: "s8", title: "Kids Game Material Supply", titleAmharic: "", description: "Fun and safe entertainment options for children at your event.", descriptionAmharic: "", icon: "Gamepad2", gradient: "from-lime-500 to-green-600", bgGlow: "bg-lime-500/10" },
+    { id: "advert-promotion", title: "Advert & Promotion", titleAmharic: "", description: "Strategic advertising and promotional campaigns to maximize your event's reach.", descriptionAmharic: "", icon: "Megaphone", gradient: "from-amber-500 to-orange-600", bgGlow: "bg-amber-500/10" },
+    { id: "event-organization", title: "Event Organization", titleAmharic: "", description: "Full-service event planning and management from concept to completion.", descriptionAmharic: "", icon: "PartyPopper", gradient: "from-emerald-500 to-teal-600", bgGlow: "bg-emerald-500/10" },
+    { id: "decoration", title: "Decoration", titleAmharic: "", description: "Stunning decorative designs tailored to your theme and vision.", descriptionAmharic: "", icon: "Palette", gradient: "from-rose-500 to-pink-600", bgGlow: "bg-rose-500/10" },
+    { id: "stage-tent-rental", title: "Stage & Tent Rent", titleAmharic: "", description: "Professional stage setups and tent rentals for events of any scale.", descriptionAmharic: "", icon: "Tent", gradient: "from-violet-500 to-purple-600", bgGlow: "bg-violet-500/10" },
+    { id: "sound-lighting", title: "Sound & Light Supply", titleAmharic: "", description: "State-of-the-art sound systems and professional lighting setups.", descriptionAmharic: "", icon: "Speaker", gradient: "from-cyan-500 to-sky-600", bgGlow: "bg-cyan-500/10" },
+    { id: "chair-table-supply", title: "Chair & Table Supply", titleAmharic: "", description: "A wide selection of chairs, tables, and furniture rentals.", descriptionAmharic: "", icon: "Armchair", gradient: "from-indigo-500 to-blue-600", bgGlow: "bg-indigo-500/10" },
+    { id: "catering", title: "Catering Supply", titleAmharic: "", description: "Delicious catering services featuring the best of Ethiopian and international cuisine.", descriptionAmharic: "", icon: "UtensilsCrossed", gradient: "from-orange-500 to-red-600", bgGlow: "bg-orange-500/10" },
+    { id: "kids-entertainment", title: "Kids Game Material Supply", titleAmharic: "", description: "Fun and safe entertainment options for children at your event.", descriptionAmharic: "", icon: "Gamepad2", gradient: "from-lime-500 to-green-600", bgGlow: "bg-lime-500/10" },
   ],
   testimonials: [
     { id: "t1", name: "Dr. Dereje", nameAmharic: "ዶ/ር ደረጄ", role: "Director General, Addis Ababa Science & Technology University", roleAmharic: "", avatar: "ደ", quote: "Enkutatash delivered an outstanding experience for our university event.", quoteAmharic: "", rating: 5, event: "University Event" },

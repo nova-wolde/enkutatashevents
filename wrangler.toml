@@ -14,6 +14,12 @@ main = "worker/index.ts"
 directory = "dist/client"
 not_found_handling = "single-page-application"
 
+# ─── Service Bindings ─────────────────────────────────────────────────────────
+# Meowdis Redis (Durable Objects) — worker-to-worker binding avoids workers.dev DNS issues.
+[[services]]
+binding = "MEOWDIS"
+service = "meowdis"
+
 # ─── KV Namespaces ───────────────────────────────────────────────────────────
 # Stores uploaded images as base64 strings (free tier, no extra cost).
 [[kv_namespaces]]
@@ -35,6 +41,10 @@ routes = [
   { pattern = "enkutatashevents.com", custom_domain = true },
 ]
 
+[[env.production.services]]
+binding = "MEOWDIS"
+service = "meowdis"
+
 [env.production.vars]
 NODE_ENV = "production"
 
@@ -44,3 +54,7 @@ name = "enkutatashevents-preview"
 
 [env.preview.vars]
 NODE_ENV = "production"
+
+[[env.preview.services]]
+binding = "MEOWDIS"
+service = "meowdis"

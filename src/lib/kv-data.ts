@@ -1,65 +1,45 @@
 /**
- * Upstash Redis Data Layer
+ * Meowdis Redis Data Layer
  *
- * Uses Upstash Redis (free, no credit card, with persistence!)
- * instead of Vercel KV. Same Redis commands, better free tier.
+ * Uses Meowdis (Redis-compatible Durable Object) running on Cloudflare Workers.
+ * Deployed as a separate Worker with a service binding. Falls back to direct
+ * HTTP fetch when the binding isn't available (e.g., local dev).
  *
- * IMPORTANT: If Upstash is not configured (no UPSTASH_REDIS_REST_URL env var),
- * all read operations return null and writes are no-ops.
- * API routes should fall back to seed data when reads return null.
+ * IMPORTANT: If neither binding nor URL is configured, all read operations
+ * return null and writes are no-ops. API routes fall back to seed data.
  */
 
-import { Redis } from "@upstash/redis"
-
-// ─── Lazy Redis Client ────────────────────────────────────────────────────────
-let _redis: Redis | null = null
-
-function getRedis(): Redis | null {
-  if (_redis !== null) return _redis
-
-  const url = process.env.UPSTASH_REDIS_REST_URL
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN
-
-  if (!url || !token) {
-    return null
-  }
-
-  _redis = new Redis({ url, token })
-  return _redis
-}
+import { meowdis } from "./meowdis-client"
 
 // ─── Availability Check ────────────────────────────────────────────────────────
 let redisAvailable: boolean | null = null
+let redisAvailableAt: number = 0
+const REDIS_CACHE_TTL = 30_000 // re-check every 30 seconds after a failure
 
-/**
- * Check if Upstash Redis is configured and reachable.
- * Caches the result so we don't check on every request.
- */
 async function isRedisAvailable(): Promise<boolean> {
-  if (redisAvailable !== null) return redisAvailable
+  if (redisAvailable === true) return true
+  if (redisAvailable === false && Date.now() - redisAvailableAt < REDIS_CACHE_TTL) return false
 
-  const redis = getRedis()
-  if (!redis) {
+  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
     console.warn("[Redis] No UPSTASH_REDIS_REST_URL found. Redis is not configured.")
     redisAvailable = false
+    redisAvailableAt = Date.now()
     return false
   }
 
-  // Try a simple operation to verify connectivity
   try {
-    await redis.get("__redis_health_check__")
+    await meowdis.get("__redis_health_check__")
     redisAvailable = true
+    redisAvailableAt = Date.now()
     return true
   } catch (error) {
     console.warn("[Redis] Health check failed. Redis may not be reachable:", error)
     redisAvailable = false
+    redisAvailableAt = Date.now()
     return false
   }
 }
 
-/**
- * Reset the availability cache (useful after linking Redis).
- */
 export function resetRedisAvailability(): void {
   redisAvailable = null
 }
@@ -82,8 +62,7 @@ const KEYS = {
 async function getRedisValue<T>(key: string): Promise<T | null> {
   if (!(await isRedisAvailable())) return null
   try {
-    const redis = getRedis()!
-    const raw = await redis.get<T>(key)
+    const raw = await meowdis.get<T>(key)
     return raw
   } catch (error) {
     console.error(`[Redis] Error reading key "${key}":`, error)
@@ -98,8 +77,7 @@ async function setRedisValue<T>(key: string, value: T): Promise<boolean> {
     return false
   }
   try {
-    const redis = getRedis()!
-    await redis.set(key, value)
+    await meowdis.set(key, value)
     return true
   } catch (error) {
     console.error(`[Redis] Error writing key "${key}":`, error)
@@ -165,13 +143,23 @@ export async function saveContactSubmissions(submissions: ContactSubmission[]): 
   return await setRedisValue(KEYS.contactSubmissions, submissions)
 }
 
-// ─── Site Content ──────────────────────────────────────────────────────────────
+// ─── Site Content (with in-memory cache) ────────────────────────────────────────
+let _siteContentCache: { data: Record<string, unknown>; expiresAt: number } | null = null
+const SITE_CONTENT_CACHE_TTL = 60_000 // 60 seconds
 
 export async function getSiteContent(): Promise<Record<string, unknown> | null> {
-  return await getRedisValue<Record<string, unknown>>(KEYS.siteContent)
+  if (_siteContentCache && Date.now() < _siteContentCache.expiresAt) {
+    return _siteContentCache.data
+  }
+  const data = await getRedisValue<Record<string, unknown>>(KEYS.siteContent)
+  if (data) {
+    _siteContentCache = { data, expiresAt: Date.now() + SITE_CONTENT_CACHE_TTL }
+  }
+  return data
 }
 
 export async function saveSiteContent(content: Record<string, unknown>): Promise<boolean> {
+  _siteContentCache = null
   return await setRedisValue(KEYS.siteContent, content)
 }
 
@@ -236,18 +224,14 @@ export interface Session {
 
 const SESSION_TTL_SECONDS = 7 * 24 * 60 * 60 // 7 days
 
-/**
- * Create a new session in Redis with automatic TTL expiry.
- */
 export async function createSession(session: Session): Promise<boolean> {
   if (!(await isRedisAvailable())) {
     console.warn("[Redis] Cannot create session — Redis is not available.")
     return false
   }
   try {
-    const redis = getRedis()!
     const key = `${KEYS.sessionPrefix}${session.token}`
-    await redis.set(key, JSON.stringify(session), { ex: SESSION_TTL_SECONDS })
+    await meowdis.set(key, JSON.stringify(session), { ex: SESSION_TTL_SECONDS })
     return true
   } catch (error) {
     console.error("[Redis] Error creating session:", error)
@@ -255,21 +239,16 @@ export async function createSession(session: Session): Promise<boolean> {
   }
 }
 
-/**
- * Get a session by token. Returns null if not found, expired, or Redis unavailable.
- */
 export async function getSession(token: string): Promise<Session | null> {
   if (!(await isRedisAvailable())) return null
   try {
-    const redis = getRedis()!
     const key = `${KEYS.sessionPrefix}${token}`
-    const raw = await redis.get<string>(key)
+    const raw = await meowdis.get<string>(key)
     if (!raw) return null
 
     const session: Session = typeof raw === "string" ? JSON.parse(raw) : raw
-    // Double-check expiry (belt-and-suspenders; Redis TTL should handle this)
     if (new Date(session.expiresAt) < new Date()) {
-      await redis.del(key)
+      await meowdis.del(key)
       return null
     }
     return session
@@ -279,15 +258,11 @@ export async function getSession(token: string): Promise<Session | null> {
   }
 }
 
-/**
- * Delete a session by token (used for logout).
- */
 export async function deleteSession(token: string): Promise<void> {
   if (!(await isRedisAvailable())) return
   try {
-    const redis = getRedis()!
     const key = `${KEYS.sessionPrefix}${token}`
-    await redis.del(key)
+    await meowdis.del(key)
   } catch (error) {
     console.error("[Redis] Error deleting session:", error)
   }
@@ -295,7 +270,7 @@ export async function deleteSession(token: string): Promise<void> {
 
 // ─── Health Check ──────────────────────────────────────────────────────────────
 
-export async function checkRedisHealth(): Promise<{ ok: boolean; latencyMs: number; configured: boolean }> {
+export async function checkRedisHealth(): Promise<{ ok: boolean; latencyMs: number; configured: boolean; error?: string }> {
   const start = Date.now()
 
   if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
@@ -303,11 +278,10 @@ export async function checkRedisHealth(): Promise<{ ok: boolean; latencyMs: numb
   }
 
   try {
-    const redis = getRedis()!
-    await redis.get("__health_check__")
+    await meowdis.get("__health_check__")
     return { ok: true, latencyMs: Date.now() - start, configured: true }
-  } catch {
-    return { ok: false, latencyMs: Date.now() - start, configured: true }
+  } catch (err) {
+    return { ok: false, latencyMs: Date.now() - start, configured: true, error: err instanceof Error ? err.message : String(err) }
   }
 }
 
@@ -328,11 +302,10 @@ export async function checkDataKeys(): Promise<Record<string, boolean>> {
   const keys = [KEYS.siteContent, KEYS.events, KEYS.bookings, KEYS.contactSubmissions, KEYS.activities]
   const results: Record<string, boolean> = {}
 
-  const redis = getRedis()!
   await Promise.all(
     keys.map(async (key) => {
       try {
-        const val = await redis.get(key)
+        const val = await meowdis.get(key)
         results[key] = val !== null
       } catch {
         results[key] = false

@@ -48,7 +48,24 @@ export default async function BlogPostPage({ params }: Props) {
     .filter((p) => p.slug !== slug && p.category === post.category)
     .slice(0, 3)
 
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: post.excerpt,
+    author: { "@type": "Organization", name: "Enkutatash Events" },
+    publisher: { "@type": "Organization", name: "Enkutatash Events" },
+    datePublished: post.date,
+    dateModified: post.date,
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${SITE_URL}/blog/${post.slug}` },
+  }
+
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
     <div className="min-h-screen bg-background">
       <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
         <Link href="/blog" className="inline-flex items-center gap-1 text-sm text-emerald-600 hover:underline mb-8">
@@ -103,5 +120,6 @@ export default async function BlogPostPage({ params }: Props) {
         </section>
       )}
     </div>
+    </>
   )
 }

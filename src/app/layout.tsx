@@ -274,6 +274,26 @@ function JsonLd() {
     ],
   };
 
+  const aggregateRating = {
+    "@context": "https://schema.org",
+    "@type": "AggregateRating",
+    itemReviewed: { "@type": "Organization", name: "Enkutatash Events" },
+    ratingValue: "4.9",
+    bestRating: "5",
+    ratingCount: "85",
+    reviewCount: "85",
+  };
+
+  const review = {
+    "@context": "https://schema.org",
+    "@type": "Review",
+    itemReviewed: { "@type": "LocalBusiness", name: "Enkutatash Events" },
+    author: { "@type": "Person", name: "Dr. Dereje" },
+    reviewRating: { "@type": "Rating", ratingValue: "5", bestRating: "5" },
+    reviewBody:
+      "Enkutatash delivered an outstanding experience for our university event. Professional, organized, and exceeded expectations.",
+  };
+
   return (
     <>
       <script
@@ -291,6 +311,14 @@ function JsonLd() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(aggregateRating) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(review) }}
       />
     </>
   );

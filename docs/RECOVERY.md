@@ -140,10 +140,29 @@ If you don't have local `.env` saved:
 ### 5.4 Verify local works
 
 ```bash
+# 1. Start the local Redis-REST shim (see "Local dev data layer" below)
+node scripts/dev-redis-shim.mjs        # leave running in a terminal
+
+# 2. In another terminal:
 npm run dev
 # open http://localhost:3000 — should show landing page
 # open http://localhost:3000/mesfin — should bounce to login screen
 ```
+
+**Local login password:** whatever `OWNER_PASSWORD` is set to in your local `.env` (not the production value).
+
+#### Local dev data layer (important — read this)
+
+The Upstash database from the original deploy (`more-stork-42589.upstash.io`) **no longer resolves in public DNS** — it was deleted or renamed. Production doesn't care because the Worker reaches Redis through the private `MEOWDIS` Cloudflare service binding, never over the public internet. But **local dev needs its own data source**, so this repo ships `scripts/dev-redis-shim.mjs`: a tiny Node server that speaks the Upstash REST contract (`POST ["GET", key]` → `{"result": ...}`) against an in-memory store persisted to `db/shim-data.json`.
+
+- `.env` points at it: `UPSTASH_REDIS_REST_URL=http://127.0.0.1:8379`, token `local-dev-shim-token`.
+- `worker/index.ts` skips the MEOWDIS binding when `NODE_ENV=development` (always true under `vinext dev`); on real Workers (where wrangler pins `NODE_ENV="production"`) the binding is used as before. Without this skip, every Redis command in dev returns a plain-text workerd error that breaks JSON parsing.
+- To mirror live production content locally, seed from the public APIs while the shim runs:
+  ```bash
+  curl -s https://enkutatashevents.com/api/events -o /tmp/prod_events.json
+  # then POST ["SET","data:events",<array>] to http://127.0.0.1:8379
+  ```
+  (Or just create test data through the dashboard — login works fully offline.)
 
 ### 5.5 Deploy
 

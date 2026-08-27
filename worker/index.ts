@@ -52,7 +52,14 @@ export default {
     }
 
     // Make Meowdis service binding available to Next.js routes via meowdis-client.
-    if (env.MEOWDIS) {
+    // ⚠ Only on real Cloudflare Workers. In local dev (vinext dev) the
+    // "meowdis" backing service doesn't exist; fetching that binding returns a
+    // plain-text workerd error (`Worker "meowdis" ...`) which poisons every
+    // Redis command, so local dev must fall back to UPSTASH_REDIS_REST_URL.
+    // wrangler.toml pins NODE_ENV="production" everywhere it deploys, while
+    // vinext dev always runs with NODE_ENV="development".
+    const skipMeowdisBinding = process.env.NODE_ENV === "development";
+    if (env.MEOWDIS && !skipMeowdisBinding) {
       setMeowdisFetch((req) => env.MEOWDIS.fetch(req));
     }
 

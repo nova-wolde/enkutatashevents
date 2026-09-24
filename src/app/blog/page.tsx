@@ -4,6 +4,7 @@ import { ArrowRight, CalendarDays, Clock } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { blogPosts } from "@/lib/blog-data"
+import { SiteFooter } from "@/components/site-footer";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://enkutatashevents.com"
 
@@ -99,6 +100,8 @@ export default function BlogPage() {
           </div>
         </div>
       </section>
+
+      <SiteFooter />
     </div>
   )
 }

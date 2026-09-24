@@ -5,6 +5,7 @@ import { CalendarDays, Clock, ArrowLeft } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { blogPosts } from "@/lib/blog-data"
 import { SITE_URL } from "@/lib/seo-data"
+import { SiteFooter } from "@/components/site-footer";
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -119,6 +120,8 @@ export default async function BlogPostPage({ params }: Props) {
           </div>
         </section>
       )}
+
+      <SiteFooter />
     </div>
     </>
   )

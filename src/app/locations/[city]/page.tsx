@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { services } from "@/lib/services-data"
 import { ethiopianCities, getCityBySlug, getCityFaqs, SITE_URL } from "@/lib/seo-data"
+import { SiteFooter } from "@/components/site-footer";
 
 interface Props {
   params: Promise<{ city: string }>
@@ -290,6 +291,8 @@ export default async function CityPage({ params }: Props) {
           &larr; Back to Home
         </Link>
       </div>
+
+      <SiteFooter />
     </div>
     </>
   )

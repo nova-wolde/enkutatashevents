@@ -58,6 +58,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { useEventStore, Language } from './store'
 import { BookingDialog } from './booking-dialog'
+import { SiteFooter } from '@/components/site-footer'
 
 // ─── Icon Lookup ──────────────────────────────────────────────────────────────
 const iconLookup: Record<string, React.ElementType> = {
@@ -97,6 +98,8 @@ function LanguageProvider({ children }: { children: React.ReactNode }) {
   const setLanguage = (lang: Language) => {
     setLanguageState(lang)
     localStorage.setItem('enkutatash-language', lang)
+    // Notify site-wide components (e.g. SiteFooter) to re-render in the new language
+    window.dispatchEvent(new CustomEvent<Language>('enkutatash:language', { detail: lang }))
   }
 
   const t = (en: string, am: string) => language === 'am' ? (am || en) : en
@@ -1006,67 +1009,7 @@ function ContactSection({ content }: { content: SiteContent }) {
 }
 
 
-function Footer({ content }: { content: SiteContent }) {
-  const { language, t } = useLanguage()
-  return (
-    <footer className="border-t border-border/50 py-6 sm:py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-8 mb-6 sm:mb-8">
-          <div className="col-span-2 md:col-span-1">
-            <div className="flex items-center gap-2 mb-3 sm:mb-4">
-              <Image src="/enkutatash-logo.png" alt="Enkutatash Logo" width={32} height={32} unoptimized className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg object-contain" />
-              <div className="flex flex-col leading-tight">
-                <span className="text-base sm:text-lg font-bold">{content.businessName}</span>
-                <span className="text-[8px] sm:text-[10px] text-muted-foreground">{content.businessNameAmharic}</span>
-              </div>
-            </div>
-            <p className="text-[11px] sm:text-sm text-muted-foreground max-w-xs">{language === 'am' ? (content.descriptionAmharic || content.description) : content.description}</p>
-            <div className="mt-3 sm:mt-4 flex gap-1.5 sm:gap-2">
-              {(content.socialLinks || []).filter(s => s.url).map((social, i) => {
-                const iconMap: Record<string, React.ElementType> = { Instagram, Facebook, Youtube, Telegram: Send, WhatsApp: MessageCircle, TikTok: Music }
-                const Icon = iconMap[social.platform] || Instagram
-                return <a key={i} href={social.url} target="_blank" rel="noopener noreferrer"><Button variant="ghost" size="icon" className="h-10 w-10 sm:h-8 sm:w-8 min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0"><Icon className="h-4 w-4" /></Button></a>
-              })}
-            </div>
-          </div>
-          <div>
-            <h4 className="text-[11px] sm:text-sm font-semibold mb-2 sm:mb-3">{t('Company', 'ድርጅት')}</h4>
-            <ul className="space-y-1 sm:space-y-2">
-              {[{ en: 'About Us', am: 'ስለ እኛ' }, { en: 'Portfolio', am: 'ስራዎቻችን' }, { en: 'Testimonials', am: 'ደንበኞቻችን' }, { en: 'Contact', am: 'ያግኙን' }].map((item) => (<li key={item.en}><a className="text-[10px] sm:text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">{t(item.en, item.am)}</a></li>))}
-            </ul>
-          </div>
-          <div>
-            <h4 className="text-[11px] sm:text-sm font-semibold mb-2 sm:mb-3">{t('Contact Us', 'ያግኙን')}</h4>
-            <ul className="space-y-1 sm:space-y-2">
-              {(content.phones || []).slice(0, 2).map((phone, i) => (<li key={i} className="text-[10px] sm:text-sm text-muted-foreground">{phone}</li>))}
-              <li className="text-[10px] sm:text-sm text-muted-foreground break-all">{content.email}</li>
-              <li className="text-[10px] sm:text-sm text-muted-foreground">{language === 'am' ? (content.addressAmharic || content.address) : content.address}</li>
-            </ul>
-          </div>
-        </div>
-        <div className="pt-6 sm:pt-8 border-t border-border/50 flex flex-col items-center justify-center gap-2">
-          <p className="text-[10px] sm:text-sm text-muted-foreground">&copy; 2026 {content.businessName} Event / {content.businessNameAmharic}. All rights reserved.</p>
-          <div className="flex items-center gap-3 text-[10px] sm:text-xs text-muted-foreground flex-wrap justify-center">
-            <a href="/services" className="hover:text-foreground transition-colors">Services</a>
-            <span className="text-border">|</span>
-            <a href="/locations" className="hover:text-foreground transition-colors">Locations</a>
-            <span className="text-border">|</span>
-            <a href="/blog" className="hover:text-foreground transition-colors">Blog</a>
-            <span className="text-border">|</span>
-            <a href="/privacy" className="hover:text-foreground transition-colors">{t('Privacy Policy', 'የግላዊነት ፖሊሲ')}</a>
-            <span className="text-border">|</span>
-            <button
-              onClick={() => window.dispatchEvent(new Event('show-cookie-consent'))}
-              className="hover:text-foreground transition-colors"
-            >
-              {t('Cookie Settings', 'የኩኪ ቅንብሮች')}
-            </button>
-          </div>
-        </div>
-      </div>
-    </footer>
-  )
-}
+
 
 const fallbackContent: SiteContent = {
   businessName: "Enkutatash Events",
@@ -1220,7 +1163,21 @@ export function LandingPage() {
         <ProcessSection />
         <TestimonialsSection content={content} />
         <ContactSection content={content} />
-        <Footer content={content} />
+        <SiteFooter
+          content={{
+            businessName: content.businessName,
+            businessNameAmharic: content.businessNameAmharic,
+            description: content.description,
+            descriptionAmharic: content.descriptionAmharic,
+            email: content.email,
+            phones: content.phones,
+            phoneLinks: content.phoneLinks,
+            address: content.address,
+            addressAmharic: content.addressAmharic,
+            workingHours: content.workingHours,
+            socialLinks: content.socialLinks,
+          }}
+        />
         <BookingDialog />
       </div>
     </LanguageProvider>

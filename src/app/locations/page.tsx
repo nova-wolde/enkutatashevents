@@ -4,6 +4,7 @@ import { MapPin, ArrowRight, Phone } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ethiopianCities } from "@/lib/seo-data"
+import { SiteFooter } from "@/components/site-footer";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://enkutatashevents.com"
 
@@ -118,6 +119,8 @@ export default function LocationsPage() {
           </div>
         </div>
       </section>
+
+      <SiteFooter />
     </div>
   )
 }

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { services } from "@/lib/services-data";
+import { SiteFooter } from "@/components/site-footer";
 
 export const metadata: Metadata = {
   title: "Our Services — Event Planning, Decoration, Sound & Lighting | Addis Ababa",
@@ -145,6 +146,8 @@ export default function ServicesPage() {
           &larr; Back to Home
         </Link>
       </div>
+
+      <SiteFooter />
     </div>
   );
 }

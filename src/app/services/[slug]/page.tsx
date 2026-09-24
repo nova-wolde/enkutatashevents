@@ -5,6 +5,7 @@ import { ArrowRight, Phone, Mail, CheckCircle2, Home, ChevronRight } from "lucid
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { services, getServiceBySlug } from "@/lib/services-data"
+import { SiteFooter } from "@/components/site-footer";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://enkutatashevents.com"
 
@@ -285,6 +286,8 @@ export default async function ServicePage({ params }: Props) {
           &larr; Back to All Services
         </Link>
       </div>
+
+      <SiteFooter />
     </div>
     </>
   )

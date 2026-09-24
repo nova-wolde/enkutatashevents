@@ -6,12 +6,6 @@ import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import {
   ArrowUp,
-  Instagram,
-  Facebook,
-  Youtube,
-  Send,
-  MessageCircle,
-  Music,
   Mail,
   Phone,
 } from 'lucide-react'
@@ -28,7 +22,7 @@ export interface FooterContent {
   address?: string
   addressAmharic?: string
   workingHours?: { day: string; hours: string }[]
-  socialLinks: { platform: string; url: string }[]
+  socialLinks?: { platform: string; url: string }[]
 }
 
 const defaultContent: FooterContent = {
@@ -39,22 +33,6 @@ const defaultContent: FooterContent = {
   email: 'enkutatashevents@gmail.com',
   phones: ['+251 915 895 757', '+251 915 843 131', '+251 910 977 371'],
   phoneLinks: ['+251915895757', '+251915843131', '+251910977371'],
-  socialLinks: [
-    { platform: 'Instagram', url: 'https://www.instagram.com/enkutatashevents/' },
-    { platform: 'Facebook', url: 'https://web.facebook.com/profile.php?id=61590503624575' },
-    { platform: 'YouTube', url: 'https://www.youtube.com/@Enkutatashevents' },
-    { platform: 'Telegram', url: 'https://t.me/httpenkutatashevent' },
-    { platform: 'WhatsApp', url: 'https://whatsapp.com/channel/0029VbDBLNS6WaKf4RGzel3r' },
-  ],
-}
-
-const socialIconMap: Record<string, React.ElementType> = {
-  Instagram,
-  Facebook,
-  Youtube,
-  Telegram: Send,
-  WhatsApp: MessageCircle,
-  TikTok: Music,
 }
 
 // ─── Language hook (reads the same localStorage key the site toggle writes) ──
@@ -127,28 +105,9 @@ export function SiteFooter({ content }: { content?: Partial<FooterContent> }) {
                 <span className="text-[10px] text-zinc-500">{c.businessNameAmharic}</span>
               </span>
             </Link>
-            <p className="text-sm text-zinc-500 mb-4">
+            <p className="text-sm text-zinc-500">
               {t(c.description, c.descriptionAmharic || c.description)}
             </p>
-            <div className="flex flex-wrap gap-2" aria-label={t('Social media', 'ማህበራዊ ሚዲያ')}>
-              {(c.socialLinks || [])
-                .filter((s) => s.url)
-                .map((social, i) => {
-                  const Icon = socialIconMap[social.platform] || Instagram
-                  return (
-                    <a
-                      key={i}
-                      href={social.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`${c.businessName} on ${social.platform}`}
-                      className="inline-flex h-9 w-9 min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-zinc-400 transition-colors duration-200 hover:border-emerald-500/60 hover:bg-emerald-600 hover:text-white"
-                    >
-                      <Icon className="h-4 w-4" aria-hidden="true" />
-                    </a>
-                  )
-                })}
-            </div>
           </div>
 
           <nav aria-label="Footer" className="grid grid-cols-2 gap-x-12 gap-y-2.5 sm:gap-x-16 md:text-right shrink-0">

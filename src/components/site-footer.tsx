@@ -129,7 +129,7 @@ export function SiteFooter({ content }: { content?: Partial<FooterContent> }) {
         {/* Address + office number + email (only lifeline on subpages) */}
         <div className="pb-8 flex flex-wrap items-center gap-x-6 gap-y-1.5 text-sm text-zinc-500">
           <a
-            href="https://www.google.com/maps?q=Ayat,+Addis+Ababa,+Ethiopia"
+            href="https://www.google.com/maps?q=9.020682,38.868906"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 hover:text-white transition-colors"

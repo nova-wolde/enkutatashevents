@@ -984,7 +984,7 @@ function ContactSection({ content }: { content: SiteContent }) {
             {/* Location map */}
             <div className="mt-6 sm:mt-8 overflow-hidden rounded-xl sm:rounded-2xl border border-border/50 shadow-sm">
               <iframe
-                src="https://www.google.com/maps?q=Ayat%2C%20Addis%20Ababa%2C%20Ethiopia&z=13&output=embed"
+                src="https://www.google.com/maps?q=9.020682%2C38.868906&z=16&output=embed"
                 title={t('Our location — Ayat, Addis Ababa', 'ቦታችን — አያት፣ አዲስ አበባ')}
                 loading="lazy"
                 allowFullScreen

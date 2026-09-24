@@ -188,3 +188,17 @@ Work Log:
 
 Stage Summary:
 - Favicon/PWA/apple icons now emerald spotlight tile + yellow Adey Abeba; in-app logo unchanged (transparent)
+
+---
+Task ID: 13
+Agent: Super Z (main)
+Task: Make the favicon tile round
+
+Work Log:
+- --radius 0.5 -> true circle mask via rounded(); pipeline auto-insets artwork to 93% when circular so petal tips clear the inscribed circle
+- Geometry verified (transparent corners, opaque edge midpoints); 16px swatch legible
+- ?v=6->?v=7, sw v8; built, pushed ccd82d3, deployed
+- Tab capture attempt 1 showed gray default (transient favicon fetch failure mid-propagation); live asset hashes verified OK; attempt 2 confirmed circular emerald tile with flower live in tab
+
+Stage Summary:
+- Favicon is now a circular emerald 'medallion' with the yellow Adey Abeba — live and verified

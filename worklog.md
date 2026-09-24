@@ -233,3 +233,19 @@ Work Log:
 
 Stage Summary:
 - PWA install = admin console only; public site has no SW and no install prompt
+
+---
+Task ID: 16
+Agent: Super Z (main)
+Task: Client handover documentation — Website Owner's Manual (PDF)
+
+Work Log:
+- Mapped full admin surface from code: 9 views (Dashboard, Analytics, Events, Bookings, Attendees, Venues, Messages, Content, Settings), 8 content tabs, login/session flow (password-only, 7-day cookie), password = OWNER_PASSWORD Cloudflare secret (no UI; rotate via dashboard or wrangler secret put)
+- Booted local harness (dev-redis-shim 8379 + seed-local-from-prod + vinext dev 8799, OWNER_PASSWORD=local-dev-admin); pre-set enkutatash-cookie-consent in localStorage so cookie banner doesn't block captures
+- Playwright capture: 20 screenshots (login, dashboard, analytics, events, create-event dialog, bookings, attendees, venues, messages, 8 content tabs, settings top/integrations/danger) at 1440x860 @2x -> docs/manual-shots/
+- Wrote 21-page manual (creative-flow HTML -> html2pdf-next.js -> vector PDF): 13 chapters + cheat sheet + ending; plain-English, chapter-per-task incl. explicit password-change chapter (Cloudflare dashboard path + developer path + 7-day session caveat) and security-habits chapter
+- QA: poster_validate pre-render PASS (fixed screen-bg mismatch); pdf_qa final PASS (fixed body-bg bleed on light pages via light base, fixed em-dash line start, added Title/Author metadata); visual page sweep confirmed cover, figures, tables, ending
+
+Stage Summary:
+- Deliverables: download/enkutatash-admin-guide/Enkutatash_Events_Admin_Guide.pdf (21pp, 4.1MB) + admin-manual.html + images/ (HTML source per skill rule); copy at download/Enkutatash_Events_Admin_Guide.pdf
+- Site code unchanged — docs-only task; screenshots reusable for future manual revisions

@@ -14,7 +14,9 @@ import {
   Instagram,
   Mail,
   MapPin,
+  MessageCircle,
   Phone,
+  Send,
   Youtube,
 } from 'lucide-react'
 
@@ -88,6 +90,8 @@ const socialIconFor = (platform: string) => {
   if (p.includes('instagram')) return Instagram
   if (p.includes('face')) return Facebook
   if (p.includes('you')) return Youtube
+  if (p.includes('telegram')) return Send
+  if (p.includes('whatsapp')) return MessageCircle
   return Globe
 }
 
@@ -300,12 +304,8 @@ export function SiteFooter({ content }: { content?: Partial<FooterContent> }) {
               {c.workingHours && c.workingHours.length > 0 && (
                 <li className="flex items-start gap-2.5">
                   <Clock className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" aria-hidden="true" />
-                  <span className="flex flex-col gap-0.5 text-zinc-500">
-                    {c.workingHours.slice(0, 3).map((h) => (
-                      <span key={h.day}>
-                        <span className="text-zinc-400">{h.day}</span> · {h.hours}
-                      </span>
-                    ))}
+                  <span className="text-zinc-400">
+                    {c.workingHours[0].day} · {c.workingHours[0].hours}
                   </span>
                 </li>
               )}

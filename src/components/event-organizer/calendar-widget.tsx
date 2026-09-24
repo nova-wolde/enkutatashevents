@@ -25,9 +25,9 @@ export function CalendarWidget() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.2 }}
     >
-      <Card className="rounded-xl shadow-sm">
+      <Card className="rounded-2xl border-border/60 shadow-sm">
         <CardHeader className="pb-3">
-          <CardTitle className="text-base font-semibold">Calendar</CardTitle>
+          <CardTitle className="text-sm font-semibold">Calendar</CardTitle>
         </CardHeader>
         <CardContent className="pb-4">
           <Calendar
@@ -39,7 +39,7 @@ export function CalendarWidget() {
             }}
             className="rounded-md max-w-full [&_[data-slot=calendar]]:max-w-full"
             modifiersClassNames={{
-              hasEvent: 'after:bg-emerald-500 after:rounded-full after:w-1.5 after:h-1.5 after:bottom-0.5 after:left-1/2 after:-translate-x-1/2 after:absolute',
+              hasEvent: 'after:bg-amber-500 after:rounded-full after:w-1.5 after:h-1.5 after:bottom-0.5 after:left-1/2 after:-translate-x-1/2 after:absolute',
             }}
           />
 

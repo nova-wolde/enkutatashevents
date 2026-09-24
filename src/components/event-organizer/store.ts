@@ -113,6 +113,7 @@ interface EventStore {
   setBookingDialogOpen: (open: boolean) => void
   setLoading: (loading: boolean) => void
   setLanguage: (language: Language) => void
+  handleLogout: () => Promise<void>
 }
 
 export const useEventStore = create<EventStore>((set) => ({
@@ -170,4 +171,15 @@ export const useEventStore = create<EventStore>((set) => ({
   setBookingDialogOpen: (bookingDialogOpen) => set({ bookingDialogOpen }),
   setLoading: (loading) => set({ loading }),
   setLanguage: (language) => set({ language }),
+  handleLogout: async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' })
+    } catch {
+      // ignore network errors — still clear local state
+    }
+    set({ appView: 'landing' })
+    if (typeof window !== 'undefined' && window.location.pathname !== '/') {
+      window.location.href = '/'
+    }
+  },
 }))

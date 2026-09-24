@@ -7,8 +7,6 @@ import {
   Users,
   Clock,
   DollarSign,
-  TrendingUp,
-  TrendingDown,
 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { useEventStore } from './store'
@@ -35,7 +33,7 @@ function AnimatedCounter({ target, duration = 1500, prefix = '', suffix = '' }: 
   }, [target, duration])
 
   return (
-    <span>
+    <span className="tabular-nums">
       {prefix}{count.toLocaleString()}{suffix}
     </span>
   )
@@ -62,48 +60,40 @@ export function StatsCards() {
     {
       title: 'Total Events',
       value: totalEvents,
+      sub: `${upcomingEvents} upcoming · ${events.filter((e) => e.status === 'completed').length} completed`,
       icon: CalendarDays,
-      trend: '+12%',
-      trendUp: true,
-      gradient: 'from-emerald-500/10 to-teal-500/10',
       iconColor: 'text-emerald-600 dark:text-emerald-400',
-      iconBg: 'bg-emerald-500/15',
+      iconBg: 'bg-emerald-500/10 border border-emerald-500/15',
     },
     {
       title: 'Total Attendees',
       value: totalAttendees,
+      sub: 'across all events',
       icon: Users,
-      trend: '+8.5%',
-      trendUp: true,
-      gradient: 'from-violet-500/10 to-purple-500/10',
-      iconColor: 'text-violet-600 dark:text-violet-400',
-      iconBg: 'bg-violet-500/15',
+      iconColor: 'text-teal-600 dark:text-teal-400',
+      iconBg: 'bg-teal-500/10 border border-teal-500/15',
     },
     {
       title: 'Upcoming Events',
       value: upcomingEvents,
+      sub: upcomingEvents > 0 ? 'scheduled ahead' : 'nothing scheduled',
       icon: Clock,
-      trend: '2 this week',
-      trendUp: true,
-      gradient: 'from-amber-500/10 to-orange-500/10',
       iconColor: 'text-amber-600 dark:text-amber-400',
-      iconBg: 'bg-amber-500/15',
+      iconBg: 'bg-amber-500/10 border border-amber-500/15',
     },
     {
-      title: 'Revenue',
+      title: 'Est. Revenue',
       value: totalRevenue,
+      sub: 'from ticket sales',
       icon: DollarSign,
-      trend: '+23%',
-      trendUp: true,
-      gradient: 'from-rose-500/10 to-pink-500/10',
-      iconColor: 'text-rose-600 dark:text-rose-400',
-      iconBg: 'bg-rose-500/15',
+      iconColor: 'text-violet-600 dark:text-violet-400',
+      iconBg: 'bg-violet-500/10 border border-violet-500/15',
       prefix: '$',
     },
   ]
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
       {stats.map((stat, i) => {
         const Icon = stat.icon
         return (
@@ -115,33 +105,23 @@ export function StatsCards() {
             animate="visible"
             whileHover={{ y: -2, transition: { duration: 0.2 } }}
           >
-            <Card className="rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between">
-                  <div className="space-y-2">
-                    <p className="text-sm text-muted-foreground font-medium">{stat.title}</p>
-                    <p className="text-2xl font-bold tracking-tight">
+            <Card className="overflow-hidden rounded-2xl border-border/60 shadow-sm transition-shadow duration-200 hover:shadow-md">
+              <CardContent className="p-5">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="min-w-0 space-y-1">
+                    <p className="truncate text-[13px] font-medium text-muted-foreground">{stat.title}</p>
+                    <p className="text-[28px] font-bold leading-none tracking-tight">
                       <AnimatedCounter
                         target={stat.value}
                         prefix={stat.prefix || ''}
                       />
                     </p>
                   </div>
-                  <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${stat.iconBg}`}>
+                  <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${stat.iconBg}`}>
                     <Icon className={`h-5 w-5 ${stat.iconColor}`} />
                   </div>
                 </div>
-                <div className="mt-3 flex items-center gap-1.5">
-                  {stat.trendUp ? (
-                    <TrendingUp className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
-                  ) : (
-                    <TrendingDown className="h-3.5 w-3.5 text-destructive" />
-                  )}
-                  <span className={`text-xs font-medium ${stat.trendUp ? 'text-emerald-600 dark:text-emerald-400' : 'text-destructive'}`}>
-                    {stat.trend}
-                  </span>
-                  <span className="text-xs text-muted-foreground">vs last month</span>
-                </div>
+                <p className="mt-3 truncate text-xs text-muted-foreground/80">{stat.sub}</p>
               </CardContent>
             </Card>
           </motion.div>

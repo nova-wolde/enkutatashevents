@@ -26,7 +26,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useEventStore, EventCategory } from './store'
 
-const COLORS = ['#10b981', '#14b8a6', '#f59e0b', '#8b5cf6', '#f43f5e', '#06b6d4', '#ec4899', '#84cc16']
+const COLORS = ['#10b981', '#14b8a6', '#f59e0b', '#8b5cf6', '#f43f5e', '#06b6d4', '#ec4899', '#eab308']
 
 const categoryColors: Record<string, string> = {
   Conference: '#10b981',
@@ -36,7 +36,7 @@ const categoryColors: Record<string, string> = {
   Meetup: '#14b8a6',
   Wedding: '#ec4899',
   Corporate: '#06b6d4',
-  Cultural: '#84cc16',
+  Cultural: '#eab308',
   Symposium: '#f97316',
   Government: '#6366f1',
 }
@@ -158,7 +158,7 @@ export function AnalyticsView() {
     >
       {/* Summary Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="rounded-xl shadow-sm">
+        <Card className="rounded-2xl border-border/60 shadow-sm">
           <CardContent className="p-4 flex items-center gap-4">
             <div className="h-10 w-10 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0">
               <DollarSign className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
@@ -169,7 +169,7 @@ export function AnalyticsView() {
             </div>
           </CardContent>
         </Card>
-        <Card className="rounded-xl shadow-sm">
+        <Card className="rounded-2xl border-border/60 shadow-sm">
           <CardContent className="p-4 flex items-center gap-4">
             <div className="h-10 w-10 rounded-lg bg-teal-500/10 flex items-center justify-center shrink-0">
               <Users className="h-5 w-5 text-teal-600 dark:text-teal-400" />
@@ -180,7 +180,7 @@ export function AnalyticsView() {
             </div>
           </CardContent>
         </Card>
-        <Card className="rounded-xl shadow-sm">
+        <Card className="rounded-2xl border-border/60 shadow-sm">
           <CardContent className="p-4 flex items-center gap-4">
             <div className="h-10 w-10 rounded-lg bg-amber-500/10 flex items-center justify-center shrink-0">
               <TrendingUp className="h-5 w-5 text-amber-600 dark:text-amber-400" />
@@ -191,7 +191,7 @@ export function AnalyticsView() {
             </div>
           </CardContent>
         </Card>
-        <Card className="rounded-xl shadow-sm">
+        <Card className="rounded-2xl border-border/60 shadow-sm">
           <CardContent className="p-4 flex items-center gap-4">
             <div className="h-10 w-10 rounded-lg bg-violet-500/10 flex items-center justify-center shrink-0">
               <Ticket className="h-5 w-5 text-violet-600 dark:text-violet-400" />
@@ -207,16 +207,23 @@ export function AnalyticsView() {
       {/* Charts Row 1 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Revenue Overview */}
-        <Card className="rounded-xl shadow-sm">
+        <Card className="rounded-2xl border-border/60 shadow-sm">
           <CardHeader className="pb-2">
-            <CardTitle className="text-base font-semibold">Revenue Overview</CardTitle>
+            <CardTitle className="text-sm font-semibold">Revenue Overview</CardTitle>
           </CardHeader>
           <CardContent>
+            {monthlyRevenue.every((m) => m.revenue === 0) ? (
+              <div className="flex h-[250px] flex-col items-center justify-center text-center">
+                <DollarSign className="mb-2 h-7 w-7 text-muted-foreground/30" />
+                <p className="text-sm font-medium text-muted-foreground">No revenue recorded yet</p>
+                <p className="mt-0.5 text-xs text-muted-foreground/70">Revenue appears once events have ticket sales.</p>
+              </div>
+            ) : (
             <ResponsiveContainer width="100%" height={250}>
               <LineChart data={monthlyRevenue}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                 <XAxis dataKey="month" className="text-xs" tick={{ fill: 'currentColor' }} />
-                <YAxis className="text-xs" tick={{ fill: 'currentColor' }} tickFormatter={(v: number) => `$${(v / 1000).toFixed(0)}k`} />
+                <YAxis className="text-xs" tick={{ fill: 'currentColor' }} tickFormatter={(v: number) => (v >= 1000 ? `$${(v / 1000).toFixed(1).replace(/\.0$/, '')}k` : `$${v}`)} />
                 <Tooltip
                   formatter={(value: number) => [`$${value.toLocaleString()}`, 'Revenue']}
                   contentStyle={{ borderRadius: '8px', border: '1px solid hsl(var(--border))' }}
@@ -231,13 +238,14 @@ export function AnalyticsView() {
                 />
               </LineChart>
             </ResponsiveContainer>
+            )}
           </CardContent>
         </Card>
 
         {/* Events by Category */}
-        <Card className="rounded-xl shadow-sm">
+        <Card className="rounded-2xl border-border/60 shadow-sm">
           <CardHeader className="pb-2">
-            <CardTitle className="text-base font-semibold">Events by Category</CardTitle>
+            <CardTitle className="text-sm font-semibold">Events by Category</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={250}>
@@ -273,9 +281,9 @@ export function AnalyticsView() {
       {/* Charts Row 2 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Attendee Trends */}
-        <Card className="rounded-xl shadow-sm">
+        <Card className="rounded-2xl border-border/60 shadow-sm">
           <CardHeader className="pb-2">
-            <CardTitle className="text-base font-semibold">Attendee Trends</CardTitle>
+            <CardTitle className="text-sm font-semibold">Attendee Trends</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={250}>
@@ -294,9 +302,9 @@ export function AnalyticsView() {
         </Card>
 
         {/* Top Events */}
-        <Card className="rounded-xl shadow-sm">
+        <Card className="rounded-2xl border-border/60 shadow-sm">
           <CardHeader className="pb-2">
-            <CardTitle className="text-base font-semibold">Top Events by Attendees</CardTitle>
+            <CardTitle className="text-sm font-semibold">Top Events by Attendees</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={250}>
@@ -323,9 +331,9 @@ export function AnalyticsView() {
 
       {/* Bookings by Status */}
       {bookingsByStatus.length > 0 && (
-        <Card className="rounded-xl shadow-sm">
+        <Card className="rounded-2xl border-border/60 shadow-sm">
           <CardHeader className="pb-2">
-            <CardTitle className="text-base font-semibold">Bookings by Status</CardTitle>
+            <CardTitle className="text-sm font-semibold">Bookings by Status</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={250}>

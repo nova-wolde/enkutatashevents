@@ -37,22 +37,27 @@ function AppView() {
   const info = viewTitles[currentView]
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="flex min-h-screen flex-col bg-muted/40">
       <Header />
 
       <div className="flex flex-1">
         <Sidebar />
 
-        <main className="flex-1 overflow-auto">
-          <div className="p-4 md:p-6 max-w-7xl mx-auto">
+        <main className="min-w-0 flex-1 overflow-auto">
+          <div className="mx-auto max-w-7xl p-4 md:p-8">
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
-              className="mb-6"
+              className="mb-6 flex items-center gap-3.5"
             >
-              <h1 className="text-2xl font-bold tracking-tight">{info.title}</h1>
-              <p className="text-sm text-muted-foreground mt-0.5">{info.subtitle}</p>
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/15 to-teal-500/10">
+                <info.icon className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+              </div>
+              <div className="min-w-0">
+                <h1 className="truncate text-xl font-bold tracking-tight md:text-2xl">{info.title}</h1>
+                <p className="truncate text-sm text-muted-foreground">{info.subtitle}</p>
+              </div>
             </motion.div>
 
             <AnimatePresence mode="wait">
@@ -181,10 +186,12 @@ export default function AdminPage() {
 
   if (!checked || (appView === 'app' && loadingData)) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="flex min-h-screen items-center justify-center bg-muted/40">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4" />
-          <p className="text-muted-foreground">Loading admin panel...</p>
+          <div className="relative mx-auto mb-4 h-10 w-10">
+            <div className="absolute inset-0 animate-spin rounded-full border-2 border-emerald-500/20 border-t-emerald-500" />
+          </div>
+          <p className="text-sm font-medium text-muted-foreground">Loading admin panel…</p>
         </div>
       </div>
     )

@@ -1,25 +1,12 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Calendar, MapPin, Users, ArrowRight } from 'lucide-react'
+import { Calendar, MapPin, Users, ArrowRight, Sparkles, Plus } from 'lucide-react'
 import { format, parseISO } from 'date-fns'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { useEventStore, EventCategory } from './store'
-
-const categoryColors: Record<string, string> = {
-  Conference: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/20',
-  Workshop: 'bg-violet-500/15 text-violet-700 dark:text-violet-400 border-violet-500/20',
-  Social: 'bg-amber-500/15 text-amber-700 dark:text-amber-400 border-amber-500/20',
-  Concert: 'bg-rose-500/15 text-rose-700 dark:text-rose-400 border-rose-500/20',
-  Meetup: 'bg-cyan-500/15 text-cyan-700 dark:text-cyan-400 border-cyan-500/20',
-  Wedding: 'bg-pink-500/15 text-pink-700 dark:text-pink-400 border-pink-500/20',
-  Corporate: 'bg-blue-500/15 text-blue-700 dark:text-blue-400 border-blue-500/20',
-  Cultural: 'bg-lime-500/15 text-lime-700 dark:text-lime-400 border-lime-500/20',
-  Symposium: 'bg-orange-500/15 text-orange-700 dark:text-orange-400 border-orange-500/20',
-  Government: 'bg-indigo-500/15 text-indigo-700 dark:text-indigo-400 border-indigo-500/20',
-}
+import { useEventStore } from './store'
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -35,83 +22,104 @@ const itemVariants = {
 }
 
 export function EventCards() {
-  const { events, setCurrentView, setSelectedEvent } = useEventStore()
+  const { events, setCurrentView, setSelectedEvent, setCreateDialogOpen } = useEventStore()
 
   const upcomingEvents = events
     .filter((e) => e.status === 'upcoming' || e.status === 'ongoing')
     .slice(0, 6)
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-lg font-semibold">Upcoming Events</h2>
-          <p className="text-sm text-muted-foreground">Events happening soon</p>
+    <Card className="rounded-2xl border-border/60 shadow-sm">
+      <CardContent className="p-5 md:p-6">
+        <div className="mb-4 flex items-center justify-between gap-2">
+          <div>
+            <h2 className="text-base font-semibold tracking-tight">Upcoming Events</h2>
+            <p className="text-xs text-muted-foreground">Scheduled and live events</p>
+          </div>
+          <Button variant="ghost" size="sm" className="h-8 text-emerald-600 hover:text-emerald-700 dark:text-emerald-400" onClick={() => setCurrentView('events')}>
+            View All <ArrowRight className="ml-1 h-3.5 w-3.5" />
+          </Button>
         </div>
-        <Button variant="ghost" size="sm" className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-700" onClick={() => setCurrentView('events')}>
-          View All <ArrowRight className="ml-1 h-3.5 w-3.5" />
-        </Button>
-      </div>
 
-      <motion.div
-        className="grid grid-cols-1 lg:grid-cols-2 gap-4"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        {upcomingEvents.map((event) => (
-          <motion.div key={event.id} variants={itemVariants} whileHover={{ y: -4, transition: { duration: 0.2 } }}>
-            <Card className="rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300 overflow-hidden">
-              {/* Gradient image placeholder */}
-              <div className={`h-32 bg-gradient-to-br ${event.imageGradient} relative`}>
-                <div className="absolute inset-0 bg-black/10" />
-                <div className="absolute top-3 right-3">
-                  <Badge variant="outline" className="bg-white/90 dark:bg-black/50 text-xs border-0 backdrop-blur-sm">
-                    {event.status === 'ongoing' ? '🔴 Live Now' : 'Upcoming'}
-                  </Badge>
-                </div>
-                <div className="absolute bottom-3 left-3">
-                  <Badge variant="outline" className={`text-xs border ${categoryColors[event.category]}`}>
-                    {event.category}
-                  </Badge>
-                </div>
-              </div>
-
-              <CardContent className="p-4 space-y-3">
-                <h3 className="font-semibold text-base leading-tight">{event.name}</h3>
-
-                <div className="flex flex-col gap-1.5 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                    <span>
-                      {format(parseISO(event.date), 'MMM d, yyyy')} at {event.time}
-                    </span>
+        {upcomingEvents.length === 0 ? (
+          <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border/80 bg-muted/30 px-6 py-10 text-center">
+            <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/10">
+              <Sparkles className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+            </div>
+            <p className="text-sm font-medium">No upcoming events</p>
+            <p className="mb-4 mt-0.5 max-w-xs text-xs text-muted-foreground">
+              Create your next event and it will show up here with bookings and attendee stats.
+            </p>
+            <Button size="sm" className="h-8 bg-emerald-600 text-white hover:bg-emerald-700" onClick={() => setCreateDialogOpen(true)}>
+              <Plus className="mr-1.5 h-3.5 w-3.5" />
+              Create Event
+            </Button>
+          </div>
+        ) : (
+          <motion.div
+            className="grid grid-cols-1 gap-4 xl:grid-cols-2"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            {upcomingEvents.map((event) => (
+              <motion.div key={event.id} variants={itemVariants} whileHover={{ y: -3, transition: { duration: 0.2 } }}>
+                <Card className="overflow-hidden rounded-xl border-border/60 shadow-sm transition-shadow duration-300 hover:shadow-md">
+                  {/* Gradient image placeholder */}
+                  <div className={`relative h-24 bg-gradient-to-br ${event.imageGradient}`}>
+                    <Sparkles className="absolute -bottom-2 right-4 h-16 w-16 rotate-12 text-white/10" />
+                    <div className="absolute right-3 top-3 flex items-center gap-1.5">
+                      {event.status === 'ongoing' ? (
+                        <Badge variant="outline" className="border-0 bg-white/90 text-xs backdrop-blur-sm dark:bg-black/50">
+                          <span className="mr-1 inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-red-500" />
+                          Live Now
+                        </Badge>
+                      ) : (
+                        <Badge variant="outline" className="border-0 bg-white/90 text-xs backdrop-blur-sm dark:bg-black/50">
+                          Upcoming
+                        </Badge>
+                      )}
+                    </div>
+                    <div className="absolute bottom-3 left-3">
+                      <Badge variant="outline" className="border-0 bg-white/90 text-xs font-medium text-zinc-800 backdrop-blur-sm">
+                        {event.category}
+                      </Badge>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <MapPin className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                    <span>{event.venue}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Users className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                    <span>
-                      {event.attendees}/{event.maxAttendees} attendees
-                    </span>
-                  </div>
-                </div>
 
-                <div className="flex items-center justify-between pt-1">
-                  <span className="text-lg font-bold text-emerald-600 dark:text-emerald-400">
-                    {event.ticketPrice === 0 ? 'Free' : `$${event.ticketPrice}`}
-                  </span>
-                  <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white h-8" onClick={() => { setSelectedEvent(event); setCurrentView('events') }}>
-                    View Details
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+                  <CardContent className="space-y-3 p-4">
+                    <h3 className="truncate font-semibold leading-tight">{event.name}</h3>
+
+                    <div className="grid grid-cols-1 gap-1.5 text-[13px] text-muted-foreground sm:grid-cols-2">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="h-3.5 w-3.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
+                        <span className="truncate">{format(parseISO(event.date), 'MMM d, yyyy')} · {event.time}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Users className="h-3.5 w-3.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
+                        <span className="truncate">{event.attendees}/{event.maxAttendees} attendees</span>
+                      </div>
+                      <div className="flex items-center gap-2 sm:col-span-2">
+                        <MapPin className="h-3.5 w-3.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
+                        <span className="truncate">{event.venue}</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between border-t border-border/60 pt-3">
+                      <span className="text-base font-bold text-emerald-600 dark:text-emerald-400">
+                        {event.ticketPrice === 0 ? 'Free' : `$${event.ticketPrice.toLocaleString()}`}
+                      </span>
+                      <Button size="sm" variant="outline" className="h-8 border-emerald-600/30 text-emerald-700 hover:bg-emerald-600 hover:text-white dark:text-emerald-400 dark:hover:text-white" onClick={() => { setSelectedEvent(event); setCurrentView('events') }}>
+                        View Details
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
           </motion.div>
-        ))}
-      </motion.div>
-    </div>
+        )}
+      </CardContent>
+    </Card>
   )
 }

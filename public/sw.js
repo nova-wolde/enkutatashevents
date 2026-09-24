@@ -1,4 +1,4 @@
-const CACHE_NAME = 'enkutatash-v3'
+const CACHE_NAME = 'enkutatash-v4'
 const STATIC_ASSETS = [
   '/',
   '/enkutatash-logo.png',

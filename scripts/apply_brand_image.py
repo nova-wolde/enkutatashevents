@@ -237,7 +237,16 @@ def main() -> None:
             any_src = radial_canvas(1024, *grad)
         else:
             any_src = Image.new("RGBA", master.size, (*bg, 255))
-        any_src.paste(master, (0, 0), master)
+        art = master
+        if args.radius >= 0.5:
+            # circular tile: the inscribed circle shaves anything touching the
+            # square edges — pull the artwork in so petal tips clear the curve
+            s = int(1024 * 0.93)
+            art = Image.new("RGBA", master.size, (0, 0, 0, 0))
+            small = master.resize((s, s), Image.LANCZOS)
+            art.paste(small, ((1024 - s) // 2, (1024 - s) // 2), small)
+            print("  circular tile: artwork inset to 93%")
+        any_src.paste(art, (0, 0), art)
         print(f"  solid-any tile = rgb{bg}")
 
     # "any" icons — rounded-corner transparency

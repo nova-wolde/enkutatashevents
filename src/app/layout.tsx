@@ -109,13 +109,13 @@ export const metadata: Metadata = {
 
   icons: {
     icon: [
-      { url: "/favicon.ico?v=6", sizes: "48x48" },
-      { url: "/favicon.svg?v=6", type: "image/svg+xml" },
-      { url: "/favicon-32x32.png?v=6", type: "image/png", sizes: "32x32" },
-      { url: "/favicon-192.png?v=6", type: "image/png", sizes: "192x192" },
-      { url: "/enkutatash-mark-512.png?v=6", type: "image/png", sizes: "512x512" },
+      { url: "/favicon.ico?v=7", sizes: "48x48" },
+      { url: "/favicon.svg?v=7", type: "image/svg+xml" },
+      { url: "/favicon-32x32.png?v=7", type: "image/png", sizes: "32x32" },
+      { url: "/favicon-192.png?v=7", type: "image/png", sizes: "192x192" },
+      { url: "/enkutatash-mark-512.png?v=7", type: "image/png", sizes: "512x512" },
     ],
-    apple: "/apple-touch-icon.png?v=6",
+    apple: "/apple-touch-icon.png?v=7",
   },
   manifest: "/manifest.json",
 

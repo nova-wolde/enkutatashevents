@@ -187,7 +187,7 @@ function LandingNavbar({ content }: { content: SiteContent }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-2.5">
-            <Image src="/enkutatash-logo.png" alt="Enkutatash Logo" width={40} height={40} unoptimized className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl object-contain" />
+            <Image src="/enkutatash-logo.png" alt="Enkutatash Events logo — event organizer in Addis Ababa, Ethiopia" width={40} height={40} unoptimized className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl object-contain" />
             <div className="flex flex-col leading-tight">
               <span className="text-lg sm:text-xl font-bold tracking-tight">{content.businessName}</span>
               <span className="text-[9px] sm:text-[10px] text-muted-foreground leading-none hidden xs:block">
@@ -421,15 +421,15 @@ function AboutSection({ content }: { content: SiteContent }) {
           <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: '-100px' }} transition={{ duration: 0.5 }} className="relative">
             <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
               <div className="col-span-2 relative rounded-lg sm:rounded-xl overflow-hidden aspect-[16/9]">
-                <Image src="/events/event-2.jpg" alt="Wedding Reception" fill unoptimized className="object-cover" />
+                <Image src="/events/event-2.jpg" alt="Wedding reception decoration by Enkutatash Events in Addis Ababa" fill unoptimized className="object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
               </div>
               <div className="relative rounded-lg sm:rounded-xl overflow-hidden aspect-square">
-                <Image src="/events/event-5.jpg" alt="Cultural Festival" fill unoptimized className="object-cover" />
+                <Image src="/events/event-5.jpg" alt="Ethiopian cultural festival stage setup by Enkutatash Events" fill unoptimized className="object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
               </div>
               <div className="relative rounded-lg sm:rounded-xl overflow-hidden aspect-square">
-                <Image src="/events/event-4.jpg" alt="Live Concert" fill unoptimized className="object-cover" />
+                <Image src="/events/event-4.jpg" alt="Live concert with professional sound and lighting by Enkutatash Events" fill unoptimized className="object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
               </div>
             </div>

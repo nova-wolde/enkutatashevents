@@ -73,7 +73,7 @@ export function LoginPage({ onSuccess }: LoginPageProps) {
             >
               <Image
                 src="/enkutatash-logo.png"
-                alt="Enkutatash"
+                alt="Enkutatash Events"
                 width={40}
                 height={40}
                 unoptimized

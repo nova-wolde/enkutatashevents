@@ -76,7 +76,7 @@ export function Header() {
       <div className="flex items-center gap-2">
         <Image
           src="/enkutatash-logo.png"
-          alt="Enkutatash"
+          alt="Enkutatash Events"
           width={32}
           height={32}
           unoptimized

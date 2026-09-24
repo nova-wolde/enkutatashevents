@@ -617,3 +617,39 @@ export const faqData = [
       "While our primary services are planning, decoration, and equipment rental, we partner with professional photographers and videographers in Addis Ababa. We can coordinate photography and videography services as part of your event package.",
   },
 ]
+
+// ─── City-specific FAQs (used on /locations/[city] pages for FAQPage schema) ──
+
+export interface CityFaq {
+  question: string
+  answer: string
+}
+
+export function getCityFaqs(city: { name: string; region: string }): CityFaq[] {
+  return [
+    {
+      question: `Do you organize events in ${city.name}?`,
+      answer: `Yes. Enkutatash Events provides full event organization services in ${city.name}, ${city.region}, and surrounding towns. Our team travels to ${city.name} for weddings, corporate events, concerts, graduations, and private celebrations, bringing all equipment and staff with us from Addis Ababa.`,
+    },
+    {
+      question: `How much does event planning cost in ${city.name}?`,
+      answer: `Pricing depends on the type, size, and complexity of your event. Weddings in ${city.name} typically need decoration, catering, stage and sound services, while corporate events may only need stage setup and equipment. Contact us for a free consultation and a detailed quote tailored to your ${city.name} event and budget.`,
+    },
+    {
+      question: `Do you provide tent and stage rental in ${city.name}?`,
+      answer: `Yes. We deliver and install high-quality tents (from 50 up to 10,000+ guest capacity), custom-built stages, podiums, backdrop systems, chairs, and tables for events in ${city.name}. Our crew handles delivery, setup, and teardown so everything is ready before your guests arrive.`,
+    },
+    {
+      question: `Can you cater weddings and events in ${city.name}?`,
+      answer: `Absolutely. We offer full catering in ${city.name} with Ethiopian traditional menus (injera, tibs, doro wat, kitfo) and international options, including the Ethiopian coffee ceremony, custom menu planning, and professional waitstaff for weddings, corporate functions, and family celebrations.`,
+    },
+    {
+      question: `How far in advance should I book an event organizer in ${city.name}?`,
+      answer: `For weddings and large events in ${city.name}, we recommend booking 3 to 6 months ahead to secure your preferred date. Smaller events like birthdays and engagements can usually be arranged with 2 to 4 weeks' notice. Reach out anyway — we do our best to accommodate shorter timelines.`,
+    },
+    {
+      question: `How do I get a quote for an event in ${city.name}?`,
+      answer: `Call us at +251 910 977 371, email enkutatashevents@gmail.com, or send a message through our website. Tell us your event date, location in ${city.name}, guest count, and the services you need — we will respond with a free, detailed quote.`,
+    },
+  ]
+}

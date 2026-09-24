@@ -1,11 +1,11 @@
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 import Link from "next/link"
-import { ArrowRight, Phone, Mail, CheckCircle2, MapPin, Home } from "lucide-react"
+import { ArrowRight, Phone, Mail, CheckCircle2, MapPin, Home, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { services } from "@/lib/services-data"
-import { ethiopianCities, getCityBySlug, SITE_URL } from "@/lib/seo-data"
+import { ethiopianCities, getCityBySlug, getCityFaqs, SITE_URL } from "@/lib/seo-data"
 
 interface Props {
   params: Promise<{ city: string }>
@@ -62,7 +62,24 @@ export default async function CityPage({ params }: Props) {
     cityTitle: `${s.title} in ${city.name}`,
   }))
 
+  const cityFaqs = getCityFaqs(city)
+
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: cityFaqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: { "@type": "Answer", text: faq.answer },
+    })),
+  }
+
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
     <div className="min-h-screen bg-background">
       {/* Breadcrumb */}
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6" aria-label="Breadcrumb">
@@ -219,8 +236,33 @@ export default async function CityPage({ params }: Props) {
         </div>
       </section>
 
-      {/* CTA */}
+      {/* FAQ */}
       <section className="py-16 sm:py-20 bg-muted/30 border-t border-border/50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-center mb-4">
+            Frequently Asked Questions — {city.name}
+          </h2>
+          <p className="text-muted-foreground text-center mb-10 max-w-2xl mx-auto">
+            Common questions about hiring an event organizer in {city.name}, {city.region}.
+          </p>
+          <div className="space-y-4">
+            {cityFaqs.map((faq, i) => (
+              <details key={i} className="group rounded-xl border border-border/50 bg-background">
+                <summary className="flex items-center justify-between p-4 sm:p-5 cursor-pointer font-medium text-sm sm:text-base list-none [&::-webkit-details-marker]:hidden">
+                  {faq.question}
+                  <ChevronRight className="h-4 w-4 shrink-0 transition-transform group-open:rotate-90 ml-2" />
+                </summary>
+                <div className="px-4 sm:px-5 pb-4 sm:pb-5 text-sm text-muted-foreground border-t border-border/50 pt-3">
+                  {faq.answer}
+                </div>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-16 sm:py-20 border-t border-border/50">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-4">
             Plan Your Event in {city.name}
@@ -249,5 +291,6 @@ export default async function CityPage({ params }: Props) {
         </Link>
       </div>
     </div>
+    </>
   )
 }

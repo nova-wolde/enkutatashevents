@@ -11,6 +11,7 @@ import {
   Trash2,
   ChevronLeft,
   ChevronRight,
+  Plus,
 } from 'lucide-react'
 import {
   Table,
@@ -210,6 +211,14 @@ export function EventsList() {
                     <SelectItem value="cancelled">Cancelled</SelectItem>
                   </SelectContent>
                 </Select>
+                <Button
+                  size="sm"
+                  className="h-9 bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm"
+                  onClick={() => setCreateDialogOpen(true)}
+                >
+                  <Plus className="mr-1.5 h-4 w-4" />
+                  Create Event
+                </Button>
               </div>
             </div>
           </CardHeader>

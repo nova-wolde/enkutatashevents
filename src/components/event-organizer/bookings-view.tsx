@@ -55,6 +55,22 @@ const statusConfig: Record<string, { label: string; color: string; bgColor: stri
   completed: { label: 'Completed', color: 'text-violet-700 dark:text-violet-400', bgColor: 'bg-violet-500/10', icon: AlertCircle },
 }
 
+// Friendly labels for service ids chosen in the public booking dialog
+// (ids come from booking-dialog.tsx serviceOptions). Unknown ids fall
+// back to humanized text so nothing ever renders as raw jargon.
+const serviceLabels: Record<string, string> = {
+  'advert': 'Advert & Promotion',
+  'organization': 'Event Organization',
+  'decoration': 'Decoration',
+  'stage-tent': 'Stage & Tent Rent',
+  'sound-light': 'Sound & Light Supply',
+  'chair-table': 'Chair & Table Supply',
+  'catering': 'Catering Supply',
+  'kids': 'Kids Game Material',
+}
+const serviceLabel = (id: string) =>
+  serviceLabels[id] || id.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+
 export function BookingsView() {
   const { toast } = useToast()
   const { bookings, setBookings, setPendingBookingsCount } = useEventStore()
@@ -518,7 +534,7 @@ export function BookingsView() {
                     <div className="flex flex-wrap gap-1.5">
                       {selectedBooking.services.map((s) => (
                         <Badge key={s} variant="secondary" className="text-[10px]">
-                          {s}
+                          {serviceLabel(s)}
                         </Badge>
                       ))}
                     </div>

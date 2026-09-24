@@ -172,3 +172,19 @@ Work Log:
 Stage Summary:
 - Tab favicon fixed for ALL visitors (was never a cache issue on this one)
 - Proof rig reusable: bash /home/z/my-project/scripts/capture-tab-strip.sh
+
+---
+Task ID: 12
+Agent: Super Z (main)
+Task: User disliked black favicon tile — redesign with color theory
+
+Work Log:
+- Web research: luxury event design guide cites 'deep emerald paired with amber/mustard yellow' as THE premium event palette; yellow+green = analogous harmony; site theme_color already #0b3d2e
+- apply_brand_image.py: new --gradient INNER:OUTER flag -> radial_canvas() spotlight tile (subtle radial, eased falloff, highlight at 42% height); wired into solid-any, maskable, apple-touch
+- Regenerated set: --radius 0.1 --solid-any --gradient '#12503B:#062A1F' (mid ~= brand emerald)
+- Yellow petal vs emerald contrast ~8:1 (WCAG graphics-passing)
+- ?v=5->?v=6, sw v7; built, pushed 20f3aad, deployed
+- Fresh-profile chromium tab capture: flower on emerald tile confirmed live in tab strip
+
+Stage Summary:
+- Favicon/PWA/apple icons now emerald spotlight tile + yellow Adey Abeba; in-app logo unchanged (transparent)

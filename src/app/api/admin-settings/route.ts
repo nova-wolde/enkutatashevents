@@ -13,6 +13,9 @@ const DEFAULT_SETTINGS: AdminSettings = {
   defaultVenue: '',
   defaultCategory: '',
   defaultMaxAttendees: '100',
+  gaMeasurementId: '',
+  gscVerification: '',
+  metaPixelId: '',
 }
 
 // ─── GET: Fetch admin settings (auth required) ───────────────────────────────

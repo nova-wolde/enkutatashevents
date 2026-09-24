@@ -11,6 +11,7 @@ import {
   AlertTriangle,
   Save,
   Loader2,
+  BarChart3,
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -50,6 +51,9 @@ interface SettingsData {
   defaultVenue: string
   defaultCategory: string
   defaultMaxAttendees: string
+  gaMeasurementId: string
+  gscVerification: string
+  metaPixelId: string
 }
 
 const DEFAULT_SETTINGS: SettingsData = {
@@ -63,6 +67,9 @@ const DEFAULT_SETTINGS: SettingsData = {
   defaultVenue: '',
   defaultCategory: '',
   defaultMaxAttendees: '100',
+  gaMeasurementId: '',
+  gscVerification: '',
+  metaPixelId: '',
 }
 
 export function SettingsView() {
@@ -79,8 +86,14 @@ export function SettingsView() {
   useEffect(() => {
     fetch('/api/admin-settings', { credentials: 'include' })
       .then((r) => r.json())
-      .then((data) => {
-        if (data.settings) setSettings(data.settings)
+      .then((data: { settings?: Partial<SettingsData> }) => {
+        if (data.settings) {
+          // Merge over defaults; drop null/undefined so inputs stay controlled
+          const clean = Object.fromEntries(
+            Object.entries(data.settings).filter(([, v]) => v !== undefined && v !== null)
+          ) as Partial<SettingsData>
+          setSettings((prev) => ({ ...prev, ...clean }))
+        }
       })
       .catch(() => {})
   }, [])
@@ -289,6 +302,59 @@ export function SettingsView() {
               onChange={(e) => updateSetting('defaultMaxAttendees', e.target.value)}
               className="w-full sm:w-[200px]"
             />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Integrations (Analytics & Search Console) */}
+      <Card className="rounded-xl shadow-sm">
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <BarChart3 className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+            <CardTitle className="text-base font-semibold">Integrations</CardTitle>
+          </div>
+          <CardDescription>
+            Paste your analytics &amp; search console IDs — changes go live on the next page load, no redeploy needed
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="settings-ga">Google Analytics 4 Measurement ID</Label>
+            <Input
+              id="settings-ga"
+              placeholder="G-XXXXXXXXXX"
+              value={settings.gaMeasurementId}
+              onChange={(e) => updateSetting('gaMeasurementId', e.target.value.trim())}
+            />
+            <p className="text-xs text-muted-foreground">
+              From Google Analytics → Admin → Data Streams → Web. Loads after visitors accept cookies.
+            </p>
+          </div>
+          <Separator />
+          <div className="space-y-2">
+            <Label htmlFor="settings-gsc">Google Search Console Verification Code</Label>
+            <Input
+              id="settings-gsc"
+              placeholder="e.g. 9tjB8...  (the content= part of the meta tag)"
+              value={settings.gscVerification}
+              onChange={(e) => updateSetting('gscVerification', e.target.value.trim())}
+            />
+            <p className="text-xs text-muted-foreground">
+              From Search Console → Settings → Ownership verification → HTML tag. Paste only the code inside content="...".
+            </p>
+          </div>
+          <Separator />
+          <div className="space-y-2">
+            <Label htmlFor="settings-meta">Meta (Facebook) Pixel ID</Label>
+            <Input
+              id="settings-meta"
+              placeholder="e.g. 123456789012345"
+              value={settings.metaPixelId}
+              onChange={(e) => updateSetting('metaPixelId', e.target.value.trim())}
+            />
+            <p className="text-xs text-muted-foreground">
+              From Meta Events Manager → Data Sources → your Pixel ID. Loads after visitors accept cookies.
+            </p>
           </div>
         </CardContent>
       </Card>

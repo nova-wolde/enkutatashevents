@@ -186,6 +186,11 @@ export interface AdminSettings {
   defaultVenue: string
   defaultCategory: string
   defaultMaxAttendees: string
+  // ─── Marketing/Analytics integrations (paste in admin — no redeploy needed) ──
+  // These are NOT secrets: they appear in the public page HTML anyway.
+  gaMeasurementId?: string
+  gscVerification?: string
+  metaPixelId?: string
 }
 
 export async function getAdminSettings(): Promise<AdminSettings | null> {

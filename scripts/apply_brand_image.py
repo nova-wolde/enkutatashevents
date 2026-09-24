@@ -246,13 +246,20 @@ def main() -> None:
     fav32.save(out / "favicon.ico", format="ICO",
                sizes=[(16, 16), (32, 32), (48, 48)], append_images=[fav16])
 
-    # svg wrapper (same mechanism as before, now pointing at the mark)
+    # svg favicon — must be fully SELF-CONTAINED: Chrome blocks external
+    # resources referenced from SVG favicons, which silently yields the
+    # default gray tab icon. Embed a small optimized raster as a data URI.
+    import base64
+    import io
+    buf = io.BytesIO()
+    favicon512.resize((64, 64), Image.LANCZOS).save(buf, format="PNG", optimize=True)
+    b64 = base64.b64encode(buf.getvalue()).decode("ascii")
     (out / "favicon.svg").write_text(
         '<?xml version="1.0" encoding="utf-8"?>\n'
         '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" '
-        'viewBox="0 0 512 512" width="512" height="512">\n'
-        '  <image xlink:href="/enkutatash-mark-512.png" width="512" height="512" '
-        'preserveAspectRatio="xMidYMid meet"/>\n</svg>\n'
+        'viewBox="0 0 64 64" width="64" height="64">\n'
+        f'  <image href="data:image/png;base64,{b64}" xlink:href="data:image/png;base64,{b64}" '
+        'width="64" height="64" preserveAspectRatio="xMidYMid meet"/>\n</svg>\n'
     )
 
     print(f"  wrote 11 assets to {out} (master {args.master_size}px)")

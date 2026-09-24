@@ -1,10 +1,15 @@
-const CACHE_NAME = 'enkutatash-v1'
+const CACHE_NAME = 'enkutatash-v2'
 const STATIC_ASSETS = [
   '/',
   '/enkutatash-logo.png',
+  '/enkutatash-mark-512.png',
+  '/enkutatash-mark-512-maskable.png',
   '/favicon.ico',
   '/favicon.svg',
+  '/favicon-16x16.png',
+  '/favicon-32x32.png',
   '/favicon-192.png',
+  '/favicon-512.png',
   '/apple-touch-icon.png',
   '/manifest.json',
 ]

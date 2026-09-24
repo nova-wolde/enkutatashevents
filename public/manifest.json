@@ -5,7 +5,7 @@
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#059669",
+  "theme_color": "#0b3d2e",
   "orientation": "portrait-primary",
   "scope": "/",
   "lang": "en",
@@ -19,10 +19,16 @@
       "purpose": "any"
     },
     {
-      "src": "/enkutatash-logo.png",
+      "src": "/enkutatash-mark-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/enkutatash-mark-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
   "prefer_related_applications": false

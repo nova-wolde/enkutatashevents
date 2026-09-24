@@ -122,3 +122,18 @@ Work Log:
 Stage Summary:
 - Live on enkutatashevents.com: Adey Abeba flower is now favicon (ico/svg/16/32/192/512), PWA any+maskable launcher, apple-touch icon, and in-app logo everywhere (public header/footer, admin, 404)
 - Future swaps: python3 scripts/apply_brand_image.py <img> --radius 0..0.24, bump sw.js, deploy
+
+---
+Task ID: 9
+Agent: Super Z (main)
+Task: Force favicon refresh for returning visitors (user reported seeing old favicon)
+
+Work Log:
+- Verified live /favicon.ico already md5-matched the new flower build (browser favicon cache was the culprit, not the deploy)
+- Added ?v=3 to all icon URLs in src/app/layout.tsx metadata (ico/svg/32/192/512/apple-touch) and public/manifest.json icon srcs -> browsers treat them as new resources
+- Bumped sw.js CACHE_NAME to enkutatash-v4
+- Built, pushed 44a6ade, deployed; confirmed live HTML now emits versioned links and 5/5 versioned assets md5-match local
+- Note: sandbox shell resets CWD between calls -> always cd /home/z/enkutatashevents per call
+
+Stage Summary:
+- Favicon/PWA icons versioned; any returning browser will refetch the Adey Abeba flower favicon on next page load

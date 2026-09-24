@@ -170,6 +170,9 @@ def main() -> None:
     p.add_argument("--bg", default="auto")
     p.add_argument("--radius", type=float, default=0.22)
     p.add_argument("--safe", type=float, default=0.78)
+    p.add_argument("--solid-any", action="store_true",
+                   help="composite the 'any' favicon tiles onto the solid bg (transparent "
+                        "cutouts otherwise vanish on light browser tabs)")
     p.add_argument("--master-size", type=int, default=512)
     p.add_argument("--out", type=Path, default=REPO / "public")
     args = p.parse_args()
@@ -198,8 +201,15 @@ def main() -> None:
 
     radius_px = int(1024 * args.radius)
 
+    # optionally give 'any' icons a solid tile so cutout art reads on light tabs
+    any_src = master
+    if args.solid_any and transparent_src:
+        any_src = Image.new("RGBA", master.size, (*bg, 255))
+        any_src.paste(master, (0, 0), master)
+        print(f"  solid-any tile = rgb{bg}")
+
     # "any" icons — rounded-corner transparency
-    any1024 = rounded(master, radius_px)
+    any1024 = rounded(any_src, radius_px)
     favicon512 = any1024.resize((512, 512), Image.LANCZOS)
     favicon192 = any1024.resize((192, 192), Image.LANCZOS)
     fav32 = any1024.resize((32, 32), Image.LANCZOS)

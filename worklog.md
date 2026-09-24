@@ -217,3 +217,19 @@ Work Log:
 
 Stage Summary:
 - New premium emerald footer live across all pages (landing, blog, services, locations, legal)
+
+---
+Task ID: 15
+Agent: Super Z (main)
+Task: Scope the PWA to the admin app only (not the landing page)
+
+Work Log:
+- Root layout: removed site-wide manifest link
+- New src/app/admin/layout.tsx: attaches manifest metadata only on /admin routes
+- service-worker-registration.tsx: path-aware — /admin/* registers '/sw.js' with scope '/admin/'; public pages unregister any legacy site-wide SW
+- manifest.json: name 'Enkutatash Events Admin', short_name 'ET Admin', start_url '/admin', scope '/admin/'
+- sw.js: CACHE_NAME v9, precache '/admin' shell instead of '/', offline nav fallback -> /admin
+- Deployed aef532a; verified live: public HTML has no rel=manifest, /admin has it; browser eval shows SW scope 'https://enkutatashevents.com/admin/' registered on /admin and kept after visiting public pages (which carry no manifest link); admin login UI renders fine
+
+Stage Summary:
+- PWA install = admin console only; public site has no SW and no install prompt

@@ -16,8 +16,8 @@ Technical SEO:
   ✓ Page speed optimization (Next.js, image optimization, compression)
   ☐ Submit sitemap to Google Search Console — DONE
   ☐ Submit sitemap to Bing Webmaster Tools
-  ☐ Set up Google Analytics 4 (GA4) — add NEXT_PUBLIC_GA_MEASUREMENT_ID
-  ☐ Set up Google Search Console verification — add NEXT_PUBLIC_GSC_VERIFICATION
+  ◐ GA4 wiring done — paste ID in Admin → Settings → Integrations (no redeploy)
+  ◐ GSC wiring done — paste code in Admin → Settings → Integrations (no redeploy)
 
 Local SEO:
   ✓ Google Business Profile created
@@ -48,7 +48,7 @@ On-Page SEO:
   ✓ Optimized meta titles and descriptions for all pages
   ✓ Added comprehensive keyword lists
   ✓ Internal linking between services, locations, and blog
-  ☐ Add alt text to all portfolio images
+  ✓ Alt text improved on landing-page images (logo, wedding, cultural festival, concert) — Dec 2026
   ☐ Add image schema markup for portfolio
 
 PHASE 3: LINK BUILDING & AUTHORITY (Months 4-8)
@@ -82,7 +82,7 @@ Content Scaling:
   ☐ Reach 100 blog posts total
   ☐ Add video content: event walkthroughs, tutorials
   ☐ Create downloadable guides and checklists
-  ☐ Add FAQ schema to location pages
+  ✓ FAQPage schema added to all 19 city location pages (Dec 2026)
   ☐ Create targeted landing pages for high-value keywords
 
 Local SEO Scaling:

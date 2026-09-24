@@ -182,6 +182,18 @@ After deploy, verify `https://enkutatashevents.com/` loads and `/mesfin` shows t
 
 Log in as owner → "Content" tab in the dashboard. Changes are saved to Redis. No redeploy needed.
 
+### Wire up Google Analytics 4 / Search Console / Meta Pixel
+
+Log in as owner → "Settings" tab → **Integrations** card. Paste any of:
+
+- **GA4 Measurement ID** (format `G-XXXXXXXXXX`) — from Google Analytics → Admin → Data Streams
+- **GSC Verification Code** — from Search Console → Settings → Ownership verification → HTML tag (only the code inside `content="..."`)
+- **Meta Pixel ID** (numeric) — from Meta Events Manager → Data Sources
+
+Save → IDs are stored in Redis and served publicly via `GET /api/public-settings`. The site's `<AnalyticsLoader>` picks them up on the next page load. **No redeploy needed.** GA4 and Meta Pixel only load after a visitor accepts the cookie banner; GSC verification is injected immediately (and is server-rendered too if `NEXT_PUBLIC_GSC_VERIFICATION` was set at build time).
+
+To change these IDs at the build/infra level instead, set `NEXT_PUBLIC_GA_MEASUREMENT_ID` / `NEXT_PUBLIC_GSC_VERIFICATION` / `NEXT_PUBLIC_META_PIXEL_ID` as env vars and redeploy — dashboard values always take priority over env values.
+
 ### Change the owner password
 
 ```bash

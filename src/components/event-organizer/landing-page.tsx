@@ -957,16 +957,40 @@ function ContactSection({ content }: { content: SiteContent }) {
 
             <div className="mt-6 sm:mt-8 flex gap-2 sm:gap-3">
               {(content.socialLinks || []).filter(s => s.url).map((social) => {
-                const iconMap: Record<string, React.ElementType> = { Instagram, Facebook, Youtube, Telegram: Send, WhatsApp: MessageCircle, TikTok: Music }
-                const Icon = iconMap[social.platform] || Instagram
+                // NOTE: lucide exports "Youtube" (capital Y only) but the CMS platform is "YouTube" —
+                // map explicitly, then fall back to URL matching for any unknown platform label.
+                const iconMap: Record<string, React.ElementType> = { Instagram, Facebook, YouTube: Youtube, Telegram: Send, WhatsApp: MessageCircle, TikTok: Music }
+                const resolveIcon = (): React.ElementType => {
+                  const u = social.url.toLowerCase()
+                  if (u.includes('instagram')) return Instagram
+                  if (u.includes('facebook')) return Facebook
+                  if (u.includes('youtube') || u.includes('youtu.be')) return Youtube
+                  if (u.includes('t.me') || u.includes('telegram')) return Send
+                  if (u.includes('whatsapp') || u.includes('wa.me')) return MessageCircle
+                  if (u.includes('tiktok')) return Music
+                  return iconMap[social.platform] || Instagram
+                }
+                const Icon = resolveIcon()
                 return (
-                  <a key={social.platform} href={social.url} target="_blank" rel="noopener noreferrer">
+                  <a key={social.platform + social.url} href={social.url} target="_blank" rel="noopener noreferrer" aria-label={social.platform}>
                     <Button variant="outline" size="icon" className="h-10 w-10 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl min-h-[44px] min-w-[44px]">
                       <Icon className="h-4 w-4" />
                     </Button>
                   </a>
                 )
               })}
+            </div>
+
+            {/* Location map */}
+            <div className="mt-6 sm:mt-8 overflow-hidden rounded-xl sm:rounded-2xl border border-border/50 shadow-sm">
+              <iframe
+                src="https://www.google.com/maps?q=Ayat%2C%20Addis%20Ababa%2C%20Ethiopia&z=13&output=embed"
+                title={t('Our location — Ayat, Addis Ababa', 'ቦታችን — አያት፣ አዲስ አበባ')}
+                loading="lazy"
+                allowFullScreen
+                referrerPolicy="no-referrer-when-downgrade"
+                className="w-full h-56 sm:h-64 md:h-72 border-0 block"
+              />
             </div>
           </motion.div>
 

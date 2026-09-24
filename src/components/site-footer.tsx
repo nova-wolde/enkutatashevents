@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation'
 import {
   ArrowUp,
   Mail,
+  MapPin,
   Phone,
 } from 'lucide-react'
 
@@ -33,6 +34,8 @@ const defaultContent: FooterContent = {
   email: 'enkutatashevents@gmail.com',
   phones: ['+251 915 895 757', '+251 915 843 131', '+251 910 977 371'],
   phoneLinks: ['+251915895757', '+251915843131', '+251910977371'],
+  address: 'Ayat, Addis Ababa',
+  addressAmharic: 'አያት፣ አዲስ አበባ',
 }
 
 // ─── Language hook (reads the same localStorage key the site toggle writes) ──
@@ -123,8 +126,17 @@ export function SiteFooter({ content }: { content?: Partial<FooterContent> }) {
           </nav>
         </div>
 
-        {/* One-line contact (only lifeline on subpages) */}
+        {/* Address + office number + email (only lifeline on subpages) */}
         <div className="pb-8 flex flex-wrap items-center gap-x-6 gap-y-1.5 text-sm text-zinc-500">
+          <a
+            href="https://www.google.com/maps?q=Ayat,+Addis+Ababa,+Ethiopia"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 hover:text-white transition-colors"
+          >
+            <MapPin className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" />
+            {t(c.address || 'Ayat, Addis Ababa', c.addressAmharic || 'አያት፣ አዲስ አበባ')}
+          </a>
           <a
             href={`tel:${c.phoneLinks?.[2] || c.phoneLinks?.[0] || c.phones?.[0]}`}
             className="inline-flex items-center gap-2 hover:text-white transition-colors"

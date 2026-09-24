@@ -44,6 +44,7 @@ const nextConfig: NextConfig = {
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: blob: https://enkutatashevents.com",
               "connect-src 'self' https://www.google-analytics.com https://cloudflareinsights.com",
+              "frame-src 'self' https://www.google.com https://maps.google.com",
               "frame-ancestors 'none'",
               "base-uri 'self'",
               "form-action 'self'",

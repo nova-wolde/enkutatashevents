@@ -185,11 +185,12 @@ def main() -> None:
     master = im.resize((1024, 1024), Image.LANCZOS)  # work at high res for downscales
     master_small = im.resize((args.master_size, args.master_size), Image.LANCZOS)
 
+    transparent_src = bool((np_safe(master)[:, :, 3] < 250).any())
     (bg, opaque) = sample_corner_bg(master) if args.bg == "auto" else (None, False)
     if args.bg == "auto":
-        if not opaque:  # transparent mat -> fall back to dark emerald brand colour
-            bg = (11, 61, 46)
-        print(f"  auto bg = rgb{bg}")
+        if not opaque:  # transparent mat -> black canvas so the artwork pops
+            bg = (0, 0, 0)
+        print(f"  auto bg = rgb{bg} (transparent source: {transparent_src})")
     elif args.bg == "none":
         bg = (255, 255, 255)
     else:
@@ -215,12 +216,20 @@ def main() -> None:
     any_master_small.save(out / "enkutatash-logo.png", optimize=True)
 
     # apple-touch — full-bleed cover (iOS applies its own corner mask)
-    cover_bleed(master, 180).convert("RGB").save(out / "apple-touch-icon.png", optimize=True)
+    if transparent_src:
+        # cutout artwork: center the whole mark on a solid canvas (no petal cropping)
+        full_bleed(master, 180, bg, safe=0.86).convert("RGB").save(
+            out / "apple-touch-icon.png", optimize=True)
+    else:
+        cover_bleed(master, 180).convert("RGB").save(out / "apple-touch-icon.png", optimize=True)
 
     # maskable — rounded artwork inside safe zone on seamless edge-colour ring
-    edge_bg = sample_edge_bg(any1024)
-    print(f"  maskable ring bg = rgb{edge_bg}")
-    full_bleed(any1024, 512, edge_bg, safe=args.safe).save(
+    if transparent_src:
+        mask_bg = bg  # solid canvas colour (edge sampling would pick artwork colours)
+    else:
+        mask_bg = sample_edge_bg(any1024)
+    print(f"  maskable ring bg = rgb{mask_bg}")
+    full_bleed(any1024, 512, mask_bg, safe=args.safe).save(
         out / "enkutatash-mark-512-maskable.png", optimize=True)
 
     # multi-size .ico

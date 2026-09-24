@@ -82,3 +82,24 @@ Stage Summary:
 - Data persists during session but resets on page refresh (expected behavior for hardcoded data)
 - API routes still exist for public-facing features (contact form, booking form, auth)
 - Site accessible at https://enkutatashevents.com and https://enkutatashevents.com/admin
+
+---
+Task ID: 7
+Agent: Main Agent
+Task: Use user's brand image as favicon, PWA launcher and logo everywhere in the app
+
+Work Log:
+- User's pasted image did not reach the sandbox (upload/ empty after reset); decision: build reusable pipeline + apply strongest in-repo brand asset (emerald ornament mark cropped from enkutatash-logo-wide.png, bbox 61,198,437,574), trivially re-runnable when user re-attaches their exact image
+- Created scripts/apply_brand_image.py — one-command brand pipeline: autocrop→square→rounded-corner "any" icons (16/32/192/512), multi-size favicon.ico (16+32+48), favicon.svg wrapper, apple-touch-icon (full-bleed cover, zoom 1.14), maskable 512 (rounded art in 78% safe zone on edge-colour ring rgb(2,64,59)), master enkutatash-logo.png (512px, optimized)
+- Fixed maskable white-fringe bug (square-corner mat pixels leaked in → paste rounded artwork instead of raw square)
+- manifest.json: icons = 192 any, 512 any (enkutatash-mark-512.png), 512 maskable; theme_color aligned to brand emerald #0b3d2e
+- sw.js: CACHE_NAME bumped enkutatash-v1→v2 + all new icons in STATIC_ASSETS
+- layout.tsx: icon metadata = ico/svg/32/192/512 + apple-touch (JSON-LD logo path unchanged, file replaced in place)
+- proxy.ts: matcher now excludes favicon* and enkutatash-mark* static paths
+- Local verification (single-call harnesses): 12/12 assets 200 + correct MIME; manifest + head links verified in DOM; screenshots: homepage header/footer (light+dark), admin login, admin dashboard (dark emerald sidebar, logged in via vinext dev + dev-redis-shim + seed-local-from-prod), mobile admin — all crisp
+- Commit 9c48e42 pushed; deployed to Cloudflare (Version 07873f9f); live checks: 8/8 assets 200 with new sizes, live manifest + head links correct, live homepage header screenshot confirms new mark
+
+Stage Summary:
+- New emerald ornament mark now serves as favicon, PWA launcher (any+maskable), apple-touch icon and the in-app logo everywhere (public header, footer, admin header/sidebar/login, 404)
+- Reusable pipeline: `python3 scripts/apply_brand_image.py <image>` regenerates all 11 assets from ANY source image in one command (then bump sw.js cache name)
+- If the user re-attaches their intended image, re-run pipeline + sw.js bump + deploy = complete swap in ~2 minutes

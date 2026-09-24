@@ -117,7 +117,7 @@ export const metadata: Metadata = {
     ],
     apple: "/apple-touch-icon.png?v=7",
   },
-  manifest: "/manifest.json",
+  // NOTE: no site-wide manifest — PWA is admin-only (see src/app/admin/layout.tsx)
 
   openGraph: {
     type: "website",

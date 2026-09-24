@@ -1,6 +1,6 @@
-const CACHE_NAME = 'enkutatash-v8'
+const CACHE_NAME = 'enkutatash-v9'
 const STATIC_ASSETS = [
-  '/',
+  '/admin',
   '/enkutatash-logo.png',
   '/enkutatash-mark-512.png',
   '/enkutatash-mark-512-maskable.png',
@@ -45,10 +45,10 @@ self.addEventListener('fetch', (event) => {
   // Skip API calls and chrome-extension
   if (url.pathname.startsWith('/api/') || url.protocol === 'chrome-extension:') return
 
-  // For navigation requests — network first, fallback to cache
+  // For navigation requests — network first, fallback to cached admin shell
   if (request.mode === 'navigate') {
     event.respondWith(
-      fetch(request).catch(() => caches.match('/'))
+      fetch(request).catch(() => caches.match('/admin'))
     )
     return
   }

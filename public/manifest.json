@@ -1,13 +1,13 @@
 {
-  "name": "Enkutatash Event",
-  "short_name": "Enkutatash",
-  "description": "Addis Ababa's premier event organizer. Weddings, corporate events, concerts, cultural celebrations — we bring your vision to life.",
-  "start_url": "/",
+  "name": "Enkutatash Events Admin",
+  "short_name": "ET Admin",
+  "description": "Admin console for Enkutatash Events — manage events, bookings, attendees, messages and site content.",
+  "start_url": "/admin",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#0b3d2e",
   "orientation": "portrait-primary",
-  "scope": "/",
+  "scope": "/admin/",
   "lang": "en",
   "dir": "ltr",
   "categories": [

@@ -103,3 +103,22 @@ Stage Summary:
 - New emerald ornament mark now serves as favicon, PWA launcher (any+maskable), apple-touch icon and the in-app logo everywhere (public header, footer, admin header/sidebar/login, 404)
 - Reusable pipeline: `python3 scripts/apply_brand_image.py <image>` regenerates all 11 assets from ANY source image in one command (then bump sw.js cache name)
 - If the user re-attaches their intended image, re-run pipeline + sw.js bump + deploy = complete swap in ~2 minutes
+
+---
+Task ID: 8
+Agent: Super Z (main)
+Task: Apply the user's actual logo (Adey Abeba flower) to favicon, PWA launcher and app-wide logo
+
+Work Log:
+- User delivered image as repo-root upload "logo (2).png" on GitHub; downloaded via raw URL (1254x1254 RGBA, transparent cutout of yellow Enkutatash daisy)
+- Verified source: corners/edges alpha=0 (transparent mat), no bg removal needed
+- Patched scripts/apply_brand_image.py for transparent sources: maskable uses solid canvas (--bg auto -> black) instead of edge-colour sampling; apple-touch centers full flower (safe 0.86) instead of cover-crop
+- Ran pipeline (--radius 0) -> regenerated all 11 assets; verified alpha: any-icons/master corners a=0, maskable opaque black canvas, apple RGB black
+- Bumped public/sw.js CACHE_NAME enkutatash-v2 -> v3
+- Archived source at brand/adey-abeba-flower.png for future re-runs
+- Build OK; rebased on user's remote upload commit (8115f9a), pushed 6204b09, deployed CF version 82214c8a
+- Live verify: 7/7 assets md5-match local; desktop + mobile screenshots show flower in header/footer
+
+Stage Summary:
+- Live on enkutatashevents.com: Adey Abeba flower is now favicon (ico/svg/16/32/192/512), PWA any+maskable launcher, apple-touch icon, and in-app logo everywhere (public header/footer, admin, 404)
+- Future swaps: python3 scripts/apply_brand_image.py <img> --radius 0..0.24, bump sw.js, deploy

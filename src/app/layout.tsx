@@ -160,15 +160,15 @@ function JsonLd() {
     email: "enkutatashevents@gmail.com",
     address: {
       "@type": "PostalAddress",
-      streetAddress: "Ayat",
+      streetAddress: "Ayat Mall, 1st Floor, Office No. E1F-19, Ayat",
       addressLocality: "Addis Ababa",
       addressRegion: "Addis Ababa",
       addressCountry: "ET",
     },
     geo: {
       "@type": "GeoCoordinates",
-      latitude: 9.0222,
-      longitude: 38.7469,
+      latitude: 9.020682,
+      longitude: 38.868906,
     },
     openingHoursSpecification: [
       {

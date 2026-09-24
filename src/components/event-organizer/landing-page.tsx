@@ -985,7 +985,7 @@ function ContactSection({ content }: { content: SiteContent }) {
             <div className="mt-6 sm:mt-8 overflow-hidden rounded-xl sm:rounded-2xl border border-border/50 shadow-sm">
               <iframe
                 src="https://www.google.com/maps?q=9.020682%2C38.868906&z=16&output=embed"
-                title={t('Our location — Ayat, Addis Ababa', 'ቦታችን — አያት፣ አዲስ አበባ')}
+                title={t('Our location — Ayat Mall, Ayat, Addis Ababa', 'ቦታችን — አያት ሞል፣ አያት፣ አዲስ አበባ')}
                 loading="lazy"
                 allowFullScreen
                 referrerPolicy="no-referrer-when-downgrade"
@@ -1046,8 +1046,8 @@ const fallbackContent: SiteContent = {
   email: "enkutatashevents@gmail.com",
   phones: ["+251 915 895 757", "+251 915 843 131", "+251 910 977 371"],
   phoneLinks: ["+251915895757", "+251915843131", "+251910977371"],
-  address: "Ayat, Addis Ababa",
-  addressAmharic: "አያት፣ አዲስ አበባ",
+  address: "Ayat Mall, 1st Floor, Office No. E1F-19, Ayat, Addis Ababa",
+  addressAmharic: "አያት ሞል፣ 1ኛ ፎቅ፣ ቢሮ ቁጥር E1F-19፣ አያት፣ አዲስ አበባ",
   workingHours: [{ day: "Mon - Fri", hours: "8:00 AM - 6:00 PM" }, { day: "Sat", hours: "9:00 AM - 2:00 PM" }],
   socialLinks: [
     { platform: "Instagram", url: "https://www.instagram.com/enkutatashevents/" },

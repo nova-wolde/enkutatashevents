@@ -100,7 +100,7 @@ export default function TermsPage() {
             <h2 className="text-xl font-semibold mt-8 mb-3">8. Contact</h2>
             <p className="text-muted-foreground">
               Enkutatash Event<br />
-              Ayat, Addis Ababa, Ethiopia<br />
+              Ayat Mall, 1st Floor, Office No. E1F-19, Ayat, Addis Ababa, Ethiopia<br />
               Email:{" "}
               <a href="mailto:enkutatashevents@gmail.com" className="text-emerald-600 hover:underline">
                 enkutatashevents@gmail.com

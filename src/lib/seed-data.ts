@@ -60,8 +60,8 @@ export function getSeedSiteContent(): Record<string, unknown> {
     email: "enkutatashevents@gmail.com",
     phones: ["+251 915 895 757", "+251 915 843 131", "+251 910 977 371"],
     phoneLinks: ["+251915895757", "+251915843131", "+251910977371"],
-    address: "Ayat, Addis Ababa",
-    addressAmharic: "አያት፣ አዲስ አበባ",
+    address: "Ayat Mall, 1st Floor, Office No. E1F-19, Ayat, Addis Ababa",
+    addressAmharic: "አያት ሞል፣ 1ኛ ፎቅ፣ ቢሮ ቁጥር E1F-19፣ አያት፣ አዲስ አበባ",
     workingHours: [
       { day: "Mon - Fri", hours: "8:00 AM - 6:00 PM" },
       { day: "Sat", hours: "9:00 AM - 2:00 PM" },

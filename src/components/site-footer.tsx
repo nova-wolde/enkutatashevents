@@ -34,8 +34,8 @@ const defaultContent: FooterContent = {
   email: 'enkutatashevents@gmail.com',
   phones: ['+251 915 895 757', '+251 915 843 131', '+251 910 977 371'],
   phoneLinks: ['+251915895757', '+251915843131', '+251910977371'],
-  address: 'Ayat, Addis Ababa',
-  addressAmharic: 'አያት፣ አዲስ አበባ',
+  address: 'Ayat Mall, 1st Floor, Office No. E1F-19, Ayat, Addis Ababa',
+  addressAmharic: 'አያት ሞል፣ 1ኛ ፎቅ፣ ቢሮ ቁጥር E1F-19፣ አያት፣ አዲስ አበባ',
 }
 
 // ─── Language hook (reads the same localStorage key the site toggle writes) ──
@@ -135,7 +135,7 @@ export function SiteFooter({ content }: { content?: Partial<FooterContent> }) {
             className="inline-flex items-center gap-2 hover:text-white transition-colors"
           >
             <MapPin className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" />
-            {t(c.address || 'Ayat, Addis Ababa', c.addressAmharic || 'አያት፣ አዲስ አበባ')}
+            {t(c.address || 'Ayat Mall, 1st Floor, Office No. E1F-19, Ayat, Addis Ababa', c.addressAmharic || 'አያት ሞል፣ 1ኛ ፎቅ፣ ቢሮ ቁጥር E1F-19፣ አያት፣ አዲስ አበባ')}
           </a>
           <a
             href={`tel:${c.phoneLinks?.[2] || c.phoneLinks?.[0] || c.phones?.[0]}`}

@@ -118,14 +118,33 @@ def sample_edge_bg(im: Image.Image) -> tuple:
     return tuple(int(v) for v in med)
 
 
-def full_bleed(im: Image.Image, size: int, bg: tuple, safe: float) -> Image.Image:
-    """Content scaled into safe zone, centered on solid bg (for maskable / apple)."""
-    canvas = Image.new("RGBA", (size, size), (*bg, 255))
+def full_bleed(im: Image.Image, size: int, bg: tuple, safe: float,
+               canvas_img: Image.Image | None = None) -> Image.Image:
+    """Content scaled into safe zone, centered on solid/gradient bg (for maskable / apple)."""
+    if canvas_img is not None:
+        canvas = canvas_img.resize((size, size), Image.LANCZOS).convert("RGBA")
+    else:
+        canvas = Image.new("RGBA", (size, size), (*bg, 255))
     inner = int(size * safe)
     content = im.resize((inner, inner), Image.LANCZOS)
     off = (size - inner) // 2
     canvas.paste(content, (off, off), content)
     return canvas
+
+
+def radial_canvas(size: int, inner: tuple, outer: tuple,
+                  fy: float = 0.42) -> Image.Image:
+    """Premium 'spotlight' tile: subtle radial gradient, highlight near the top
+    center easing to a darker rim — gives app-icon depth without noise."""
+    import numpy as np
+    yy, xx = np.mgrid[0:size, 0:size].astype(float)
+    d = np.sqrt((yy - size * fy) ** 2 + (xx - size / 2) ** 2)
+    d = d / d.max()
+    t = (d ** 1.4)[..., None]  # ease the falloff
+    rgb = (np.array(inner, dtype=float) * (1 - t)
+           + np.array(outer, dtype=float) * t).astype("uint8")
+    alpha = np.full((size, size, 1), 255, dtype="uint8")
+    return Image.fromarray(np.concatenate([rgb, alpha], axis=2), "RGBA")
 
 
 def cover_bleed(im: Image.Image, size: int, zoom: float = 1.14) -> Image.Image:
@@ -173,6 +192,9 @@ def main() -> None:
     p.add_argument("--solid-any", action="store_true",
                    help="composite the 'any' favicon tiles onto the solid bg (transparent "
                         "cutouts otherwise vanish on light browser tabs)")
+    p.add_argument("--gradient", default="none", metavar="INNER:OUTER",
+                   help="radial-gradient canvas for tile variants, e.g. '#12503B:#062A1F' "
+                        "(overrides flat --bg on solid-any / maskable / apple-touch)")
     p.add_argument("--master-size", type=int, default=512)
     p.add_argument("--out", type=Path, default=REPO / "public")
     args = p.parse_args()
@@ -201,10 +223,20 @@ def main() -> None:
 
     radius_px = int(1024 * args.radius)
 
+    grad = None
+    if args.gradient != "none":
+        a, b = args.gradient.split(":")
+        h = lambda s: tuple(int(s.lstrip("#")[i:i + 2], 16) for i in (0, 2, 4))
+        grad = (h(a), h(b))
+        print(f"  gradient canvas = rgb{grad[0]} -> rgb{grad[1]}")
+
     # optionally give 'any' icons a solid tile so cutout art reads on light tabs
     any_src = master
     if args.solid_any and transparent_src:
-        any_src = Image.new("RGBA", master.size, (*bg, 255))
+        if grad:
+            any_src = radial_canvas(1024, *grad)
+        else:
+            any_src = Image.new("RGBA", master.size, (*bg, 255))
         any_src.paste(master, (0, 0), master)
         print(f"  solid-any tile = rgb{bg}")
 
@@ -228,7 +260,8 @@ def main() -> None:
     # apple-touch — full-bleed cover (iOS applies its own corner mask)
     if transparent_src:
         # cutout artwork: center the whole mark on a solid canvas (no petal cropping)
-        full_bleed(master, 180, bg, safe=0.86).convert("RGB").save(
+        full_bleed(master, 180, bg, safe=0.86,
+                   canvas_img=radial_canvas(1024, *grad) if grad else None).convert("RGB").save(
             out / "apple-touch-icon.png", optimize=True)
     else:
         cover_bleed(master, 180).convert("RGB").save(out / "apple-touch-icon.png", optimize=True)
@@ -239,7 +272,8 @@ def main() -> None:
     else:
         mask_bg = sample_edge_bg(any1024)
     print(f"  maskable ring bg = rgb{mask_bg}")
-    full_bleed(any1024, 512, mask_bg, safe=args.safe).save(
+    full_bleed(any1024, 512, mask_bg, safe=args.safe,
+               canvas_img=radial_canvas(1024, *grad) if grad else None).save(
         out / "enkutatash-mark-512-maskable.png", optimize=True)
 
     # multi-size .ico

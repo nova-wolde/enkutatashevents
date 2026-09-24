@@ -137,3 +137,21 @@ Work Log:
 
 Stage Summary:
 - Favicon/PWA icons versioned; any returning browser will refetch the Adey Abeba flower favicon on next page load
+
+---
+Task ID: 10
+Agent: Super Z (main)
+Task: Fix "can't see the favicon" — user's favicon_io zip failed to sync again
+
+Work Log:
+- Zip did NOT arrive (upload/ empty; not in repo root either) — 2nd chat-file delivery failure
+- Diagnosed real root cause instead: transparent-cutout flower favicon is near-invisible at 16px on light browser tabs
+- Added --solid-any flag to apply_brand_image.py: composites cutout art onto solid bg tile for 'any' icons (black rounded tile, radius 0.1); in-app logo stays transparent
+- Regenerated favicon set from brand/adey-abeba-flower.png; verified pixels (opaque black between petals, rounded corners)
+- Icon URLs ?v=3->?v=4, sw.js CACHE_NAME v5; built, pushed b955267, deployed
+- Live verified after ~45s propagation: HTML ?v=4 links + 8/8 assets md5-match
+- Rendered 16px favicon on light/dark tab swatches -> clearly legible
+
+Stage Summary:
+- Favicon now a black app-icon tile with the yellow Adey Abeba flower — visible on any tab strip
+- If user's exact favicon_io files still wanted: deliver zip via GitHub web upload (worked for logo (2).png)

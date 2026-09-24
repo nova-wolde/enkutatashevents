@@ -155,3 +155,20 @@ Work Log:
 Stage Summary:
 - Favicon now a black app-icon tile with the yellow Adey Abeba flower — visible on any tab strip
 - If user's exact favicon_io files still wanted: deliver zip via GitHub web upload (worked for logo (2).png)
+
+---
+Task ID: 11
+Agent: Super Z (main)
+Task: User reported favicon not visible in browser tab; asked for screenshot proof
+
+Work Log:
+- Built real-browser proof rig: Xvfb :99 + headed Playwright chromium (fresh profile) + ffmpeg x11grab root-window capture (scripts/capture-tab-strip.sh in /home/z/my-project)
+- REPRODUCED the bug: tab showed Chromium's gray default icon
+- Root cause: favicon.svg wrapped <image xlink:href='/enkutatash-mark-512.png'> — Chrome blocks external resources inside SVG favicons -> silently falls back to default icon (all browsers, all visitors)
+- Fix: favicon.svg now fully self-contained (64px PNG embedded as base64 data URI, href + xlink:href); patched apply_brand_image.py so future runs emit self-contained SVG
+- Versions ?v=4->?v=5, sw v6; built, pushed 8c08318, deployed
+- Re-captured tab strip after propagation: yellow flower on black tile clearly visible next to page title (download/favicon-in-tab-proof.png, tab-strip-proof-wide.png)
+
+Stage Summary:
+- Tab favicon fixed for ALL visitors (was never a cache issue on this one)
+- Proof rig reusable: bash /home/z/my-project/scripts/capture-tab-strip.sh

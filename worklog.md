@@ -202,3 +202,18 @@ Work Log:
 
 Stage Summary:
 - Favicon is now a circular emerald 'medallion' with the yellow Adey Abeba — live and verified
+
+---
+Task ID: 14
+Agent: Super Z (main)
+Task: Complete footer redesign
+
+Work Log:
+- Rebuilt src/components/site-footer.tsx: CTA band (eyebrow + headline + Book/Call buttons), 4-col grid (brand medallion + socials / Explore / What we do / Visit us), bottom bar
+- Deep emerald gradient canvas + glow blobs + 8-petal Adey Abeba SVG watermark; amber uppercase headings; hover-reveal chevron links
+- All CMS content wired: 5 socials (added Send/MessageCircle icons for Telegram/WhatsApp), 3 phones tel: links, working-hours row, address -> Google Maps pin
+- Full EN/AM bilingual via existing language hook; cookie-consent trigger + back-to-top preserved
+- Built, pushed 8d69ac9 + 58164f4, deployed; verified desktop (1440) + mobile (390) screenshots live
+
+Stage Summary:
+- New premium emerald footer live across all pages (landing, blog, services, locations, legal)

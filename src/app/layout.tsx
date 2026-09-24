@@ -4,6 +4,7 @@ import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/toaster";
 import { ServiceWorkerRegistration } from "@/components/service-worker-registration";
 import { CookieConsent } from "@/components/cookie-consent";
+import { AnalyticsLoader } from "@/components/analytics-loader";
 import "./globals.css";
 
 // ─── Font Optimization ────────────────────────────────────────────────────────
@@ -334,6 +335,14 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <JsonLd />
+        {/* GSC verification — server-rendered (most reliable for Google's fetcher).
+            Runtime-pastable verification is handled by <AnalyticsLoader /> too. */}
+        {process.env.NEXT_PUBLIC_GSC_VERIFICATION && (
+          <meta
+            name="google-site-verification"
+            content={process.env.NEXT_PUBLIC_GSC_VERIFICATION}
+          />
+        )}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
@@ -358,106 +367,11 @@ export default function RootLayout({
           <CookieConsent />
           <ServiceWorkerRegistration />
         </ThemeProvider>
-        {/* Analytics — only loads if env vars are set AND user has given cookie consent */}
-        <Analytics />
+        {/* Analytics — IDs come from admin settings (runtime) or env vars (build-time).
+            GA4/Meta Pixel only load after the user accepts cookie consent. */}
+        <AnalyticsLoader />
       </body>
     </html>
   );
 }
 
-// ─── Analytics Component (gated by cookie consent) ────────────────────────────
-function Analytics() {
-  const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
-  const GSC_VERIFICATION = process.env.NEXT_PUBLIC_GSC_VERIFICATION;
-  const META_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
-
-  return (
-    <>
-      {/* Google Search Console Verification — always present (not a tracking cookie) */}
-      {GSC_VERIFICATION && (
-        <meta name="google-site-verification" content={GSC_VERIFICATION} />
-      )}
-
-      {/* Google Analytics 4 — loaded after consent */}
-      {GA_ID && (
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                function loadGA() {
-                  var s1 = document.createElement('script');
-                  s1.async = true;
-                  s1.src = 'https://www.googletagmanager.com/gtag/js?id=${GA_ID}';
-                  document.head.appendChild(s1);
-                  window.dataLayer = window.dataLayer || [];
-                  function gtag(){dataLayer.push(arguments);}
-                  gtag('js', new Date());
-                  gtag('config', '${GA_ID}', { page_path: window.location.pathname });
-                }
-
-                function checkConsent() {
-                  try {
-                    var raw = localStorage.getItem('enkutatash-cookie-consent');
-                    if (raw) {
-                      var data = JSON.parse(raw);
-                      if (data.accepted === true) { loadGA(); return; }
-                    }
-                  } catch(e) {}
-                  // Wait for consent
-                  window.addEventListener('cookie-consent-accepted', loadGA, { once: true });
-                }
-
-                if (document.readyState === 'loading') {
-                  document.addEventListener('DOMContentLoaded', checkConsent);
-                } else {
-                  checkConsent();
-                }
-              })();
-            `,
-          }}
-        />
-      )}
-
-      {/* Meta Pixel — loaded after consent */}
-      {META_PIXEL_ID && (
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                function loadPixel() {
-                  !function(f,b,e,v,n,t,s)
-                  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-                  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-                  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-                  n.queue=[];t=b.createElement(e);t.async=!0;
-                  t.src=v;s=b.getElementsByTagName(e)[0];
-                  s.parentNode.insertBefore(t,s)}(window, document,'script',
-                  'https://connect.facebook.net/en_US/fbevents.js');
-                  fbq('init', '${META_PIXEL_ID}');
-                  fbq('track', 'PageView');
-                }
-
-                function checkConsent() {
-                  try {
-                    var raw = localStorage.getItem('enkutatash-cookie-consent');
-                    if (raw) {
-                      var data = JSON.parse(raw);
-                      if (data.accepted === true) { loadPixel(); return; }
-                    }
-                  } catch(e) {}
-                  window.addEventListener('cookie-consent-accepted', loadPixel, { once: true });
-                }
-
-                if (document.readyState === 'loading') {
-                  document.addEventListener('DOMContentLoaded', checkConsent);
-                } else {
-                  checkConsent();
-                }
-              })();
-            `,
-          }}
-        />
-      )}
-    </>
-  );
-}

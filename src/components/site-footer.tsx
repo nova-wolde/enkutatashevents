@@ -5,9 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import {
-  ArrowRight,
   ArrowUp,
-  Clock,
   Instagram,
   Facebook,
   Youtube,
@@ -15,10 +13,8 @@ import {
   MessageCircle,
   Music,
   Mail,
-  MapPin,
   Phone,
 } from 'lucide-react'
-import { services } from '@/lib/services-data'
 
 // ─── Footer content shape (loose — accepts homepage SiteContent or defaults) ──
 export interface FooterContent {
@@ -29,27 +25,20 @@ export interface FooterContent {
   email: string
   phones: string[]
   phoneLinks: string[]
-  address: string
-  addressAmharic: string
-  workingHours: { day: string; hours: string }[]
+  address?: string
+  addressAmharic?: string
+  workingHours?: { day: string; hours: string }[]
   socialLinks: { platform: string; url: string }[]
 }
 
 const defaultContent: FooterContent = {
   businessName: 'Enkutatash Events',
   businessNameAmharic: 'እንቁጣጣሽ ኤቨንት',
-  description:
-    "Addis Ababa's premier event organizer. Crafting legendary experiences since 2022.",
-  descriptionAmharic: 'ከ2022 ዓ.ም ጀምሮ ያልተረሳ ትዝታዎችን እያደራጅን',
+  description: 'Premium event organizers in Addis Ababa.',
+  descriptionAmharic: 'በአዲስ አበባ ፕሪሚየም ዝግጅት አደራጆች',
   email: 'enkutatashevents@gmail.com',
   phones: ['+251 915 895 757', '+251 915 843 131', '+251 910 977 371'],
   phoneLinks: ['+251915895757', '+251915843131', '+251910977371'],
-  address: 'Ayat, Addis Ababa',
-  addressAmharic: 'አያት፣ አዲስ አበባ',
-  workingHours: [
-    { day: 'Mon - Fri', hours: '8:00 AM - 6:00 PM' },
-    { day: 'Sat', hours: '9:00 AM - 2:00 PM' },
-  ],
   socialLinks: [
     { platform: 'Instagram', url: 'https://www.instagram.com/enkutatashevents/' },
     { platform: 'Facebook', url: 'https://web.facebook.com/profile.php?id=61590503624575' },
@@ -92,34 +81,7 @@ function useFooterLanguage() {
   return { lang, t }
 }
 
-// ─── Small building blocks ────────────────────────────────────────────────────
-function FooterColumnTitle({ children }: { children: React.ReactNode }) {
-  return (
-    <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-400/90 mb-4 sm:mb-5">
-      {children}
-    </h3>
-  )
-}
-
-function FooterLink({ href, children, external }: { href: string; children: React.ReactNode; external?: boolean }) {
-  const cls = 'group inline-flex items-center gap-1.5 text-sm text-zinc-400 hover:text-white transition-colors duration-200 py-1'
-  if (external) {
-    return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className={cls}>
-        <span className="h-px w-0 bg-emerald-400 transition-all duration-300 group-hover:w-3" aria-hidden="true" />
-        {children}
-      </a>
-    )
-  }
-  return (
-    <Link href={href} className={cls}>
-      <span className="h-px w-0 bg-emerald-400 transition-all duration-300 group-hover:w-3" aria-hidden="true" />
-      {children}
-    </Link>
-  )
-}
-
-// ─── Site-wide footer ─────────────────────────────────────────────────────────
+// ─── Simple site-wide footer ─────────────────────────────────────────────────
 export function SiteFooter({ content }: { content?: Partial<FooterContent> }) {
   const c = useMemo<FooterContent>(() => ({ ...defaultContent, ...content }), [content])
   const { t } = useFooterLanguage()
@@ -129,12 +91,10 @@ export function SiteFooter({ content }: { content?: Partial<FooterContent> }) {
   const year = new Date().getFullYear()
   const hash = (id: string) => (isHome ? `#${id}` : `/#${id}`)
 
-  const exploreLinks = [
+  const links = [
     { en: 'About Us', am: 'ስለ እኛ', href: hash('about') },
     { en: 'Services', am: 'አገልግሎቶች', href: '/services' },
     { en: 'Locations', am: 'አካባቢዎች', href: '/locations' },
-    { en: 'Portfolio', am: 'ስራዎቻችን', href: hash('portfolio') },
-    { en: 'Testimonials', am: 'ደንበኞቻችን', href: hash('testimonials') },
     { en: 'Blog', am: 'ብሎግ', href: '/blog' },
     { en: 'Contact', am: 'ያግኙን', href: hash('contact') },
   ]
@@ -146,70 +106,28 @@ export function SiteFooter({ content }: { content?: Partial<FooterContent> }) {
       aria-label="Site footer"
       className="relative bg-zinc-950 text-zinc-300 overflow-hidden"
     >
-      {/* Brand hairline + ambient glow */}
+      {/* Brand hairline */}
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-emerald-500/60 via-amber-400/40 to-transparent" aria-hidden="true" />
-      <div className="pointer-events-none absolute inset-x-0 -top-32 h-64 bg-[radial-gradient(ellipse_50%_100%_at_50%_100%,rgba(16,185,129,0.10),transparent_70%)]" aria-hidden="true" />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* ── CTA band ── */}
-        <div className="pt-10 sm:pt-14">
-          <div className="relative overflow-hidden rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-950/60 via-zinc-900/60 to-zinc-900/30 p-6 sm:p-8 lg:p-10">
-            <div className="pointer-events-none absolute -top-20 -right-10 h-44 w-44 rounded-full bg-emerald-500/10 blur-3xl" aria-hidden="true" />
-            <div className="pointer-events-none absolute -bottom-24 -left-10 h-44 w-44 rounded-full bg-amber-500/10 blur-3xl" aria-hidden="true" />
-            <div className="relative flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
-              <div>
-                <p className="text-emerald-400 text-xs sm:text-sm font-semibold uppercase tracking-[0.18em] mb-2">
-                  {t('Get started today', 'ዛሬ ይጀምሩ')}
-                </p>
-                <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white tracking-tight leading-snug">
-                  {t('Ready to create an unforgettable event?', 'ያልተረሳ ዝግጅት ለመፍጠር ተዘጋጅተዋል?')}
-                </h2>
-                <p className="mt-2 text-sm text-zinc-400 max-w-xl">
-                  {t(
-                    'Tell us your vision — we handle planning, decoration, sound, catering and everything in between.',
-                    'ራዕይዎን ይንገሩን — ማቀድ፣ ማስጌጣት፣ ድምፅ፣ ምግብ እና ቀሪዎቹን ሁሉ እኛ እንወስዳለን።'
-                  )}
-                </p>
-              </div>
-              <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-3 shrink-0">
-                <Link
-                  href={hash('contact')}
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 px-6 min-h-[48px] text-sm font-semibold text-white shadow-lg shadow-emerald-600/25 transition-all duration-200 hover:shadow-emerald-500/40 hover:-translate-y-0.5"
-                >
-                  {t('Book an Event', 'ዝግጅት ያስይዙ')}
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </Link>
-                <a
-                  href={`tel:${c.phoneLinks[2] || c.phoneLinks[0] || '+251910977371'}`}
-                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 hover:border-emerald-400/50 bg-white/5 hover:bg-white/10 px-6 min-h-[48px] text-sm font-semibold text-white transition-colors duration-200"
-                >
-                  <Phone className="h-4 w-4 text-emerald-400" aria-hidden="true" />
-                  {t('Call Now', 'አሁኑኑ ይደውሉ')}
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* ── Main columns ── */}
-        <nav aria-label="Footer" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 sm:gap-8 py-12 sm:py-16">
-          {/* Brand */}
-          <div className="sm:col-span-2 lg:col-span-1">
-            <Link href="/" className="inline-flex items-center gap-2.5 mb-4" aria-label={`${c.businessName} — home`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Brand + links */}
+        <div className="py-10 sm:py-12 flex flex-col md:flex-row md:items-start md:justify-between gap-8">
+          <div className="max-w-sm">
+            <Link href="/" className="inline-flex items-center gap-2.5 mb-3" aria-label={`${c.businessName} — home`}>
               <Image
                 src="/enkutatash-logo.png"
                 alt={`${c.businessName} logo`}
-                width={40}
-                height={40}
+                width={36}
+                height={36}
                 unoptimized
-                className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl object-contain"
+                className="h-8 w-8 sm:h-9 sm:w-9 rounded-xl object-contain"
               />
               <span className="flex flex-col leading-tight">
-                <span className="text-lg font-bold text-white">{c.businessName}</span>
+                <span className="text-base sm:text-lg font-bold text-white">{c.businessName}</span>
                 <span className="text-[10px] text-zinc-500">{c.businessNameAmharic}</span>
               </span>
             </Link>
-            <p className="text-sm leading-relaxed text-zinc-400 max-w-xs mb-5">
+            <p className="text-sm text-zinc-500 mb-4">
               {t(c.description, c.descriptionAmharic || c.description)}
             </p>
             <div className="flex flex-wrap gap-2" aria-label={t('Social media', 'ማህበራዊ ሚዲያ')}>
@@ -224,7 +142,7 @@ export function SiteFooter({ content }: { content?: Partial<FooterContent> }) {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={`${c.businessName} on ${social.platform}`}
-                      className="inline-flex h-10 w-10 min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-zinc-400 transition-all duration-200 hover:border-emerald-500/60 hover:bg-emerald-600 hover:text-white hover:-translate-y-0.5"
+                      className="inline-flex h-9 w-9 min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-zinc-400 transition-colors duration-200 hover:border-emerald-500/60 hover:bg-emerald-600 hover:text-white"
                     >
                       <Icon className="h-4 w-4" aria-hidden="true" />
                     </a>
@@ -233,104 +151,59 @@ export function SiteFooter({ content }: { content?: Partial<FooterContent> }) {
             </div>
           </div>
 
-          {/* Explore */}
-          <div>
-            <FooterColumnTitle>{t('Explore', 'ያስሱ')}</FooterColumnTitle>
-            <ul className="space-y-1">
-              {exploreLinks.map((item) => (
-                <li key={item.en}>
-                  <FooterLink href={item.href} external={item.href.startsWith('http')}>
-                    {t(item.en, item.am)}
-                  </FooterLink>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <nav aria-label="Footer" className="grid grid-cols-2 gap-x-12 gap-y-2.5 sm:gap-x-16 md:text-right shrink-0">
+            {links.map((item) => (
+              <Link
+                key={item.en}
+                href={item.href}
+                className="text-sm text-zinc-400 hover:text-white transition-colors py-0.5"
+              >
+                {t(item.en, item.am)}
+              </Link>
+            ))}
+          </nav>
+        </div>
 
-          {/* Services */}
-          <div>
-            <FooterColumnTitle>{t('Our Services', 'አገልግሎቶቻችን')}</FooterColumnTitle>
-            <ul className="space-y-1">
-              {services.map((service) => (
-                <li key={service.id}>
-                  <FooterLink href={`/${service.slug}`}>
-                    {t(service.title, service.titleAmharic || service.title)}
-                  </FooterLink>
-                </li>
-              ))}
-            </ul>
-          </div>
+        {/* One-line contact (only lifeline on subpages) */}
+        <div className="pb-8 flex flex-wrap items-center gap-x-6 gap-y-1.5 text-sm text-zinc-500">
+          <a
+            href={`tel:${c.phoneLinks?.[2] || c.phoneLinks?.[0] || c.phones?.[0]}`}
+            className="inline-flex items-center gap-2 hover:text-white transition-colors"
+          >
+            <Phone className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" />
+            {c.phones?.[2] || c.phones?.[0]}
+          </a>
+          <a href={`mailto:${c.email}`} className="inline-flex items-center gap-2 hover:text-white transition-colors break-all">
+            <Mail className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" />
+            {c.email}
+          </a>
+        </div>
 
-          {/* Contact */}
-          <div>
-            <FooterColumnTitle>{t('Contact Us', 'ያግኙን')}</FooterColumnTitle>
-            <ul className="space-y-4 text-sm">
-              <li className="flex items-start gap-3">
-                <Phone className="h-4 w-4 text-emerald-400 mt-0.5 shrink-0" aria-hidden="true" />
-                <div className="space-y-0.5">
-                  {(c.phones || []).slice(0, 3).map((phone, i) => (
-                    <a
-                      key={i}
-                      href={`tel:${c.phoneLinks?.[i] || phone}`}
-                      className="block text-zinc-400 hover:text-white transition-colors py-0.5"
-                    >
-                      {phone}
-                    </a>
-                  ))}
-                </div>
-              </li>
-              <li className="flex items-start gap-3">
-                <Mail className="h-4 w-4 text-emerald-400 mt-0.5 shrink-0" aria-hidden="true" />
-                <a href={`mailto:${c.email}`} className="text-zinc-400 hover:text-white transition-colors break-all py-0.5">
-                  {c.email}
-                </a>
-              </li>
-              <li className="flex items-start gap-3">
-                <MapPin className="h-4 w-4 text-emerald-400 mt-0.5 shrink-0" aria-hidden="true" />
-                <span className="text-zinc-400">
-                  {t(c.address, c.addressAmharic || c.address)}
-                  <span className="block text-zinc-500">Ethiopia</span>
-                </span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Clock className="h-4 w-4 text-emerald-400 mt-0.5 shrink-0" aria-hidden="true" />
-                <div className="text-zinc-400 space-y-0.5">
-                  {(c.workingHours || []).map((wh, i) => (
-                    <p key={i} className="tabular-nums">
-                      <span className="text-zinc-500">{wh.day}:</span> {wh.hours}
-                    </p>
-                  ))}
-                </div>
-              </li>
-            </ul>
-          </div>
-        </nav>
-
-        {/* ── Bottom bar ── */}
-        <div className="border-t border-white/10 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-xs sm:text-sm text-zinc-500 text-center md:text-left">
+        {/* Bottom bar */}
+        <div className="border-t border-white/10 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p className="text-xs text-zinc-500 text-center sm:text-left">
             &copy; {year} {c.businessName} <span className="text-zinc-600">·</span> {c.businessNameAmharic}. {t('All rights reserved.', 'መብቱ በህግ የተጠበቀ ነው።')}
           </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs sm:text-sm">
+          <div className="flex items-center gap-4 sm:gap-5 text-xs">
             <Link href="/privacy" className="text-zinc-500 hover:text-white transition-colors">
-              {t('Privacy Policy', 'የግላዊነት ፖሊሲ')}
+              {t('Privacy', 'ፖሊሲ')}
             </Link>
             <Link href="/terms" className="text-zinc-500 hover:text-white transition-colors">
-              {t('Terms of Service', 'የአገልግሎት ውሎች')}
+              {t('Terms', 'ውሎች')}
             </Link>
             <button
               onClick={() => window.dispatchEvent(new Event('show-cookie-consent'))}
               className="text-zinc-500 hover:text-white transition-colors cursor-pointer"
             >
-              {t('Cookie Settings', 'የኩኪ ቅንብሮች')}
+              {t('Cookies', 'ኩኪዎች')}
             </button>
             <button
               onClick={scrollToTop}
               aria-label={t('Back to top', 'ወደ ላይ ተመለስ')}
-              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-zinc-400 transition-all duration-200 hover:border-emerald-500/60 hover:bg-emerald-600 hover:text-white"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/5 text-zinc-400 transition-colors duration-200 hover:border-emerald-500/60 hover:bg-emerald-600 hover:text-white"
             >
-              <ArrowUp className="h-4 w-4" aria-hidden="true" />
+              <ArrowUp className="h-3.5 w-3.5" aria-hidden="true" />
             </button>
           </div>
         </div>

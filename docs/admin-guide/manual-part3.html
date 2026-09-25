@@ -1,0 +1,130 @@
+<!-- Chapter 10 -->
+<div class="chapter-header">
+  <div class="kicker">Chapter 10</div>
+  <h2 class="title">Understanding Analytics</h2>
+  <div class="divider"></div>
+</div>
+<p class="body-text">Analytics answers the owner's favourite question: <i>is the website actually working?</i> Click <b>Analytics</b> in the sidebar and you get visitor numbers and trends without any technical setup; the panel collects and summarizes the data for you.</p>
+<figure class="fig"><img src="images/03-analytics.png" alt="Analytics view"><figcaption>The Analytics view — visitors, page views, and trends at a glance.</figcaption></figure>
+<p class="body-text">The cards at the top show <b>total visitors</b> and <b>page views</b>, with smaller comparisons against the previous period so you can tell whether interest is growing. A chart underneath plots visits over time — look for spikes after you post a new event or share the site on social media, because that connection is exactly how marketing starts to make sense. Further down, a breakdown by <b>page</b> shows which parts of your site attract the most attention: if your Services page dwarfs everything else, visitors are shopping; if the Gallery leads, your photos are doing the selling.</p>
+<div class="card info">
+  <div class="ct">Connecting Google Analytics (optional)</div>
+  <p>For deeper, industry-standard measurement you can link a free Google Analytics 4 property. Open <b>Settings</b>, scroll to <b>Integrations</b>, and paste your GA4 Measurement ID (it looks like G-XXXXXXXXXX). Chapter 11 shows the screen.</p>
+</div>
+
+<!-- Chapter 11 -->
+<div class="chapter-header">
+  <div class="kicker">Chapter 11</div>
+  <h2 class="title">Settings</h2>
+  <div class="divider"></div>
+</div>
+<p class="body-text">Settings is where preferences live: your admin profile, notification choices, the panel's appearance, sensible defaults for new events, and integrations with Google's measurement tools. Most owners visit rarely — set things once and let them be. Click <b>Settings</b> in the sidebar.</p>
+<figure class="fig"><img src="images/18-settings.png" alt="Settings view, top"><figcaption>Settings, top of the page: profile and notification preferences.</figcaption></figure>
+<p class="body-text"><b>Profile Settings</b> holds your display name and email — what the panel calls you. <b>Notifications</b> lets you choose what you are alerted about, such as new bookings or new messages. <b>Appearance</b> switches the panel between light and dark display, purely a matter of taste. <b>Event Defaults</b> pre-fills sensible values (default capacity, default category) so creating events takes fewer clicks.</p>
+<h3 class="sub">11.1 &nbsp;Integrations — Google Analytics &amp; Search Console</h3>
+<p class="body-text">Scroll down for the <b>Integrations</b> card. Paste a <b>GA4 Measurement ID</b> to connect Google Analytics, and a <b>Search Console</b> verification value to prove ownership of the site to Google. Both are copy-paste jobs — if you do not have the values yet, ask whoever manages your Google account, or leave them empty; the site works perfectly without them.</p>
+<figure class="fig"><img src="images/19-settings-integrations.png" alt="Integrations section"><figcaption>The Integrations card: GA4 and Search Console fields.</figcaption></figure>
+<h3 class="sub">11.2 &nbsp;The Danger Zone — please read before touching</h3>
+<div class="card warn">
+  <div class="ct">Handle with care</div>
+  <p>At the very bottom of Settings sits the <b>Danger Zone</b> with a red <b>Reset Content</b> action. This wipes the site's content back to factory defaults — every headline, testimonial, portfolio photo, and team member you have customized would be replaced by the original template text. It exists for emergencies only. Do not use it for routine fixes; there is nothing there you will ever need in day-to-day ownership.</p>
+</div>
+<figure class="fig"><img src="images/20-settings-danger.png" alt="Danger zone"><figcaption>The Danger Zone — best left completely alone.</figcaption></figure>
+
+<!-- Chapter 12 -->
+<div class="chapter-header">
+  <div class="kicker">Chapter 12</div>
+  <h2 class="title">Changing the Admin Password</h2>
+  <div class="divider"></div>
+</div>
+<p class="body-text">There is no "change password" screen inside the admin panel — the password deliberately lives one level higher, in your website's hosting account, where no hacker who steals your browser can reach it. Your site is hosted on <b>Cloudflare</b>, a free account created for you during handover. You can change the password yourself in a few minutes, or simply ask your developer to do it.</p>
+
+<h3 class="sub">12.1 &nbsp;Option A — do it yourself via the Cloudflare dashboard</h3>
+<ol class="steps">
+  <li>Go to <b>dash.cloudflare.com</b> and sign in with the Cloudflare account email and password you were given at handover.</li>
+  <li>Click your domain, <b>enkutatashevents.com</b>, in the list of websites.</li>
+  <li>In the left menu choose <b>Workers &amp; Pages</b>, then click your website's worker (its name contains <i>enkutatash</i>).</li>
+  <li>Open the <b>Settings</b> tab, then find <b>Variables and Secrets</b> and press <b>Edit</b>.</li>
+  <li>Find the variable named <b>OWNER_PASSWORD</b>. Click its value, type your new password, and press <b>Save</b> (or Deploy if asked).</li>
+  <li>Wait about a minute, then test: open enkutatashevents.com/admin in a private browser window and sign in with the new password.</li>
+</ol>
+<div class="card info">
+  <div class="ct">Good to know — the seven-day session</div>
+  <p>Changing OWNER_PASSWORD locks out <i>new</i> sign-ins with the old password. Devices already signed in stay trusted for up to seven days, because that is how long each session lives. If you need everyone out immediately — for example if a device was stolen — tell your developer, who can clear all sessions at once.</p>
+</div>
+
+<h3 class="sub">12.2 &nbsp;Option B — ask your developer</h3>
+<p class="body-text">If the Cloudflare dashboard feels intimidating, that is completely fine. Send your developer a message saying: <i>"Please change my admin password to the one I am sending separately."</i> Send the new password through a different channel than the request itself — for example, request by email and password by phone or WhatsApp. The change takes the developer only a minute or two.</p>
+
+<h3 class="sub">12.3 &nbsp;Choosing a strong password</h3>
+<p class="body-text">A strong password is long more than it is complicated. Aim for at least 14 characters. Three random words work beautifully — <i>sunrise-coffee-Addis-94</i> is easy for you to remember and miserable for a computer to guess. Avoid birthdays, company names, and anything you use on other websites. Write it down and store it with your other important papers, or keep it in a password manager.</p>
+
+<!-- Chapter 13 -->
+<div class="chapter-header">
+  <div class="kicker">Chapter 13</div>
+  <h2 class="title">Seven Habits of a Safe Website Owner</h2>
+  <div class="divider"></div>
+</div>
+<p class="body-text">Your website is a business asset, and like your cash box, it mostly needs common sense. These seven habits cover everything that matters — none of them require technical skill.</p>
+<table class="tbl">
+  <tr><th style="width:38%">Habit</th><th>Why it matters</th></tr>
+  <tr><td><b>1 · Guard the password</b></td><td>Share it only with people who truly need it, and never send it in the same message as the request that asks for it.</td></tr>
+  <tr><td><b>2 · Sign out on shared computers</b></td><td>The seven-day remember-me is a convenience on your own laptop and a risk in an internet café.</td></tr>
+  <tr><td><b>3 · Change the password a few times a year</b></td><td>Chapter 12 makes it a five-minute job. After any staff change or shared-password incident, change it that day.</td></tr>
+  <tr><td><b>4 · Pause before deleting</b></td><td>Deletes in the admin panel are real. When a confirm dialog appears, read it — it is the one place the site asks "are you sure?"</td></tr>
+  <tr><td><b>5 · Keep the Danger Zone alone</b></td><td>Reset Content erases your customized text and photos. No routine problem is ever solved there.</td></tr>
+  <tr><td><b>6 · Read your Dashboard daily</b></td><td>A one-minute glance catches new messages, pending bookings, and anything odd long before clients notice.</td></tr>
+  <tr><td><b>7 · Call for help early</b></td><td>If something looks wrong — a strange screen, an error, a lockout — contact your developer sooner rather than later. Small problems stay small when reported early.</td></tr>
+</table>
+
+<!-- Cheat sheet -->
+<div class="chapter-header">
+  <div class="kicker">Quick Reference</div>
+  <h2 class="title">"I want to…" Cheat Sheet</h2>
+  <div class="divider"></div>
+</div>
+<p class="body-text">Tear out this page (or bookmark it) — it compresses the whole manual into one table.</p>
+<div class="cheat">
+  <div class="cheat-row"><div class="q">Sign in to the admin panel</div><div class="a">enkutatashevents.com/admin → type password → Sign In <i>(Ch. 2)</i></div></div>
+  <div class="cheat-row"><div class="q">See today's overview</div><div class="a">Dashboard — the first screen after signing in <i>(Ch. 3)</i></div></div>
+  <div class="cheat-row"><div class="q">Create a new event</div><div class="a">Events → Create Event → fill the dialog → Create Event <i>(Ch. 4)</i></div></div>
+  <div class="cheat-row"><div class="q">Hide an event without deleting it</div><div class="a">Events → Edit → set status to Draft → save <i>(Ch. 4)</i></div></div>
+  <div class="cheat-row"><div class="q">Accept a booking request</div><div class="a">Bookings → open it → Confirm <i>(Ch. 5)</i></div></div>
+  <div class="cheat-row"><div class="q">Add a guest who registered by phone</div><div class="a">Attendees → Add → name, contact, event → save <i>(Ch. 6)</i></div></div>
+  <div class="cheat-row"><div class="q">Add or fix a venue</div><div class="a">Venues → Add Venue / Edit on the card <i>(Ch. 7)</i></div></div>
+  <div class="cheat-row"><div class="q">Read a client enquiry</div><div class="a">Messages → click the message → reply from your email <i>(Ch. 8)</i></div></div>
+  <div class="cheat-row"><div class="q">Change text on the website</div><div class="a">Content → pick the tab → edit → Save / Save All <i>(Ch. 9)</i></div></div>
+  <div class="cheat-row"><div class="q">Add a portfolio photo</div><div class="a">Content → Portfolio → Add Photo → caption → save <i>(Ch. 9)</i></div></div>
+  <div class="cheat-row"><div class="q">See how many people visited</div><div class="a">Analytics — visitors, views, trends <i>(Ch. 10)</i></div></div>
+  <div class="cheat-row"><div class="q">Connect Google Analytics</div><div class="a">Settings → Integrations → paste GA4 ID <i>(Ch. 11)</i></div></div>
+  <div class="cheat-row"><div class="q">Change the admin password</div><div class="a">Cloudflare dashboard → Workers &amp; Pages → Variables → OWNER_PASSWORD <i>(Ch. 12)</i></div></div>
+  <div class="cheat-row"><div class="q">Sign out safely</div><div class="a">Bottom of the sidebar → Sign out <i>(Ch. 2)</i></div></div>
+</div>
+<div class="card info" style="margin-top:10px">
+  <div class="ct">One last thing</div>
+  <p>Keep this manual where you can reach it — printed on your desk or bookmarked in your browser. When a new team member joins, walk them through Chapters 2 and 13 first. And whenever you feel unsure, your developer is one message away; no question about your own website is ever too small.</p>
+</div>
+
+</div><!-- /main-content -->
+
+<!-- ═══════════ ENDING ═══════════ -->
+<div class="ending">
+  <svg class="motif motif-a" width="340" height="340" viewBox="0 0 100 100">
+    <g transform="translate(50,50)"><g fill="#e8c96a">
+      <ellipse rx="9" ry="30" transform="rotate(10) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(55) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(100) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(145) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(190) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(235) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(280) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(325) translate(0,-22)"/>
+    </g><circle r="11" fill="#c99b2e"/></g>
+  </svg>
+  <svg class="motif motif-b" width="300" height="300" viewBox="0 0 100 100">
+    <g transform="translate(50,50)"><g fill="#e8c96a">
+      <ellipse rx="9" ry="30" transform="rotate(30) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(75) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(120) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(165) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(210) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(255) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(300) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(345) translate(0,-22)"/>
+    </g><circle r="11" fill="#c99b2e"/></g>
+  </svg>
+  <div class="kicker" style="color:var(--gold-lt)">Enkutatash Events</div>
+  <div class="big">Your website,</div>
+  <div class="big" style="color:var(--gold-lt); margin-top:0">in your hands.</div>
+  <p class="note">Everything on enkutatashevents.com answers to you now. Take it one chapter, one task, one save at a time — and when in doubt, this manual and your developer are only a message away.</p>
+  <div class="foot">enkutatashevents.com · Addis Ababa · Edition 2026</div>
+</div>
+
+</body>
+</html>

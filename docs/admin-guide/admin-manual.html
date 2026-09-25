@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Enkutatash Events — Website Owner's Manual</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+<style>
+@page { size: 720px 1020px; margin: 0; }
+:root{
+  --emerald:#0b3d2e; --deep:#07271c; --deeper:#051d15;
+  --gold:#c99b2e; --gold-lt:#e8c96a;
+  --bg:#f6f8f7; --ink:#132a22; --muted:#5b6f67; --line:#dfe7e3;
+}
+html,body{ margin:0; padding:0; width:720px; background:#f6f8f7; color:var(--ink);
+  font-family:'Inter',sans-serif; font-size:13.5px; line-height:1.62; }
+@media screen{
+  html{ height:auto; display:flex; justify-content:center; background:#f6f8f7; }
+  body{ transform-origin:top center; margin:20px auto; box-shadow:0 4px 40px rgba(5,29,21,.18); }
+}
+*{ box-sizing:border-box; }
+p,td,li{ overflow-wrap:break-word; word-break:break-word; }
+img{ max-width:100%; height:auto; object-fit:contain; }
+
+/* ── Adey Abeba motif ── */
+.motif{ position:absolute; opacity:.5; }
+
+/* ── Cover ── */
+.cover{ width:720px; height:1020px; background:linear-gradient(160deg,#0b3d2e 0%,#07271c 55%,#051d15 100%);
+  color:#f2f7f4; break-after:page; overflow:hidden; position:relative; clip-path:inset(0);
+  display:flex; flex-direction:column; justify-content:center; padding:64px; }
+.cover .motif-a{ top:-140px; right:-120px; }
+.cover .motif-b{ bottom:-110px; left:-130px; opacity:.28; }
+.cover-kicker{ margin-bottom:26px; }
+.cover-kicker{ font-size:11px; letter-spacing:.32em; text-transform:uppercase; color:var(--gold-lt); font-weight:600;
+  background:rgba(232,201,106,.12); border-radius:999px; padding:7px 16px; display:inline-block; width:auto; max-width:100%; }
+.cover .h1a,.cover .h1b{ font-family:'Playfair Display',serif; font-size:58px; line-height:1.08; margin:0; font-weight:900; }
+.cover .h1b{ color:var(--gold-lt); margin:0 0 12px; }
+.cover .sub{ font-family:'Playfair Display',serif; font-style:italic; font-size:20px; color:#bfd4c9; margin:0 0 34px; }
+.cover-desc{ font-size:14px; color:#a8c3b6; max-width:440px; line-height:1.75; margin:0 0 44px; }
+.cover-chips{ display:flex; flex-wrap:wrap; gap:8px; max-width:480px; margin-bottom:52px; }
+.cover-chips span{ font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; font-weight:600;
+  background:rgba(232,201,106,.13); color:var(--gold-lt); border-radius:999px; padding:6px 14px; }
+.cover-foot{ background:rgba(232,201,106,.09); border-radius:10px; padding:18px 22px; display:flex; justify-content:space-between; align-items:flex-end; }
+.cover-foot .brand{ font-weight:700; font-size:14px; color:#f2f7f4; }
+.cover-foot .brand small{ display:block; font-weight:400; font-size:10.5px; color:#8fae9f; letter-spacing:.14em; text-transform:uppercase; margin-top:3px; }
+.cover-foot .ed{ text-align:right; font-size:10.5px; color:#8fae9f; letter-spacing:.18em; text-transform:uppercase; line-height:1.8; }
+
+/* ── Flowing content ── */
+.main-content{ padding:58px 62px 40px; }
+.chapter-header{ break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header:first-child{ margin-top:0; }
+.kicker{ font-size:10px; letter-spacing:.3em; text-transform:uppercase; color:var(--gold); font-weight:700; margin-bottom:6px; }
+h2.title{ font-family:'Playfair Display',serif; font-size:29px; font-weight:900; color:var(--emerald); margin:0 0 6px; line-height:1.15; }
+.divider{ width:52px; height:10px; background:linear-gradient(to bottom, var(--gold) 0 3px, transparent 3px); margin:8px 0 12px; }
+p.body-text{ margin:0 0 12px; }
+.lead{ font-size:14.5px; color:#31473e; }
+
+h3.sub{ font-size:15.5px; font-weight:700; color:var(--emerald); margin:20px 0 8px; break-after:avoid; }
+
+/* steps */
+ol.steps{ list-style:none; margin:10px 0 14px; padding:0; counter-reset:step; }
+ol.steps li{ position:relative; counter-increment:step; padding:0 0 10px 44px; margin:0; }
+ol.steps li::before{ content:counter(step); position:absolute; left:0; top:0; width:26px; height:26px;
+  border-radius:50%; background:var(--gold); color:#fff; font-weight:700; font-size:12.5px;
+  display:flex; align-items:center; justify-content:center; }
+ol.steps li b{ color:var(--emerald); }
+
+/* figures */
+figure.fig{ display:block; width:100%; margin:14px 0; break-inside:avoid; }
+figure.fig img{ display:block; width:100%; border:1px solid var(--line); border-radius:8px; }
+figure.fig figcaption{ font-size:10.5px; color:var(--muted); margin-top:6px; text-align:center; letter-spacing:.04em; }
+
+/* callouts */
+.card{ background:#fff; border:1px solid var(--line); border-left:3px solid var(--gold);
+  border-radius:8px; padding:13px 16px; margin:0 0 12px; break-inside:avoid; }
+.card.warn{ border-left-color:#b3423a; background:#fdf7f6; }
+.card.info{ border-left-color:#2e6e57; }
+.card .ct{ font-size:10px; letter-spacing:.22em; text-transform:uppercase; font-weight:700; color:var(--gold); margin-bottom:4px; }
+.card.warn .ct{ color:#b3423a; } .card.info .ct{ color:#2e6e57; }
+.card p{ margin:0; }
+
+/* tables */
+table.tbl{ width:100%; border-collapse:separate; border-spacing:3px 3px; margin:12px 0 14px; font-size:12px; break-inside:avoid; }
+table.tbl th{ background:var(--emerald); color:#f2f7f4; text-align:left; padding:8px 11px; font-weight:600; font-size:11px; letter-spacing:.05em; border-radius:4px; }
+table.tbl td{ border:1px solid var(--line); padding:8px 11px; vertical-align:top; background:#fff; border-radius:4px; }
+table.tbl tr:nth-child(even) td{ background:#fbfdfc; }
+
+/* pill list for sidebar map */
+.pills{ display:flex; flex-wrap:wrap; gap:7px; margin:10px 0 14px; max-width:100%; }
+.pills span{ font-size:11px; font-weight:600; color:var(--emerald); background:#fff;
+  border:1px solid var(--line); border-radius:999px; padding:5px 12px; }
+
+/* cheat sheet */
+.cheat{ background:#fff; border:1px solid var(--line); border-radius:10px; padding:18px 20px; margin:14px 0; }
+.cheat-row{ display:flex; gap:12px; padding:7px 0; border-bottom:1px dashed var(--line); break-inside:avoid; }
+.cheat-row:last-child{ border-bottom:none; }
+.cheat-row .q{ flex:0 0 44%; font-weight:600; color:var(--emerald); font-size:12px; }
+.cheat-row .a{ flex:1; font-size:12px; color:#31473e; }
+
+/* ending */
+.ending{ width:720px; height:1020px; background:linear-gradient(200deg,#0b3d2e 0%,#07271c 55%,#051d15 100%);
+  color:#f2f7f4; break-before:page; overflow:hidden; position:relative; clip-path:inset(0);
+  display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:70px; }
+.ending .motif-a{ top:-130px; left:-130px; }
+.ending .motif-b{ bottom:-120px; right:-120px; opacity:.3; }
+.ending .big{ font-family:'Playfair Display',serif; font-size:40px; font-weight:900; line-height:1.2; margin:18px 0 14px; }
+.ending .big .gold{ color:var(--gold-lt); }
+.ending .note{ color:#a8c3b6; font-size:13.5px; max-width:430px; line-height:1.8; }
+.ending .foot{ margin-top:46px; font-size:10.5px; letter-spacing:.24em; text-transform:uppercase; color:#8fae9f; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ COVER ═══════════ -->
+<div class="cover">
+  <svg class="motif motif-a" width="380" height="380" viewBox="0 0 100 100">
+    <g transform="translate(50,50)"><g fill="#e8c96a">
+      <ellipse rx="9" ry="30" transform="rotate(0) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(45) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(90) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(135) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(180) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(225) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(270) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(315) translate(0,-22)"/>
+    </g><circle r="11" fill="#c99b2e"/></g>
+  </svg>
+  <svg class="motif motif-b" width="330" height="330" viewBox="0 0 100 100">
+    <g transform="translate(50,50)"><g fill="#e8c96a">
+      <ellipse rx="9" ry="30" transform="rotate(22) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(67) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(112) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(157) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(202) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(247) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(292) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(337) translate(0,-22)"/>
+    </g><circle r="11" fill="#c99b2e"/></g>
+  </svg>
+  <div class="cover-kicker">Client Handover Guide</div>
+  <div class="h1a">Website Owner's</div>
+  <div class="h1b">Manual</div>
+  <p class="sub">Running the enkutatashevents.com admin panel</p>
+  <p class="cover-desc">A plain-English, step-by-step companion for everything you can do in your website's admin area — from publishing events and managing bookings to editing every word on the public site, plus how to keep your admin password safe.</p>
+  <div class="cover-chips">
+    <span>Logging In</span><span>Events &amp; Bookings</span><span>Site Content</span><span>Messages</span><span>Analytics</span><span>Password &amp; Security</span>
+  </div>
+  <div class="cover-foot">
+    <div class="brand">Enkutatash Events<small>Premium Event Organizers · Addis Ababa</small></div>
+    <div class="ed">Edition 2026<br>enkutatashevents.com</div>
+  </div>
+</div>
+
+<!-- ═══════════ FLOWING CONTENT ═══════════ -->
+<div class="main-content">
+
+<!-- Chapter 1 -->
+<div class="chapter-header">
+  <div class="kicker">Chapter 1</div>
+  <h2 class="title">Welcome to Your Website's Control Room</h2>
+  <div class="divider"></div>
+</div>
+<p class="body-text lead">Congratulations on your new website. This manual was written for one reader: <b>you</b>, the owner of Enkutatash Events. It assumes no technical background — every instruction is written in everyday language, one step at a time, exactly in the order you should click.</p>
+<p class="body-text">Your website has two faces. The first is the <b>public site</b> at enkutatashevents.com, which visitors see: your services, portfolio, testimonials, and contact forms. The second is the <b>admin panel</b> — a private control room hidden behind a password — where you manage everything the public sees. Nothing on the public site changes by accident; it only changes when you make a change here.</p>
+<p class="body-text">The admin panel lives at <b>enkutatashevents.com/admin</b>. Inside, a sidebar on the left gives you nine sections: Dashboard, Analytics, Events, Bookings, Attendees, Venues, Messages, Content, and Settings. Each chapter of this manual walks through one section, one task at a time. You do not need to read it cover to cover — jump to the chapter that matches what you want to do today.</p>
+<div class="card info">
+  <div class="ct">The golden rule</div>
+  <p>Every change you make in the admin panel appears on the public website after you press <b>Save</b>. If you ever make a mistake, simply open the same screen, correct it, and save again. Almost nothing here is permanent — you can always edit, replace, or delete later.</p>
+</div>
+
+<!-- Chapter 2 -->
+<div class="chapter-header">
+  <div class="kicker">Chapter 2</div>
+  <h2 class="title">Logging In and Out</h2>
+  <div class="divider"></div>
+</div>
+<p class="body-text">The admin panel is protected by a single password — there is no username to remember. Your password was given to you privately when the website was handed over. Keep it somewhere safe, such as a password manager or a written note kept in a secure place.</p>
+
+<h3 class="sub">2.1 &nbsp;Signing in</h3>
+<ol class="steps">
+  <li>Open your browser (Chrome, Edge, Safari, or Firefox) and go to <b>enkutatashevents.com/admin</b>.</li>
+  <li>You will see the sign-in screen below — a single <b>Password</b> box and a green <b>Sign In</b> button.</li>
+  <li>Type your password. Click the small eye icon if you want to double-check what you typed.</li>
+  <li>Press <b>Sign In</b>. If the password is correct you land on the Dashboard immediately. If it is wrong, the screen says <i>Invalid password</i> — simply try again.</li>
+</ol>
+<figure class="fig"><img src="images/01-login.png" alt="Admin sign-in screen"><figcaption>The sign-in screen at enkutatashevents.com/admin — password only, no username.</figcaption></figure>
+
+<h3 class="sub">2.2 &nbsp;Staying signed in — and signing out</h3>
+<p class="body-text">After you sign in, the website remembers you on that device for <b>seven days</b>. You can close the browser, shut the laptop, come back tomorrow — you will still be signed in. After seven days you are asked to sign in again. This keeps the site convenient for you but still safe from strangers using your computer.</p>
+<p class="body-text">When you finish working — especially on a shared or public computer — always sign out. Scroll to the very bottom of the left sidebar and press <b>Sign out</b>. The next person who opens the admin address will be asked for the password, not your data. Right above it there is also a <b>View Public Site</b> button that opens the public website in a new tab, handy for checking how your changes look to visitors.</p>
+<div class="card warn">
+  <div class="ct">Forgot your password?</div>
+  <p>There is no "forgot password" link on the sign-in screen — by design, so hackers cannot abuse it. Chapter 12 explains exactly how to set a new password, either by yourself through the Cloudflare dashboard or with one phone call to your developer.</p>
+</div>
+
+<!-- Chapter 3 -->
+<div class="chapter-header">
+  <div class="kicker">Chapter 3</div>
+  <h2 class="title">The Dashboard — Your Morning Overview</h2>
+  <div class="divider"></div>
+</div>
+<p class="body-text">The Dashboard is the first thing you see after signing in. It is not for editing — it is a live summary, like the front page of your business. In a single glance it answers the four questions owners ask most: how many events do I have, how many attendees are coming, what is coming up next, and how much ticket revenue is expected.</p>
+<figure class="fig"><img src="images/02-dashboard.png" alt="Dashboard view"><figcaption>The Dashboard: summary cards on top, upcoming events and calendar below.</figcaption></figure>
+<p class="body-text">Across the top sit four <b>summary cards</b>: <b>Total Events</b> (with a small note of how many are upcoming versus completed), <b>Total Attendees</b> across all events, <b>Upcoming Events</b> with the nearest date, and <b>Est. Revenue</b> calculated from ticket prices × attendees on your published events.</p>
+<p class="body-text">Below the cards, the left panel lists your <b>Upcoming Events</b> — each with its date, venue, attendee count, price, and a <b>View Details</b> button that jumps straight to that event's record. On the right, a small <b>calendar</b> shows the current month; days holding an event are highlighted, and you can page through months with the arrows. Beneath it, <b>Recent Messages</b> shows the latest contact-form submissions so a new enquiry never goes unnoticed. Clicking <b>View All</b> beside either panel takes you to the full Events or Messages screen.</p>
+
+<!-- Chapter 4 -->
+<div class="chapter-header">
+  <div class="kicker">Chapter 4</div>
+  <h2 class="title">Managing Events</h2>
+  <div class="divider"></div>
+</div>
+<p class="body-text">The Events section is where your happenings live — cultural celebrations, weddings, corporate gatherings, ticketed shows. Everything you create here can appear on the public site and accept bookings. Open it by clicking <b>Events</b> in the sidebar.</p>
+<figure class="fig"><img src="images/04-events.png" alt="Events list"><figcaption>The Events list: search, sort, and manage every event from one table.</figcaption></figure>
+
+<h3 class="sub">4.1 &nbsp;Creating a new event</h3>
+<ol class="steps">
+  <li>In the Events screen, press the green <b>Create Event</b> button at the top right.</li>
+  <li>A dialog opens. Fill in the basics: <b>event name</b>, <b>date and time</b>, <b>venue</b>, a short <b>description</b>, and the <b>category</b> (Cultural, Wedding, Corporate, and so on).</li>
+  <li>Add a <b>ticket price</b> if the event is paid, or leave it free. Set the <b>capacity</b> — the maximum number of attendees you will accept.</li>
+  <li>Choose a <b>status</b>: <i>Draft</i> keeps it hidden from the public while you prepare; <i>Upcoming</i> publishes it to the site; <i>Completed</i> marks it as finished.</li>
+  <li>Press <b>Create Event</b> at the bottom of the dialog. The event now appears in your list — and on the public site if its status is Upcoming.</li>
+</ol>
+<figure class="fig"><img src="images/05-create-event.png" alt="Create Event dialog"><figcaption>The Create Event dialog — every field you need in one place.</figcaption></figure>
+
+<h3 class="sub">4.2 &nbsp;Editing, hiding, or removing an event</h3>
+<p class="body-text">Every row in the Events table has an <b>Edit</b> action that reopens the same dialog with the details filled in — change what you need and save. Use the <b>search box</b> at the top to find an event by name, and click the column headings (Event, Date, Attendees) to sort the list. To take an event off the public site without deleting your work, edit it and switch its status to <b>Draft</b> — it disappears from the public site instantly but stays in your admin list. Deletion is only for events you never want to see again, so the button asks you to confirm first.</p>
+<!-- Chapter 5 -->
+<div class="chapter-header">
+  <div class="kicker">Chapter 5</div>
+  <h2 class="title">Handling Bookings</h2>
+  <div class="divider"></div>
+</div>
+<p class="body-text">When a visitor requests a seat at one of your events — or asks you to organize one — the request lands in <b>Bookings</b>. This is your work queue: every entry shows who is asking, for which event or service, how many people, and any message they left. Click <b>Bookings</b> in the sidebar to open it.</p>
+<figure class="fig"><img src="images/06-bookings.png" alt="Bookings view"><figcaption>The Bookings queue — review each request and set its status.</figcaption></figure>
+<p class="body-text">Each booking carries a <b>status</b> that tells you, at a glance, where it stands: <b>Pending</b> (new, waiting for your decision), <b>Confirmed</b> (accepted — you are committing to serve it), <b>Cancelled</b> (the client withdrew), or <b>Completed</b> (delivered and closed). Open a booking to read the full details, then use the action buttons to move it through its life. The Dashboard counts pending bookings for you, so an unanswered request never hides for long.</p>
+<ol class="steps">
+  <li>Open <b>Bookings</b> from the sidebar and click the booking you want to work on.</li>
+  <li>Read the client's name, contact details, event, party size, and message carefully.</li>
+  <li>Press <b>Confirm</b> to accept, or <b>Decline</b> if you cannot serve it — the status updates instantly.</li>
+  <li>Reach out to the client directly by phone or email to continue the conversation; the admin keeps the record, not the correspondence.</li>
+</ol>
+<div class="card info">
+  <div class="ct">Good habit</div>
+  <p>Review your Bookings at the start of every day. Clients judge responsiveness — a request answered within hours reads as a company that cares. The Dashboard's pending count is your friend.</p>
+</div>
+
+<!-- Chapter 6 -->
+<div class="chapter-header">
+  <div class="kicker">Chapter 6</div>
+  <h2 class="title">Managing Attendees</h2>
+  <div class="divider"></div>
+</div>
+<p class="body-text">Attendees are the individual people attached to your events — guests who registered, ticket holders, VIP invitees. The <b>Attendees</b> screen gives you one table listing everyone, which event they belong to, and their registration details. Use it to plan catering, seating, and check-in without spreadsheets.</p>
+<figure class="fig"><img src="images/07-attendees.png" alt="Attendees view"><figcaption>The Attendees table — everyone registered across all your events.</figcaption></figure>
+<p class="body-text">The table can be filtered by event, so during a busy week you can look at just one occasion at a time. Search by name when a guest calls and asks whether their registration went through. Add attendees manually when someone registers by phone or in person — press the add button, fill in their name, email, phone, and the event they are joining, and save. If a guest cancels, remove or update their record so your head-count stays accurate; the Dashboard's attendee totals read directly from this list.</p>
+
+<!-- Chapter 7 -->
+<div class="chapter-header">
+  <div class="kicker">Chapter 7</div>
+  <h2 class="title">Managing Venues</h2>
+  <div class="divider"></div>
+</div>
+<p class="body-text">Venues are the places where your events happen — hotel ballrooms, gardens, conference halls, cultural sites. Keeping this list tidy matters, because when you create an event you pick its venue from this list, and the venue's name appears on the public event page.</p>
+<figure class="fig"><img src="images/08-venues.png" alt="Venues view"><figcaption>The Venues manager — add, edit, or retire the places you work at.</figcaption></figure>
+<ol class="steps">
+  <li>Open <b>Venues</b> from the sidebar to see all current venues as cards.</li>
+  <li>To add one, press the <b>Add Venue</b> button and fill in the venue name, address or area, and capacity.</li>
+  <li>To correct a spelling, a capacity, or an address, press <b>Edit</b> on the venue's card, change the field, and save.</li>
+  <li>If you no longer work at a place, you can remove it — events already attached to it keep their records, but new events will no longer offer it as a choice.</li>
+</ol>
+
+<!-- Chapter 8 -->
+<div class="chapter-header">
+  <div class="kicker">Chapter 8</div>
+  <h2 class="title">Reading Messages</h2>
+  <div class="divider"></div>
+</div>
+<p class="body-text">Every visitor who fills in the contact form on your website becomes a <b>Message</b> here — enquiries about weddings, cultural events, ticket questions, partnership offers. Click <b>Messages</b> in the sidebar to see your inbox. Unread messages are marked with a badge both in the list and on the sidebar itself, so new enquiries are impossible to miss.</p>
+<figure class="fig"><img src="images/09-messages.png" alt="Messages view"><figcaption>The Messages inbox — every contact-form submission in one list.</figcaption></figure>
+<ol class="steps">
+  <li>Open <b>Messages</b> and click a message to read the sender's name, email, and full text.</li>
+  <li>Reply using your own email or phone — the admin panel stores and organizes enquiries; it does not send replies.</li>
+  <li>Mark the message as <b>read</b> after handling it, so your unread count reflects reality.</li>
+  <li>Delete spam or duplicate submissions with the delete action — the Dashboard's Recent Messages panel then shows only genuine enquiries.</li>
+</ol>
+
+<!-- Chapter 9 -->
+<div class="chapter-header">
+  <div class="kicker">Chapter 9</div>
+  <h2 class="title">Editing Your Website Content</h2>
+  <div class="divider"></div>
+</div>
+<p class="body-text">This is the most powerful section of the admin panel. Everything the public reads on enkutatashevents.com — your company description, services, testimonials, portfolio, statistics, venues, and team — is controlled from <b>Content</b>. The screen is organized into eight tabs, one for each part of the public site. Switch tabs, edit the fields, and the website reflects your words after you save.</p>
+<figure class="fig"><img src="images/10-content-business.png" alt="Content manager, Business tab"><figcaption>The Content manager, open on the Business tab — notice the eight tabs across the top.</figcaption></figure>
+<table class="tbl">
+  <tr><th style="width:26%">Tab</th><th>What you control there</th></tr>
+  <tr><td><b>Business</b></td><td>Company name, tagline, contact details, address, working hours, and social media links shown in the site's header and footer.</td></tr>
+  <tr><td><b>Hero &amp; About</b></td><td>The big headline and welcome text on the homepage, the About section that tells your story, and its accompanying image.</td></tr>
+  <tr><td><b>Services</b></td><td>The list of services you offer — title, description, icon, and the order they appear in.</td></tr>
+  <tr><td><b>Testimonials</b></td><td>Client quotes: the words, the client's name, and their role or company.</td></tr>
+  <tr><td><b>Portfolio</b></td><td>Photos of past events — the gallery that sells your work.</td></tr>
+  <tr><td><b>Stats</b></td><td>The numbers you proudly display, such as events organized, happy clients, and years of experience.</td></tr>
+  <tr><td><b>Venues</b></td><td>The public showcase of venues you work with, separate from the operational venue list in Chapter 7.</td></tr>
+  <tr><td><b>Team</b></td><td>Your people: name, role, photo, and short biography.</td></tr>
+</table>
+
+<h3 class="sub">9.1 &nbsp;Editing any text on the site</h3>
+<ol class="steps">
+  <li>Open <b>Content</b> from the sidebar and click the tab that matches the section you want to change.</li>
+  <li>Click into the field and type your new text — it works like filling in a form.</li>
+  <li>Press <b>Save</b> (or <b>Save All</b> if you changed several tabs) at the top of the screen.</li>
+  <li>Check the result: press <b>View Public Site</b> at the bottom of the sidebar, then refresh the page to see your words live.</li>
+</ol>
+
+<h3 class="sub">9.2 &nbsp;Adding a portfolio photo</h3>
+<p class="body-text">Your portfolio is what convinces future clients, so keep it fresh after every successful event. Photos should be landscape-oriented, bright, and at least 1200 pixels wide; phone photos are perfectly fine.</p>
+<ol class="steps">
+  <li>Open <b>Content</b> and switch to the <b>Portfolio</b> tab.</li>
+  <li>Press the <b>Add Photo</b> (or upload) button — a file picker opens.</li>
+  <li>Choose the photo from your computer, then give it a short <b>caption</b> — the event name and place work well, for example "Meskel Celebration · Sheraton Addis".</li>
+  <li>Save. The photo appears in the public gallery. To reorder the gallery, drag the photos into your preferred sequence; to remove one, press its delete icon and confirm.</li>
+</ol>
+<div class="card warn">
+  <div class="ct">Before you save</div>
+  <p>Read your text once more, out loud if you can. The website publishes exactly what you type — including typos. Saved changes go live immediately; there is no separate "publish" step to catch you.</p>
+</div>
+<!-- Chapter 10 -->
+<div class="chapter-header">
+  <div class="kicker">Chapter 10</div>
+  <h2 class="title">Understanding Analytics</h2>
+  <div class="divider"></div>
+</div>
+<p class="body-text">Analytics answers the owner's favourite question: <i>is the website actually working?</i> Click <b>Analytics</b> in the sidebar and you get visitor numbers and trends without any technical setup; the panel collects and summarizes the data for you.</p>
+<figure class="fig"><img src="images/03-analytics.png" alt="Analytics view"><figcaption>The Analytics view — visitors, page views, and trends at a glance.</figcaption></figure>
+<p class="body-text">The cards at the top show <b>total visitors</b> and <b>page views</b>, with smaller comparisons against the previous period so you can tell whether interest is growing. A chart underneath plots visits over time — look for spikes after you post a new event or share the site on social media, because that connection is exactly how marketing starts to make sense. Further down, a breakdown by <b>page</b> shows which parts of your site attract the most attention: if your Services page dwarfs everything else, visitors are shopping; if the Gallery leads, your photos are doing the selling.</p>
+<div class="card info">
+  <div class="ct">Connecting Google Analytics (optional)</div>
+  <p>For deeper, industry-standard measurement you can link a free Google Analytics 4 property. Open <b>Settings</b>, scroll to <b>Integrations</b>, and paste your GA4 Measurement ID (it looks like G-XXXXXXXXXX). Chapter 11 shows the screen.</p>
+</div>
+
+<!-- Chapter 11 -->
+<div class="chapter-header">
+  <div class="kicker">Chapter 11</div>
+  <h2 class="title">Settings</h2>
+  <div class="divider"></div>
+</div>
+<p class="body-text">Settings is where preferences live: your admin profile, notification choices, the panel's appearance, sensible defaults for new events, and integrations with Google's measurement tools. Most owners visit rarely — set things once and let them be. Click <b>Settings</b> in the sidebar.</p>
+<figure class="fig"><img src="images/18-settings.png" alt="Settings view, top"><figcaption>Settings, top of the page: profile and notification preferences.</figcaption></figure>
+<p class="body-text"><b>Profile Settings</b> holds your display name and email — what the panel calls you. <b>Notifications</b> lets you choose what you are alerted about, such as new bookings or new messages. <b>Appearance</b> switches the panel between light and dark display, purely a matter of taste. <b>Event Defaults</b> pre-fills sensible values (default capacity, default category) so creating events takes fewer clicks.</p>
+<h3 class="sub">11.1 &nbsp;Integrations — Google Analytics &amp; Search Console</h3>
+<p class="body-text">Scroll down for the <b>Integrations</b> card. Paste a <b>GA4 Measurement ID</b> to connect Google Analytics, and a <b>Search Console</b> verification value to prove ownership of the site to Google. Both are copy-paste jobs — if you do not have the values yet, ask whoever manages your Google account, or leave them empty; the site works perfectly without them.</p>
+<figure class="fig"><img src="images/19-settings-integrations.png" alt="Integrations section"><figcaption>The Integrations card: GA4 and Search Console fields.</figcaption></figure>
+<h3 class="sub">11.2 &nbsp;The Danger Zone — please read before touching</h3>
+<div class="card warn">
+  <div class="ct">Handle with care</div>
+  <p>At the very bottom of Settings sits the <b>Danger Zone</b> with a red <b>Reset Content</b> action. This wipes the site's content back to factory defaults — every headline, testimonial, portfolio photo, and team member you have customized would be replaced by the original template text. It exists for emergencies only. Do not use it for routine fixes; there is nothing there you will ever need in day-to-day ownership.</p>
+</div>
+<figure class="fig"><img src="images/20-settings-danger.png" alt="Danger zone"><figcaption>The Danger Zone — best left completely alone.</figcaption></figure>
+
+<!-- Chapter 12 -->
+<div class="chapter-header">
+  <div class="kicker">Chapter 12</div>
+  <h2 class="title">Changing the Admin Password</h2>
+  <div class="divider"></div>
+</div>
+<p class="body-text">There is no "change password" screen inside the admin panel — the password deliberately lives one level higher, in your website's hosting account, where no hacker who steals your browser can reach it. Your site is hosted on <b>Cloudflare</b>, a free account created for you during handover. You can change the password yourself in a few minutes, or simply ask your developer to do it.</p>
+
+<h3 class="sub">12.1 &nbsp;Option A — do it yourself via the Cloudflare dashboard</h3>
+<ol class="steps">
+  <li>Go to <b>dash.cloudflare.com</b> and sign in with the Cloudflare account email and password you were given at handover.</li>
+  <li>Click your domain, <b>enkutatashevents.com</b>, in the list of websites.</li>
+  <li>In the left menu choose <b>Workers &amp; Pages</b>, then click your website's worker (its name contains <i>enkutatash</i>).</li>
+  <li>Open the <b>Settings</b> tab, then find <b>Variables and Secrets</b> and press <b>Edit</b>.</li>
+  <li>Find the variable named <b>OWNER_PASSWORD</b>. Click its value, type your new password, and press <b>Save</b> (or Deploy if asked).</li>
+  <li>Wait about a minute, then test: open enkutatashevents.com/admin in a private browser window and sign in with the new password.</li>
+</ol>
+<div class="card info">
+  <div class="ct">Good to know — the seven-day session</div>
+  <p>Changing OWNER_PASSWORD locks out <i>new</i> sign-ins with the old password. Devices already signed in stay trusted for up to seven days, because that is how long each session lives. If you need everyone out immediately — for example if a device was stolen — tell your developer, who can clear all sessions at once.</p>
+</div>
+
+<h3 class="sub">12.2 &nbsp;Option B — ask your developer</h3>
+<p class="body-text">If the Cloudflare dashboard feels intimidating, that is completely fine. Send your developer a message saying: <i>"Please change my admin password to the one I am sending separately."</i> Send the new password through a different channel than the request itself — for example, request by email and password by phone or WhatsApp. The change takes the developer only a minute or two.</p>
+
+<h3 class="sub">12.3 &nbsp;Choosing a strong password</h3>
+<p class="body-text">A strong password is long more than it is complicated. Aim for at least 14 characters. Three random words work beautifully — <i>sunrise-coffee-Addis-94</i> is easy for you to remember and miserable for a computer to guess. Avoid birthdays, company names, and anything you use on other websites. Write it down and store it with your other important papers, or keep it in a password manager.</p>
+
+<!-- Chapter 13 -->
+<div class="chapter-header">
+  <div class="kicker">Chapter 13</div>
+  <h2 class="title">Seven Habits of a Safe Website Owner</h2>
+  <div class="divider"></div>
+</div>
+<p class="body-text">Your website is a business asset, and like your cash box, it mostly needs common sense. These seven habits cover everything that matters — none of them require technical skill.</p>
+<table class="tbl">
+  <tr><th style="width:38%">Habit</th><th>Why it matters</th></tr>
+  <tr><td><b>1 · Guard the password</b></td><td>Share it only with people who truly need it, and never send it in the same message as the request that asks for it.</td></tr>
+  <tr><td><b>2 · Sign out on shared computers</b></td><td>The seven-day remember-me is a convenience on your own laptop and a risk in an internet café.</td></tr>
+  <tr><td><b>3 · Change the password a few times a year</b></td><td>Chapter 12 makes it a five-minute job. After any staff change or shared-password incident, change it that day.</td></tr>
+  <tr><td><b>4 · Pause before deleting</b></td><td>Deletes in the admin panel are real. When a confirm dialog appears, read it — it is the one place the site asks "are you sure?"</td></tr>
+  <tr><td><b>5 · Keep the Danger Zone alone</b></td><td>Reset Content erases your customized text and photos. No routine problem is ever solved there.</td></tr>
+  <tr><td><b>6 · Read your Dashboard daily</b></td><td>A one-minute glance catches new messages, pending bookings, and anything odd long before clients notice.</td></tr>
+  <tr><td><b>7 · Call for help early</b></td><td>If something looks wrong — a strange screen, an error, a lockout — contact your developer sooner rather than later. Small problems stay small when reported early.</td></tr>
+</table>
+
+<!-- Cheat sheet -->
+<div class="chapter-header">
+  <div class="kicker">Quick Reference</div>
+  <h2 class="title">"I want to…" Cheat Sheet</h2>
+  <div class="divider"></div>
+</div>
+<p class="body-text">Tear out this page (or bookmark it) — it compresses the whole manual into one table.</p>
+<div class="cheat">
+  <div class="cheat-row"><div class="q">Sign in to the admin panel</div><div class="a">enkutatashevents.com/admin → type password → Sign In <i>(Ch. 2)</i></div></div>
+  <div class="cheat-row"><div class="q">See today's overview</div><div class="a">Dashboard — the first screen after signing in <i>(Ch. 3)</i></div></div>
+  <div class="cheat-row"><div class="q">Create a new event</div><div class="a">Events → Create Event → fill the dialog → Create Event <i>(Ch. 4)</i></div></div>
+  <div class="cheat-row"><div class="q">Hide an event without deleting it</div><div class="a">Events → Edit → set status to Draft → save <i>(Ch. 4)</i></div></div>
+  <div class="cheat-row"><div class="q">Accept a booking request</div><div class="a">Bookings → open it → Confirm <i>(Ch. 5)</i></div></div>
+  <div class="cheat-row"><div class="q">Add a guest who registered by phone</div><div class="a">Attendees → Add → name, contact, event → save <i>(Ch. 6)</i></div></div>
+  <div class="cheat-row"><div class="q">Add or fix a venue</div><div class="a">Venues → Add Venue / Edit on the card <i>(Ch. 7)</i></div></div>
+  <div class="cheat-row"><div class="q">Read a client enquiry</div><div class="a">Messages → click the message → reply from your email <i>(Ch. 8)</i></div></div>
+  <div class="cheat-row"><div class="q">Change text on the website</div><div class="a">Content → pick the tab → edit → Save / Save All <i>(Ch. 9)</i></div></div>
+  <div class="cheat-row"><div class="q">Add a portfolio photo</div><div class="a">Content → Portfolio → Add Photo → caption → save <i>(Ch. 9)</i></div></div>
+  <div class="cheat-row"><div class="q">See how many people visited</div><div class="a">Analytics — visitors, views, trends <i>(Ch. 10)</i></div></div>
+  <div class="cheat-row"><div class="q">Connect Google Analytics</div><div class="a">Settings → Integrations → paste GA4 ID <i>(Ch. 11)</i></div></div>
+  <div class="cheat-row"><div class="q">Change the admin password</div><div class="a">Cloudflare dashboard → Workers &amp; Pages → Variables → OWNER_PASSWORD <i>(Ch. 12)</i></div></div>
+  <div class="cheat-row"><div class="q">Sign out safely</div><div class="a">Bottom of the sidebar → Sign out <i>(Ch. 2)</i></div></div>
+</div>
+<div class="card info" style="margin-top:10px">
+  <div class="ct">One last thing</div>
+  <p>Keep this manual where you can reach it — printed on your desk or bookmarked in your browser. When a new team member joins, walk them through Chapters 2 and 13 first. And whenever you feel unsure, your developer is one message away; no question about your own website is ever too small.</p>
+</div>
+
+</div><!-- /main-content -->
+
+<!-- ═══════════ ENDING ═══════════ -->
+<div class="ending">
+  <svg class="motif motif-a" width="340" height="340" viewBox="0 0 100 100">
+    <g transform="translate(50,50)"><g fill="#e8c96a">
+      <ellipse rx="9" ry="30" transform="rotate(10) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(55) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(100) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(145) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(190) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(235) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(280) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(325) translate(0,-22)"/>
+    </g><circle r="11" fill="#c99b2e"/></g>
+  </svg>
+  <svg class="motif motif-b" width="300" height="300" viewBox="0 0 100 100">
+    <g transform="translate(50,50)"><g fill="#e8c96a">
+      <ellipse rx="9" ry="30" transform="rotate(30) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(75) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(120) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(165) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(210) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(255) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(300) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(345) translate(0,-22)"/>
+    </g><circle r="11" fill="#c99b2e"/></g>
+  </svg>
+  <div class="kicker" style="color:var(--gold-lt)">Enkutatash Events</div>
+  <div class="big">Your website,</div>
+  <div class="big" style="color:var(--gold-lt); margin-top:0">in your hands.</div>
+  <p class="note">Everything on enkutatashevents.com answers to you now. Take it one chapter, one task, one save at a time — and when in doubt, this manual and your developer are only a message away.</p>
+  <div class="foot">enkutatashevents.com · Addis Ababa · Edition 2026</div>
+</div>
+
+</body>
+</html>

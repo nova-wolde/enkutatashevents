@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Enkutatash Events — Website Owner's Manual</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+<style>
+@page { size: 720px 1020px; margin: 0; }
+:root{
+  --emerald:#0b3d2e; --deep:#07271c; --deeper:#051d15;
+  --gold:#c99b2e; --gold-lt:#e8c96a;
+  --bg:#f6f8f7; --ink:#132a22; --muted:#5b6f67; --line:#dfe7e3;
+}
+html,body{ margin:0; padding:0; width:720px; background:#f6f8f7; color:var(--ink);
+  font-family:'Inter',sans-serif; font-size:13.5px; line-height:1.62; }
+@media screen{
+  html{ height:auto; display:flex; justify-content:center; background:#f6f8f7; }
+  body{ transform-origin:top center; margin:20px auto; box-shadow:0 4px 40px rgba(5,29,21,.18); }
+}
+*{ box-sizing:border-box; }
+p,td,li{ overflow-wrap:break-word; word-break:break-word; }
+img{ max-width:100%; height:auto; object-fit:contain; }
+
+/* ── Adey Abeba motif ── */
+.motif{ position:absolute; opacity:.5; }
+
+/* ── Cover ── */
+.cover{ width:720px; height:1020px; background:linear-gradient(160deg,#0b3d2e 0%,#07271c 55%,#051d15 100%);
+  color:#f2f7f4; break-after:page; overflow:hidden; position:relative; clip-path:inset(0);
+  display:flex; flex-direction:column; justify-content:center; padding:64px; }
+.cover .motif-a{ top:-140px; right:-120px; }
+.cover .motif-b{ bottom:-110px; left:-130px; opacity:.28; }
+.cover-kicker{ margin-bottom:26px; }
+.cover-kicker{ font-size:11px; letter-spacing:.32em; text-transform:uppercase; color:var(--gold-lt); font-weight:600;
+  background:rgba(232,201,106,.12); border-radius:999px; padding:7px 16px; display:inline-block; width:auto; max-width:100%; }
+.cover .h1a,.cover .h1b{ font-family:'Playfair Display',serif; font-size:58px; line-height:1.08; margin:0; font-weight:900; }
+.cover .h1b{ color:var(--gold-lt); margin:0 0 12px; }
+.cover .sub{ font-family:'Playfair Display',serif; font-style:italic; font-size:20px; color:#bfd4c9; margin:0 0 34px; }
+.cover-desc{ font-size:14px; color:#a8c3b6; max-width:440px; line-height:1.75; margin:0 0 44px; }
+.cover-chips{ display:flex; flex-wrap:wrap; gap:8px; max-width:480px; margin-bottom:52px; }
+.cover-chips span{ font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; font-weight:600;
+  background:rgba(232,201,106,.13); color:var(--gold-lt); border-radius:999px; padding:6px 14px; }
+.cover-foot{ background:rgba(232,201,106,.09); border-radius:10px; padding:18px 22px; display:flex; justify-content:space-between; align-items:flex-end; }
+.cover-foot .brand{ font-weight:700; font-size:14px; color:#f2f7f4; }
+.cover-foot .brand small{ display:block; font-weight:400; font-size:10.5px; color:#8fae9f; letter-spacing:.14em; text-transform:uppercase; margin-top:3px; }
+.cover-foot .ed{ text-align:right; font-size:10.5px; color:#8fae9f; letter-spacing:.18em; text-transform:uppercase; line-height:1.8; }
+
+/* ── Flowing content ── */
+.main-content{ padding:58px 62px 40px; }
+.chapter-header{ break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header:first-child{ margin-top:0; }
+.kicker{ font-size:10px; letter-spacing:.3em; text-transform:uppercase; color:var(--gold); font-weight:700; margin-bottom:6px; }
+h2.title{ font-family:'Playfair Display',serif; font-size:29px; font-weight:900; color:var(--emerald); margin:0 0 6px; line-height:1.15; }
+.divider{ width:52px; height:10px; background:linear-gradient(to bottom, var(--gold) 0 3px, transparent 3px); margin:8px 0 12px; }
+p.body-text{ margin:0 0 12px; }
+.lead{ font-size:14.5px; color:#31473e; }
+
+h3.sub{ font-size:15.5px; font-weight:700; color:var(--emerald); margin:20px 0 8px; break-after:avoid; }
+
+/* steps */
+ol.steps{ list-style:none; margin:10px 0 14px; padding:0; counter-reset:step; }
+ol.steps li{ position:relative; counter-increment:step; padding:0 0 10px 44px; margin:0; }
+ol.steps li::before{ content:counter(step); position:absolute; left:0; top:0; width:26px; height:26px;
+  border-radius:50%; background:var(--gold); color:#fff; font-weight:700; font-size:12.5px;
+  display:flex; align-items:center; justify-content:center; }
+ol.steps li b{ color:var(--emerald); }
+
+/* figures */
+figure.fig{ display:block; width:100%; margin:14px 0; break-inside:avoid; }
+figure.fig img{ display:block; width:100%; border:1px solid var(--line); border-radius:8px; }
+figure.fig figcaption{ font-size:10.5px; color:var(--muted); margin-top:6px; text-align:center; letter-spacing:.04em; }
+
+/* callouts */
+.card{ background:#fff; border:1px solid var(--line); border-left:3px solid var(--gold);
+  border-radius:8px; padding:13px 16px; margin:0 0 12px; break-inside:avoid; }
+.card.warn{ border-left-color:#b3423a; background:#fdf7f6; }
+.card.info{ border-left-color:#2e6e57; }
+.card .ct{ font-size:10px; letter-spacing:.22em; text-transform:uppercase; font-weight:700; color:var(--gold); margin-bottom:4px; }
+.card.warn .ct{ color:#b3423a; } .card.info .ct{ color:#2e6e57; }
+.card p{ margin:0; }
+
+/* tables */
+table.tbl{ width:100%; border-collapse:separate; border-spacing:3px 3px; margin:12px 0 14px; font-size:12px; break-inside:avoid; }
+table.tbl th{ background:var(--emerald); color:#f2f7f4; text-align:left; padding:8px 11px; font-weight:600; font-size:11px; letter-spacing:.05em; border-radius:4px; }
+table.tbl td{ border:1px solid var(--line); padding:8px 11px; vertical-align:top; background:#fff; border-radius:4px; }
+table.tbl tr:nth-child(even) td{ background:#fbfdfc; }
+
+/* pill list for sidebar map */
+.pills{ display:flex; flex-wrap:wrap; gap:7px; margin:10px 0 14px; max-width:100%; }
+.pills span{ font-size:11px; font-weight:600; color:var(--emerald); background:#fff;
+  border:1px solid var(--line); border-radius:999px; padding:5px 12px; }
+
+/* cheat sheet */
+.cheat{ background:#fff; border:1px solid var(--line); border-radius:10px; padding:18px 20px; margin:14px 0; }
+.cheat-row{ display:flex; gap:12px; padding:7px 0; border-bottom:1px dashed var(--line); break-inside:avoid; }
+.cheat-row:last-child{ border-bottom:none; }
+.cheat-row .q{ flex:0 0 44%; font-weight:600; color:var(--emerald); font-size:12px; }
+.cheat-row .a{ flex:1; font-size:12px; color:#31473e; }
+
+/* ending */
+.ending{ width:720px; height:1020px; background:linear-gradient(200deg,#0b3d2e 0%,#07271c 55%,#051d15 100%);
+  color:#f2f7f4; break-before:page; overflow:hidden; position:relative; clip-path:inset(0);
+  display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:70px; }
+.ending .motif-a{ top:-130px; left:-130px; }
+.ending .motif-b{ bottom:-120px; right:-120px; opacity:.3; }
+.ending .big{ font-family:'Playfair Display',serif; font-size:40px; font-weight:900; line-height:1.2; margin:18px 0 14px; }
+.ending .big .gold{ color:var(--gold-lt); }
+.ending .note{ color:#a8c3b6; font-size:13.5px; max-width:430px; line-height:1.8; }
+.ending .foot{ margin-top:46px; font-size:10.5px; letter-spacing:.24em; text-transform:uppercase; color:#8fae9f; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ COVER ═══════════ -->
+<div class="cover">
+  <svg class="motif motif-a" width="380" height="380" viewBox="0 0 100 100">
+    <g transform="translate(50,50)"><g fill="#e8c96a">
+      <ellipse rx="9" ry="30" transform="rotate(0) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(45) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(90) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(135) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(180) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(225) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(270) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(315) translate(0,-22)"/>
+    </g><circle r="11" fill="#c99b2e"/></g>
+  </svg>
+  <svg class="motif motif-b" width="330" height="330" viewBox="0 0 100 100">
+    <g transform="translate(50,50)"><g fill="#e8c96a">
+      <ellipse rx="9" ry="30" transform="rotate(22) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(67) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(112) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(157) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(202) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(247) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(292) translate(0,-22)"/><ellipse rx="9" ry="30" transform="rotate(337) translate(0,-22)"/>
+    </g><circle r="11" fill="#c99b2e"/></g>
+  </svg>
+  <div class="cover-kicker">Client Handover Guide</div>
+  <div class="h1a">Website Owner's</div>
+  <div class="h1b">Manual</div>
+  <p class="sub">Running the enkutatashevents.com admin panel</p>
+  <p class="cover-desc">A plain-English, step-by-step companion for everything you can do in your website's admin area — from publishing events and managing bookings to editing every word on the public site, plus how to keep your admin password safe.</p>
+  <div class="cover-chips">
+    <span>Logging In</span><span>Events &amp; Bookings</span><span>Site Content</span><span>Messages</span><span>Analytics</span><span>Password &amp; Security</span>
+  </div>
+  <div class="cover-foot">
+    <div class="brand">Enkutatash Events<small>Premium Event Organizers · Addis Ababa</small></div>
+    <div class="ed">Edition 2026<br>enkutatashevents.com</div>
+  </div>
+</div>
+
+<!-- ═══════════ FLOWING CONTENT ═══════════ -->
+<div class="main-content">
+
+<!-- Chapter 1 -->
+<div class="chapter-header">
+  <div class="kicker">Chapter 1</div>
+  <h2 class="title">Welcome to Your Website's Control Room</h2>
+  <div class="divider"></div>
+</div>
+<p class="body-text lead">Congratulations on your new website. This manual was written for one reader: <b>you</b>, the owner of Enkutatash Events. It assumes no technical background — every instruction is written in everyday language, one step at a time, exactly in the order you should click.</p>
+<p class="body-text">Your website has two faces. The first is the <b>public site</b> at enkutatashevents.com, which visitors see: your services, portfolio, testimonials, and contact forms. The second is the <b>admin panel</b> — a private control room hidden behind a password — where you manage everything the public sees. Nothing on the public site changes by accident; it only changes when you make a change here.</p>
+<p class="body-text">The admin panel lives at <b>enkutatashevents.com/admin</b>. Inside, a sidebar on the left gives you nine sections: Dashboard, Analytics, Events, Bookings, Attendees, Venues, Messages, Content, and Settings. Each chapter of this manual walks through one section, one task at a time. You do not need to read it cover to cover — jump to the chapter that matches what you want to do today.</p>
+<div class="card info">
+  <div class="ct">The golden rule</div>
+  <p>Every change you make in the admin panel appears on the public website after you press <b>Save</b>. If you ever make a mistake, simply open the same screen, correct it, and save again. Almost nothing here is permanent — you can always edit, replace, or delete later.</p>
+</div>
+
+<!-- Chapter 2 -->
+<div class="chapter-header">
+  <div class="kicker">Chapter 2</div>
+  <h2 class="title">Logging In and Out</h2>
+  <div class="divider"></div>
+</div>
+<p class="body-text">The admin panel is protected by a single password — there is no username to remember. Your password was given to you privately when the website was handed over. Keep it somewhere safe, such as a password manager or a written note kept in a secure place.</p>
+
+<h3 class="sub">2.1 &nbsp;Signing in</h3>
+<ol class="steps">
+  <li>Open your browser (Chrome, Edge, Safari, or Firefox) and go to <b>enkutatashevents.com/admin</b>.</li>
+  <li>You will see the sign-in screen below — a single <b>Password</b> box and a green <b>Sign In</b> button.</li>
+  <li>Type your password. Click the small eye icon if you want to double-check what you typed.</li>
+  <li>Press <b>Sign In</b>. If the password is correct you land on the Dashboard immediately. If it is wrong, the screen says <i>Invalid password</i> — simply try again.</li>
+</ol>
+<figure class="fig"><img src="images/01-login.png" alt="Admin sign-in screen"><figcaption>The sign-in screen at enkutatashevents.com/admin — password only, no username.</figcaption></figure>
+
+<h3 class="sub">2.2 &nbsp;Staying signed in — and signing out</h3>
+<p class="body-text">After you sign in, the website remembers you on that device for <b>seven days</b>. You can close the browser, shut the laptop, come back tomorrow — you will still be signed in. After seven days you are asked to sign in again. This keeps the site convenient for you but still safe from strangers using your computer.</p>
+<p class="body-text">When you finish working — especially on a shared or public computer — always sign out. Scroll to the very bottom of the left sidebar and press <b>Sign out</b>. The next person who opens the admin address will be asked for the password, not your data. Right above it there is also a <b>View Public Site</b> button that opens the public website in a new tab, handy for checking how your changes look to visitors.</p>
+<div class="card warn">
+  <div class="ct">Forgot your password?</div>
+  <p>There is no "forgot password" link on the sign-in screen — by design, so hackers cannot abuse it. Chapter 12 explains exactly how to set a new password, either by yourself through the Cloudflare dashboard or with one phone call to your developer.</p>
+</div>
+
+<!-- Chapter 3 -->
+<div class="chapter-header">
+  <div class="kicker">Chapter 3</div>
+  <h2 class="title">The Dashboard — Your Morning Overview</h2>
+  <div class="divider"></div>
+</div>
+<p class="body-text">The Dashboard is the first thing you see after signing in. It is not for editing — it is a live summary, like the front page of your business. In a single glance it answers the four questions owners ask most: how many events do I have, how many attendees are coming, what is coming up next, and how much ticket revenue is expected.</p>
+<figure class="fig"><img src="images/02-dashboard.png" alt="Dashboard view"><figcaption>The Dashboard: summary cards on top, upcoming events and calendar below.</figcaption></figure>
+<p class="body-text">Across the top sit four <b>summary cards</b>: <b>Total Events</b> (with a small note of how many are upcoming versus completed), <b>Total Attendees</b> across all events, <b>Upcoming Events</b> with the nearest date, and <b>Est. Revenue</b> calculated from ticket prices × attendees on your published events.</p>
+<p class="body-text">Below the cards, the left panel lists your <b>Upcoming Events</b> — each with its date, venue, attendee count, price, and a <b>View Details</b> button that jumps straight to that event's record. On the right, a small <b>calendar</b> shows the current month; days holding an event are highlighted, and you can page through months with the arrows. Beneath it, <b>Recent Messages</b> shows the latest contact-form submissions so a new enquiry never goes unnoticed. Clicking <b>View All</b> beside either panel takes you to the full Events or Messages screen.</p>
+
+<!-- Chapter 4 -->
+<div class="chapter-header">
+  <div class="kicker">Chapter 4</div>
+  <h2 class="title">Managing Events</h2>
+  <div class="divider"></div>
+</div>
+<p class="body-text">The Events section is where your happenings live — cultural celebrations, weddings, corporate gatherings, ticketed shows. Everything you create here can appear on the public site and accept bookings. Open it by clicking <b>Events</b> in the sidebar.</p>
+<figure class="fig"><img src="images/04-events.png" alt="Events list"><figcaption>The Events list: search, sort, and manage every event from one table.</figcaption></figure>
+
+<h3 class="sub">4.1 &nbsp;Creating a new event</h3>
+<ol class="steps">
+  <li>In the Events screen, press the green <b>Create Event</b> button at the top right.</li>
+  <li>A dialog opens. Fill in the basics: <b>event name</b>, <b>date and time</b>, <b>venue</b>, a short <b>description</b>, and the <b>category</b> (Cultural, Wedding, Corporate, and so on).</li>
+  <li>Add a <b>ticket price</b> if the event is paid, or leave it free. Set the <b>capacity</b> — the maximum number of attendees you will accept.</li>
+  <li>Choose a <b>status</b>: <i>Draft</i> keeps it hidden from the public while you prepare; <i>Upcoming</i> publishes it to the site; <i>Completed</i> marks it as finished.</li>
+  <li>Press <b>Create Event</b> at the bottom of the dialog. The event now appears in your list — and on the public site if its status is Upcoming.</li>
+</ol>
+<figure class="fig"><img src="images/05-create-event.png" alt="Create Event dialog"><figcaption>The Create Event dialog — every field you need in one place.</figcaption></figure>
+
+<h3 class="sub">4.2 &nbsp;Editing, hiding, or removing an event</h3>
+<p class="body-text">Every row in the Events table has an <b>Edit</b> action that reopens the same dialog with the details filled in — change what you need and save. Use the <b>search box</b> at the top to find an event by name, and click the column headings (Event, Date, Attendees) to sort the list. To take an event off the public site without deleting your work, edit it and switch its status to <b>Draft</b> — it disappears from the public site instantly but stays in your admin list. Deletion is only for events you never want to see again, so the button asks you to confirm first.</p>
